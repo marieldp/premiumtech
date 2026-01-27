@@ -1,0 +1,28 @@
+const webAppUrl = "YOUR_DEPLOYED_WEB_APP_URL_HERE";
+const urlParams = new URLSearchParams(window.location.search);
+const token = urlParams.get('id');
+
+// 1. Fetch Guest Name on Page Load
+if (token) {
+  fetch(`${webAppUrl}?id=${token}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('welcome-msg').innerText = `Welcome, ${data.name}!`;
+      document.getElementById('guest-name-input').value = data.name; // Hidden field
+    });
+}
+
+// 2. Submit RSVP
+function submitRSVP() {
+  const payload = {
+    token: token,
+    name: document.getElementById('guest-name-input').value,
+    attending: document.getElementById('attending-select').value,
+    note: document.getElementById('note-input').value
+  };
+
+  fetch(webAppUrl, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  }).then(() => alert("RSVP Sent! See you there!"));
+}
