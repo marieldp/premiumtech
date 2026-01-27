@@ -1,28 +1,70 @@
-const webAppUrl = "YOUR_DEPLOYED_WEB_APP_URL_HERE";
-const urlParams = new URLSearchParams(window.location.search);
-const token = urlParams.get('id');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Wedding RSVP</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f6f2; color: #4a4a4a; display: flex; justify-content: center; padding: 40px 20px; }
+        .card { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 400px; width: 100%; text-align: center; }
+        h1 { font-family: 'Georgia', serif; font-weight: normal; color: #8d775f; }
+        .hidden { display: none; }
+        select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { background: #8d775f; color: white; border: none; padding: 15px 30px; border-radius: 4px; cursor: pointer; font-size: 16px; margin-top: 10px; }
+        button:hover { background: #76634f; }
+        #loading { font-style: italic; color: #999; }
+    </style>
+</head>
+<body>
 
-// 1. Fetch Guest Name on Page Load
-if (token) {
-  fetch(`${webAppUrl}?id=${token}`)
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById('welcome-msg').innerText = `Welcome, ${data.name}!`;
-      document.getElementById('guest-name-input').value = data.name; // Hidden field
-    });
-}
+<div class="card">
+    <div id="loading">Checking your invitation...</div>
+    
+    <div id="content" class="hidden">
+        <h1 id="welcome-msg">Welcome!</h1>
+        <p>Please let us know if you can make it.</p>
+        
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
 
-// 2. Submit RSVP
-function submitRSVP() {
-  const payload = {
-    token: token,
-    name: document.getElementById('guest-name-input').value,
-    attending: document.getElementById('attending-select').value,
-    note: document.getElementById('note-input').value
-  };
+        <label for="attending-select">Will you attend?</label>
+        <select id="attending-select">
+            <option value="Yes">Joyfully Accepts</option>
+            <option value="No">Regretfully Declines</option>
+        </select>
 
-  fetch(webAppUrl, {
-    method: "POST",
-    body: JSON.stringify(payload)
-  }).then(() => alert("RSVP Sent! See you there!"));
-}
+        <label for="note-input">Dietary requirements or a message for us:</label>
+        <textarea id="note-input" rows="3" placeholder="Optional"></textarea>
+
+        <input type="hidden" id="guest-name-input">
+        
+        <button onclick="submitRSVP()" id="submit-btn">Send RSVP</button>
+    </div>
+
+    <div id="error-msg" class="hidden">
+        <h1>Oops!</h1>
+        <p>We couldn't find your invitation. Please check the link on your invite.</p>
+    </div>
+</div>
+
+<script>
+    // --- CONFIGURATION ---
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbwdxWDsJkVy6EZBa6VHKGRltMrk1SFX3Qe1ac8MRvt3F6wYTQANIlzty2FNjkIeuO9k/exec"; 
+    
+    // 1. Get token from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('id');
+
+    const loadingDiv = document.getElementById('loading');
+    const contentDiv = document.getElementById('content');
+    const errorDiv = document.getElementById('error-msg');
+
+    if (!token) {
+        loadingDiv.classList.add('hidden');
+        errorDiv.classList.remove('hidden');
+    } else {
+        // 2. Fetch Guest Name from Google Sheets
+        fetch(`${webAppUrl}?id=${token}`)
+            .then(res => res.json())
+            .then(data => {
+                loadingDiv.classList.add('hidden');
+                if (data.name && data.name !== "Guest
