@@ -63,8 +63,24 @@
         errorDiv.classList.remove('hidden');
     } else {
         // 2. Fetch Guest Name from Google Sheets
-        fetch(`${https://script.google.com/macros/s/AKfycbwdxWDsJkVy6EZBa6VHKGRltMrk1SFX3Qe1ac8MRvt3F6wYTQANIlzty2FNjkIeuO9k/exec}?id=${token}`)
-            .then(res => res.json())
-            .then(data => {
-                loadingDiv.classList.add('hidden');
-                if (data.name && data.name !== "Guest
+    fetch(`${https://script.google.com/macros/s/AKfycbwdxWDsJkVy6EZBa6VHKGRltMrk1SFX3Qe1ac8MRvt3F6wYTQANIlzty2FNjkIeuO9k/exec}?id=${token}`)
+    .then(res => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+    })
+    .then(data => {
+        loadingDiv.classList.add('hidden');
+        if (data.name) {
+            document.getElementById('welcome-msg').innerText = `Welcome, ${data.name}!`;
+            document.getElementById('guest-name-input').value = data.name;
+            contentDiv.classList.remove('hidden');
+        } else {
+            // Token was not found in the sheet
+            errorDiv.innerHTML = "<h1>Invitation Not Found</h1><p>We couldn't find a guest associated with this link.</p>";
+            errorDiv.classList.remove('hidden');
+        }
+    })
+    .catch(err => {
+        loadingDiv.innerText = "Connection Error. Please refresh.";
+        console.error("Fetch error:", err);
+    });
