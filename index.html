@@ -12,7 +12,7 @@
         .deadline-text { font-size: 0.9rem; color: #8b7d6b; margin-bottom: 20px; font-style: italic; border-bottom: 1px solid #eee; padding-bottom: 15px; }
         label { display: block; text-align: left; margin: 15px 0 5px; font-weight: 600; color: #444; font-size: 0.9rem; }
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
-        #add-guest-btn { background: #fff; border: 2px dashed #8b7d6b; color: #8b7d6b; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; margin: 10px 0; }
+        #add-guest-btn { background: #fff; border: 2px dashed #8b7d6b; color: #8b7d6b; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; margin: 10px 0; display: none; }
         #plus-one-container { background: #fafafa; border: 1px solid #eee; padding: 15px; border-radius: 10px; margin-bottom: 15px; display: none; text-align: left; }
         #submit-btn { background-color: #8b7d6b; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; cursor: pointer; font-size: 1.1rem; margin-top: 20px; }
         .hidden { display: none !important; }
@@ -39,12 +39,12 @@
         <input type="hidden" id="guest-name-input">
 
         <label for="attending-select">Will you be attending?</label>
-        <select id="attending-select">
+        <select id="attending-select" onchange="togglePlusOneVisibility()">
             <option value="Yes">Yes, with pleasure!</option>
             <option value="No">Regretfully, no</option>
         </select>
 
-        <button type="button" id="add-guest-btn" style="display: none;" onclick="showPlusOne()">+ Add a Guest</button>
+        <button type="button" id="add-guest-btn" onclick="showPlusOne()">+ Add a Guest</button>
         
         <div id="plus-one-container">
             <label for="plus-one-name">Plus One's Name:</label>
@@ -54,17 +54,19 @@
         <label for="guest-email">Email Address (for confirmation):</label>
         <input type="email" id="guest-email" placeholder="email@example.com" required>
 
-        <label for="note-input">Any message for us?</label>
-        <textarea id="note-input" rows="3" placeholder="Leave a message here"></textarea>
+        <label for="note-input">Special Notes:</label>
+        <textarea id="note-input" rows="3" placeholder="Dietary restrictions, song requests, etc."></textarea>
 
         <button id="submit-btn" onclick="submitRSVP()">Confirm RSVP</button>
     </div>
 </div>
 
 <script>
+    // --- CONFIGURATION ---
     const webAppUrl = "https://script.google.com/macros/s/AKfycbzcT83i9I7SyRxVxFi0JVoNSfOAGSyj7PyWHX54o1IYZ3KqT4oIzV7wRPoQ6w6oXReq/exec"; 
     const RSVP_DEADLINE = new Date(2027, 9, 6, 23, 59, 59); // Oct 6, 2027
 
+    // --- INITIALIZATION ---
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('id');
     const today = new Date();
@@ -72,18 +74,25 @@
     const loadingDiv = document.getElementById('loading');
     const contentDiv = document.getElementById('content');
     const deadlineSpan = document.getElementById('deadline-date');
+    
+    // Global variable to track if guest is allowed a plus one
+    let canHavePlusOne = false;
 
+    // 1. Display Deadline Immediately
     const deadlineString = RSVP_DEADLINE.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
     deadlineSpan.innerText = deadlineString;
 
+    // 2. Check if RSVP window is closed
     if (today > RSVP_DEADLINE) {
         loadingDiv.classList.add('hidden');
         document.getElementById('deadline-notice').classList.add('hidden');
         document.getElementById('main-card').innerHTML += `<h1>RSVP Closed</h1><p>The deadline was ${deadlineString}.</p>`;
     } 
+    // 3. Check for Token
     else if (!token) {
-        loadingDiv.innerHTML = "<strong>No invitation code found.</strong>";
+        loadingDiv.innerHTML = "<strong>No invitation code found.</strong><p>Please use your personalized link.</p>";
     } 
+    // 4. Load Guest Data
     else {
         fetch(webAppUrl + "?id=" + encodeURIComponent(token))
             .then(res => res.json())
@@ -91,14 +100,18 @@
                 loadingDiv.classList.add('hidden');
                 if (data.name) {
                     if (data.isDone === true) {
-                        contentDiv.innerHTML = `<h1>Thank You!</h1><p>Hi ${data.name}, we have your RSVP!</p>`;
+                        contentDiv.innerHTML = `<h1>Thank You!</h1><p>Hi ${data.name}, we already have your RSVP. See you soon!</p>`;
                         contentDiv.classList.remove('hidden');
                     } else {
                         document.getElementById('welcome-msg').innerText = "Welcome, " + data.name + "!";
                         document.getElementById('guest-name-input').value = data.name;
-                        if (data.allowPlusOne === true || data.allowPlusOne === "true") {
-                            document.getElementById('add-guest-btn').style.display = 'block';
-                        }
+                        
+                        // Set the global plus-one permission
+                        canHavePlusOne = (data.allowPlusOne === true || data.allowPlusOne === "true");
+                        
+                        // Run visibility check immediately to show button if "Yes" is default
+                        togglePlusOneVisibility();
+                        
                         contentDiv.classList.remove('hidden');
                     }
                 } else {
@@ -106,8 +119,23 @@
                 }
             })
             .catch(err => {
-                loadingDiv.innerHTML = "Error connecting. Please refresh.";
+                loadingDiv.innerHTML = "<strong>Connection Error</strong><p>Please refresh the page.</p>";
             });
+    }
+
+    // Logic to show/hide the Plus One button based on Attendance
+    function togglePlusOneVisibility() {
+        const isAttending = document.getElementById('attending-select').value === "Yes";
+        const btn = document.getElementById('add-guest-btn');
+        const container = document.getElementById('plus-one-container');
+
+        if (isAttending && canHavePlusOne) {
+            btn.style.display = 'block';
+        } else {
+            btn.style.display = 'none';
+            container.style.display = 'none';
+            document.getElementById('plus-one-name').value = ""; // Clear name if they decline
+        }
     }
 
     function showPlusOne() {
@@ -116,11 +144,9 @@
     }
 
     function submitRSVP() {
-        const emailVal = document.getElementById('guest-email').value;
-        
-        // Basic validation to ensure they entered an email
-        if (!emailVal || !emailVal.includes("@")) {
-            alert("Please enter a valid email address for your confirmation.");
+        const emailInput = document.getElementById('guest-email');
+        if (!emailInput.checkValidity()) {
+            alert("Please provide a valid email address for your confirmation.");
             return;
         }
 
@@ -131,7 +157,7 @@
         const payload = {
             token: token,
             name: document.getElementById('guest-name-input').value,
-            email: emailVal, // NOW INCLUDED IN SEND
+            email: emailInput.value,
             plusOneName: document.getElementById('plus-one-name').value || "None",
             attending: document.getElementById('attending-select').value,
             note: document.getElementById('note-input').value
@@ -143,6 +169,7 @@
             body: JSON.stringify(payload)
         });
 
+        // Show success screen after short delay
         setTimeout(() => {
             contentDiv.innerHTML = `<h1>Saved!</h1><p>Thank you, ${payload.name}. A confirmation has been sent to ${payload.email}.</p>`;
         }, 1500);
