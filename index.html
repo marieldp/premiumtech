@@ -92,30 +92,28 @@
             });
     }
 
-    function submitRSVP() {
-        const btn = document.getElementById('submit-btn');
-        btn.innerText = "Sending...";
-        btn.disabled = true;
+function submitRSVP() {
+    const btn = document.getElementById('submit-btn');
+    btn.innerText = "Sending...";
+    btn.disabled = true;
 
-        const payload = {
-            token: token,
-            name: document.getElementById('guest-name-input').value,
-            attending: document.getElementById('attending-select').value,
-            note: document.getElementById('note-input').value
-        };
+    // Grab the value from the plus-one input field
+    const p1Name = document.getElementById('plus-one-name') ? document.getElementById('plus-one-name').value : "";
 
-        // Note: We use no-cors for the POST to bypass Google's redirect security
-        fetch(webAppUrl, {
-            method: "POST",
-            mode: "no-cors", 
-            body: JSON.stringify(payload)
-        }).then(() => {
-            document.querySelector('.card').innerHTML = 
-                "<h1>Thank you!</h1><p>Your response for " + payload.name + " has been saved.</p>";
-        }).catch(err => {
-            alert("Error sending RSVP. Please try again.");
-            btn.innerText = "Send RSVP";
-            btn.disabled = false;
-        });
-    }
+    const payload = {
+        token: token,
+        name: document.getElementById('guest-name-input').value,
+        plusOneName: p1Name,
+        attending: document.getElementById('attending-select').value,
+        note: document.getElementById('note-input').value
+    };
+
+    fetch(webAppUrl, {
+        method: "POST",
+        mode: "no-cors", 
+        body: JSON.stringify(payload)
+    }).then(() => {
+        document.querySelector('.card').innerHTML = "<h1>Thank you!</h1><p>Your response has been saved.</p>";
+    });
+}
 </script>
