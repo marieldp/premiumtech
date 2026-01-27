@@ -47,10 +47,7 @@
 </div>
 
 <script>
-    // 1. CONFIGURATION - Ensure this is your latest 'Exec' URL from Google
-    const webAppUrl = "https://script.google.com/macros/s/AKfycbwdxWDsJkVy6EZBa6VHKGRltMrk1SFX3Qe1ac8MRvt3F6wYTQANIlzty2FNjkIeuO9k/exec"; 
-    
-    // 2. Extract Token from URL
+    const webAppUrl = "YOUR_DEPLOYED_WEB_APP_URL_HERE"; 
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('id');
 
@@ -59,22 +56,24 @@
     const errorDiv = document.getElementById('error-msg');
 
     if (!token) {
-        loadingDiv.innerText = "No invitation code found in the link.";
+        loadingDiv.innerText = "No invitation code found.";
     } else {
-        // 3. FETCH NAME FROM GOOGLE
+        // --- 1. LOCAL CHECK ---
+        const hasResponded = localStorage.getItem("rsvp_done_" + token);
+        console.log("Checking storage for:", token, "Result:", hasResponded);
+
         fetch(webAppUrl + "?id=" + token)
             .then(res => res.json())
             .then(data => {
                 loadingDiv.classList.add('hidden');
 
                 if (data.name) {
-                    // --- PREVENT DUPLICATES: Check if browser remembers a previous RSVP ---
-                    if (localStorage.getItem("rsvp_done_" + token)) {
+                    // If the marker exists in browser memory, block the form
+                    if (hasResponded === "true") {
                         document.querySelector('.card').innerHTML = 
-                            "<h1>Already Sent!</h1><p>Hi " + data.name + ", we've already received your RSVP. Thank you!</p>";
-                        return; // Stop the code here
+                            "<h1>Response Received</h1><p>Hi " + data.name + ", we already have your RSVP. Thank you!</p>";
+                        return;
                     }
-                    // ----------------------------------------------------------------------
 
                     document.getElementById('welcome-msg').innerText = "Welcome, " + data.name + "!";
                     document.getElementById('guest-name-input').value = data.name;
@@ -84,12 +83,10 @@
                 }
             })
             .catch(err => {
-                console.error("Fetch error:", err);
-                loadingDiv.innerText = "Connection error. Please refresh.";
+                loadingDiv.innerText = "Connection error.";
             });
     }
 
-    // 4. SUBMIT RSVP TO GOOGLE
     function submitRSVP() {
         const btn = document.getElementById('submit-btn');
         btn.innerText = "Sending...";
@@ -107,15 +104,14 @@
             mode: "no-cors", 
             body: JSON.stringify(payload)
         }).then(() => {
-            // --- PREVENT DUPLICATES: Mark this token as 'done' in this browser ---
+            // --- 2. SAVE MARKER ---
             localStorage.setItem("rsvp_done_" + token, "true");
-            // ----------------------------------------------------------------------
+            console.log("Marker saved for:", token);
 
             document.querySelector('.card').innerHTML = 
-                "<h1>Thank you!</h1><p>Your response for " + payload.name + " has been saved.</p>";
+                "<h1>Thank you!</h1><p>Your response has been saved.</p>";
         }).catch(err => {
-            alert("Error sending RSVP. Please try again.");
-            btn.innerText = "Send RSVP";
+            alert("Error sending RSVP.");
             btn.disabled = false;
         });
     }
