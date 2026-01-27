@@ -62,11 +62,9 @@
 </div>
 
 <script>
-    // --- CONFIGURATION ---
     const webAppUrl = "https://script.google.com/macros/s/AKfycbzcT83i9I7SyRxVxFi0JVoNSfOAGSyj7PyWHX54o1IYZ3KqT4oIzV7wRPoQ6w6oXReq/exec"; 
-    const RSVP_DEADLINE = new Date(2027, 9, 6, 23, 59, 59); // Oct 6, 2027
+    const RSVP_DEADLINE = new Date(2027, 9, 6, 23, 59, 59);
 
-    // --- INITIALIZATION ---
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('id');
     const today = new Date();
@@ -75,24 +73,18 @@
     const contentDiv = document.getElementById('content');
     const deadlineSpan = document.getElementById('deadline-date');
     
-    // Global variable to track if guest is allowed a plus one
     let canHavePlusOne = false;
 
-    // 1. Display Deadline Immediately
-    const deadlineString = RSVP_DEADLINE.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    deadlineSpan.innerText = deadlineString;
+    deadlineSpan.innerText = RSVP_DEADLINE.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
-    // 2. Check if RSVP window is closed
     if (today > RSVP_DEADLINE) {
         loadingDiv.classList.add('hidden');
         document.getElementById('deadline-notice').classList.add('hidden');
-        document.getElementById('main-card').innerHTML += `<h1>RSVP Closed</h1><p>The deadline was ${deadlineString}.</p>`;
+        document.getElementById('main-card').innerHTML += `<h1>RSVP Closed</h1><p>The deadline has passed.</p>`;
     } 
-    // 3. Check for Token
     else if (!token) {
-        loadingDiv.innerHTML = "<strong>No invitation code found.</strong><p>Please use your personalized link.</p>";
+        loadingDiv.innerHTML = "<strong>No invitation code found.</strong>";
     } 
-    // 4. Load Guest Data
     else {
         fetch(webAppUrl + "?id=" + encodeURIComponent(token))
             .then(res => res.json())
@@ -100,18 +92,13 @@
                 loadingDiv.classList.add('hidden');
                 if (data.name) {
                     if (data.isDone === true) {
-                        contentDiv.innerHTML = `<h1>Thank You!</h1><p>Hi ${data.name}, we already have your RSVP. See you soon!</p>`;
+                        contentDiv.innerHTML = `<h1>Thank You!</h1><p>Hi ${data.name}, we already have your RSVP!</p>`;
                         contentDiv.classList.remove('hidden');
                     } else {
                         document.getElementById('welcome-msg').innerText = "Welcome, " + data.name + "!";
                         document.getElementById('guest-name-input').value = data.name;
-                        
-                        // Set the global plus-one permission
                         canHavePlusOne = (data.allowPlusOne === true || data.allowPlusOne === "true");
-                        
-                        // Run visibility check immediately to show button if "Yes" is default
                         togglePlusOneVisibility();
-                        
                         contentDiv.classList.remove('hidden');
                     }
                 } else {
@@ -119,11 +106,10 @@
                 }
             })
             .catch(err => {
-                loadingDiv.innerHTML = "<strong>Connection Error</strong><p>Please refresh the page.</p>";
+                loadingDiv.innerHTML = "<strong>Connection Error</strong>";
             });
     }
 
-    // Logic to show/hide the Plus One button based on Attendance
     function togglePlusOneVisibility() {
         const isAttending = document.getElementById('attending-select').value === "Yes";
         const btn = document.getElementById('add-guest-btn');
@@ -134,7 +120,7 @@
         } else {
             btn.style.display = 'none';
             container.style.display = 'none';
-            document.getElementById('plus-one-name').value = ""; // Clear name if they decline
+            document.getElementById('plus-one-name').value = "";
         }
     }
 
@@ -146,7 +132,7 @@
     function submitRSVP() {
         const emailInput = document.getElementById('guest-email');
         if (!emailInput.checkValidity()) {
-            alert("Please provide a valid email address for your confirmation.");
+            alert("Please provide a valid email address.");
             return;
         }
 
@@ -169,9 +155,13 @@
             body: JSON.stringify(payload)
         });
 
-        // Show success screen after short delay
         setTimeout(() => {
-            contentDiv.innerHTML = `<h1>Saved!</h1><p>Thank you, ${payload.name}. A confirmation has been sent to ${payload.email}.</p>`;
+            const isAttending = payload.attending === "Yes";
+            contentDiv.innerHTML = `
+                <h1>${isAttending ? "We'll see you there!" : "We'll miss you!"}</h1>
+                <p>Thank you, ${payload.name}. Your response has been recorded.</p>
+                <p style="font-size: 0.9rem; color: #8b7d6b;">Confirmation sent to: ${payload.email}</p>
+            `;
         }, 1500);
     }
 </script>
