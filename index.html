@@ -67,9 +67,10 @@
     </div>
 </div>
 
+
 <script>
     // --- CONFIGURATION ---
-    const webAppUrl = "https://script.google.com/macros/s/AKfycbwdxWDsJkVy6EZBa6VHKGRltMrk1SFX3Qe1ac8MRvt3F6wYTQANIlzty2FNjkIeuO9k/exec"; 
+    const webAppUrl = "YOUR_NEW_DEPLOYMENT_URL_HERE"; 
     const RSVP_DEADLINE = new Date(2027, 9, 6, 23, 59, 59); // Oct 6, 2027
 
     // --- INITIALIZATION ---
@@ -82,24 +83,25 @@
     const deadlineSpan = document.getElementById('deadline-date');
     const guestNameField = document.getElementById('guest-name-input');
 
-    // Set Date String
-    deadlineSpan.innerText = RSVP_DEADLINE.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    // 1. DISPLAY DEADLINE IMMEDIATELY (Always visible)
+    const deadlineString = RSVP_DEADLINE.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    deadlineSpan.innerText = deadlineString;
 
-    // 1. Check Deadline First
+    // 2. CHECK IF DEADLINE HAS PASSED
     if (today > RSVP_DEADLINE) {
         loadingDiv.classList.add('hidden');
         document.getElementById('deadline-notice').classList.add('hidden');
         document.getElementById('main-card').innerHTML = `
             <h1>RSVP Period Closed</h1>
-            <p>The deadline to RSVP was ${deadlineSpan.innerText}.</p>
+            <p>The deadline to RSVP was ${deadlineString}.</p>
             <p>Please contact us directly if you still need to update your response!</p>
         `;
     } 
-    // 2. Check for Token
+    // 3. CHECK FOR TOKEN
     else if (!token) {
         loadingDiv.innerHTML = "<strong>No invitation code found.</strong><p>Please use the link sent to you by the couple.</p>";
     } 
-    // 3. Fetch Guest Data
+    // 4. FETCH GUEST DATA
     else {
         fetch(webAppUrl + "?id=" + encodeURIComponent(token))
             .then(res => res.json())
@@ -108,16 +110,18 @@
 
                 if (data.name) {
                     if (data.isDone === true) {
-                        document.getElementById('main-card').innerHTML = `
+                        // We still want the deadline visible on the "Already Done" screen
+                        // So we keep the deadline-notice div and just change the rest
+                        document.getElementById('content').innerHTML = `
                             <h1>Thank You!</h1>
                             <p>Hi ${data.name}, we have already received your RSVP.</p>
                             <p>We can't wait to see you!</p>
                         `;
+                        document.getElementById('content').classList.remove('hidden');
                     } else {
                         document.getElementById('welcome-msg').innerText = "Welcome, " + data.name + "!";
                         guestNameField.value = data.name;
 
-                        // Show Plus One if allowed in Column C
                         if (data.allowPlusOne === true || data.allowPlusOne === "true") {
                             document.getElementById('add-guest-btn').style.display = 'block';
                         }
@@ -130,11 +134,9 @@
             })
             .catch(err => {
                 loadingDiv.innerHTML = "<strong>Connection Error</strong><p>Please refresh the page and try again.</p>";
-                console.error(err);
             });
     }
 
-    // --- FUNCTIONS ---
     function showPlusOne() {
         document.getElementById('plus-one-container').style.display = 'block';
         document.getElementById('add-guest-btn').style.display = 'none';
@@ -158,17 +160,13 @@
             mode: "no-cors",
             body: JSON.stringify(payload)
         }).then(() => {
-            document.getElementById('main-card').innerHTML = `
+            // Keep the deadline visible even after submission
+            document.getElementById('content').innerHTML = `
                 <h1>Response Saved!</h1>
                 <p>Thank you, ${payload.name}. Your RSVP has been successfully recorded.</p>
             `;
-        }).catch(err => {
-            alert("Oops! Something went wrong. Please try again.");
-            btn.innerText = "Confirm RSVP";
-            btn.disabled = false;
         });
     }
 </script>
-
 </body>
 </html>
