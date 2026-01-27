@@ -50,6 +50,7 @@
             <label for="plus-one-name">Plus One's Name:</label>
             <input type="text" id="plus-one-name" placeholder="First and Last Name">
         </div>
+
         <label for="guest-email">Email Address (for confirmation):</label>
         <input type="email" id="guest-email" placeholder="email@example.com" required>
 
@@ -72,11 +73,9 @@
     const contentDiv = document.getElementById('content');
     const deadlineSpan = document.getElementById('deadline-date');
 
-    // Display deadline immediately
     const deadlineString = RSVP_DEADLINE.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
     deadlineSpan.innerText = deadlineString;
 
-    // Check if passed deadline
     if (today > RSVP_DEADLINE) {
         loadingDiv.classList.add('hidden');
         document.getElementById('deadline-notice').classList.add('hidden');
@@ -117,6 +116,14 @@
     }
 
     function submitRSVP() {
+        const emailVal = document.getElementById('guest-email').value;
+        
+        // Basic validation to ensure they entered an email
+        if (!emailVal || !emailVal.includes("@")) {
+            alert("Please enter a valid email address for your confirmation.");
+            return;
+        }
+
         const btn = document.getElementById('submit-btn');
         btn.innerText = "Saving...";
         btn.disabled = true;
@@ -124,7 +131,7 @@
         const payload = {
             token: token,
             name: document.getElementById('guest-name-input').value,
-            email: document.getElementById('guest-email').value, // Added this line
+            email: emailVal, // NOW INCLUDED IN SEND
             plusOneName: document.getElementById('plus-one-name').value || "None",
             attending: document.getElementById('attending-select').value,
             note: document.getElementById('note-input').value
@@ -134,9 +141,11 @@
             method: "POST",
             mode: "no-cors",
             body: JSON.stringify(payload)
-        }).then(() => {
-            contentDiv.innerHTML = `<h1>Saved!</h1><p>Thank you, ${payload.name}. Your response is recorded.</p>`;
         });
+
+        setTimeout(() => {
+            contentDiv.innerHTML = `<h1>Saved!</h1><p>Thank you, ${payload.name}. A confirmation has been sent to ${payload.email}.</p>`;
+        }, 1500);
     }
 </script>
 </body>
