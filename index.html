@@ -70,126 +70,119 @@
         <div id="error-msg" class="hidden rsvp-card"><p>Guest not found. Please use the original link.</p></div>
     </div>
 
-    <script>
-        const webAppUrl = "https://script.google.com/macros/s/AKfycbxYnSDLsvodsS1EfmTrM0b3EWSb9IE9FP8v7_2FJlA52cgokuMf4hDUe6m_vOctiaZM/exec"; 
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('id');
-        let guestData = null;
+   <script>
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbxYnSDLsvodsS1EfmTrM0b3EWSb9IE9FP8v7_2FJlA52cgokuMf4hDUe6m_vOctiaZM/exec"; 
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('id');
+    let guestData = null;
 
-        function openInvitation() {
-            const wrapper = document.getElementById('envelope-wrapper');
-            wrapper.classList.add('open');
-            document.body.classList.add('show-site');
-            document.body.style.overflow = 'auto';
-            // Kill the invisible wall
-            setTimeout(() => { wrapper.style.display = 'none'; }, 1550);
-            
-            if (token) {
-                document.getElementById('loading').classList.remove('hidden');
-                checkGuestStatus();
+    function openInvitation() {
+        const wrapper = document.getElementById('envelope-wrapper');
+        wrapper.classList.add('open');
+        document.body.classList.add('show-site');
+        document.body.style.overflow = 'auto';
+        
+        setTimeout(() => { wrapper.style.display = 'none'; }, 1550);
+        
+        if (token) {
+            document.getElementById('loading').classList.remove('hidden');
+            checkGuestStatus();
+        }
+    }
+
+    function checkGuestStatus() {
+        console.log("Checking ID:", token);
+        fetch(`${webAppUrl}?id=${encodeURIComponent(token)}`, {
+            method: "GET",
+            redirect: "follow"
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("Success:", data);
+            guestData = data;
+            document.getElementById('loading').classList.add('hidden');
+            if (data.name) {
+                data.isDone ? showDoneView(data) : showMainForm();
+            } else {
+                document.getElementById('error-msg').classList.remove('hidden');
             }
-        }
+        })
+        .catch(err => {
+            console.error("Fetch Error:", err);
+            document.getElementById('loading').innerHTML = "Connection Error. Please refresh.";
+        });
+    }
 
-        function checkGuestStatus() {
-            fetch(`${webAppUrl}?id=${encodeURIComponent(token)}`)
-                .then(res => res.json())
-                .then(data => {
-                    guestData = data;
-                    document.getElementById('loading').classList.add('hidden');
-                    if (data.name) {
-                        data.isDone ? showDoneView(data) : showMainForm();
-                    } else {
-                        document.getElementById('error-msg').classList.remove('hidden');
-                    }
-                });
-        }
+    function showMainForm() {
+        const content = document.getElementById('content');
+        content.classList.remove('hidden');
+        
+        // Improved Plus One Detection
+        const rawP1 = String(guestData.allowPlusOne || '').toLowerCase().trim();
+        const canP1 = (rawP1 === "true" || rawP1 === "yes" || rawP1 === "1");
 
-        function showMainForm() {
-            const content = document.getElementById('content');
-            content.classList.remove('hidden');
+        content.innerHTML = `
+            <h2 style="font-family: 'Playfair Display'; margin: 0;">Hi ${guestData.name},</h2>
             
-            const rawP1 = String(guestData.allowPlusOne || '').toLowerCase().trim();
-            const canP1 = (rawP1 === "true" || rawP1 === "yes");
+            <label>Will you attend?</label>
+            <select id="attending-select" onchange="togglePlusOne(${canP1})">
+                <option value="Yes">Yes, I'll be there!</option>
+                <option value="No">No, I can't make it</option>
+            </select>
 
-            content.innerHTML = `
-                <h2 style="font-family: 'Playfair Display'; margin: 0;">Hi ${guestData.name},</h2>
-                
-                <label>Will you attend?</label>
-                <select id="attending-select" onchange="togglePlusOne(${canP1})">
-                    <option value="Yes">Yes, I'll be there!</option>
-                    <option value="No">No, I can't make it</option>
-                </select>
+            <div id="p1-area"></div>
 
-                <div id="p1-area"></div>
+            <label>Email Address (Optional)</label>
+            <input type="email" id="guest-email" value="${guestData.email || ''}" placeholder="To receive a confirmation copy">
 
-                <label>Email Address (Optional)</label>
-                <input type="email" id="guest-email" value="${guestData.email || ''}" placeholder="To receive a confirmation copy">
+            <label>Note for the Couple</label>
+            <textarea id="guest-note" placeholder="Message or dietary requirements..."></textarea>
 
-                <label>Note for the Couple</label>
-                <textarea id="guest-note" placeholder="Message or dietary requirements..."></textarea>
+            <button class="btn" id="submit-btn" onclick="submitRSVP()">Confirm RSVP</button>
+        `;
+        togglePlusOne(canP1);
+    }
 
-                <button class="btn" id="submit-btn" onclick="submitRSVP()">Confirm RSVP</button>
-            `;
-            togglePlusOne(canP1);
-        }
+    function togglePlusOne(canP1) {
+        const area = document.getElementById('p1-area');
+        const att = document.getElementById('attending-select').value;
+        if (att === "Yes" && canP1) {
+            area.innerHTML = '<label>Plus One Full Name</label><input type="text" id="plus-one-name" placeholder="Guest Name">';
+        } else { area.innerHTML = ''; }
+    }
 
-        function togglePlusOne(canP1) {
-            const area = document.getElementById('p1-area');
-            const att = document.getElementById('attending-select').value;
-            if (att === "Yes" && canP1) {
-                area.innerHTML = '<label>Plus One Full Name</label><input type="text" id="plus-one-name" placeholder="Guest Name">';
-            } else { area.innerHTML = ''; }
-        }
+    function showDoneView(data) {
+        const content = document.getElementById('content');
+        content.classList.remove('hidden');
+        content.innerHTML = `<h2 style="text-align: center;">Thank you!</h2><p style="text-align: center;">RSVP recorded for ${data.name}.</p>`;
+    }
 
-        function showDoneView(data) {
-            const content = document.getElementById('content');
-            content.classList.remove('hidden');
-            content.innerHTML = `<h2 style="text-align: center;">Thank you!</h2><p style="text-align: center;">RSVP recorded for ${data.name}.</p>`;
-        }
+    function submitRSVP() {
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true;
+        btn.innerHTML = "Saving...";
+        
+        const payload = {
+            token: token,
+            name: guestData.name, // <-- ADDED THIS: Now sending the name to the sheet
+            email: document.getElementById('guest-email').value,
+            attending: document.getElementById('attending-select').value,
+            plusOneName: document.getElementById('plus-one-name')?.value || "None",
+            note: document.getElementById('guest-note').value
+        };
 
-        function submitRSVP() {
-            const btn = document.getElementById('submit-btn');
-            btn.disabled = true;
-            btn.innerHTML = "Saving...";
-            
-            const payload = {
-                token: token,
-                email: document.getElementById('guest-email').value,
-                attending: document.getElementById('attending-select').value,
-                plusOneName: document.getElementById('plus-one-name')?.value || "",
-                note: document.getElementById('guest-note').value
-            };
-
-            fetch(webAppUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
-                .then(() => showDoneView({ ...guestData, attending: payload.attending }));
-        }
-   function checkGuestStatus() {
-    console.log("Checking ID:", token);
-    
-    // Use the NEW URL you just copied
-    fetch(`${webAppUrl}?id=${encodeURIComponent(token)}`, {
-        method: "GET",
-        redirect: "follow" // Forces the browser to follow Google's redirect
-    })
-    .then(res => {
-        if (!res.ok) throw new Error('Network response was not ok');
-        return res.json();
-    })
-    .then(data => {
-        console.log("Success:", data);
-        guestData = data;
-        document.getElementById('loading').classList.add('hidden');
-        if (data.name) {
-            data.isDone ? showDoneView(data) : showMainForm();
-        } else {
-            document.getElementById('error-msg').classList.remove('hidden');
-        }
-    })
-    .catch(err => {
-        console.error("Fetch Error:", err);
-        document.getElementById('loading').innerHTML = "Connection Error. Please refresh.";
-    });
-}
-    </script>
+        fetch(webAppUrl, { 
+            method: "POST", 
+            mode: "no-cors", 
+            body: JSON.stringify(payload) 
+        })
+        .then(() => {
+            // Give it a small delay so Google can finish writing
+            setTimeout(() => {
+                showDoneView({ ...guestData, name: guestData.name });
+            }, 500);
+        });
+    }
+</script>
 </body>
 </html>
