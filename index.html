@@ -163,29 +163,32 @@
             fetch(webAppUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
                 .then(() => showDoneView({ ...guestData, attending: payload.attending }));
         }
-    function checkGuestStatus() {
-    console.log("Starting check for ID:", token); // Log to console
-    fetch(`${webAppUrl}?id=${encodeURIComponent(token)}`)
-        .then(res => {
-            console.log("Response received from Google");
-            return res.json();
-        })
-        .then(data => {
-            console.log("Data parsed:", data);
-            guestData = data;
-            document.getElementById('loading').classList.add('hidden');
-            
-            if (data.name) {
-                data.isDone ? showDoneView(data) : showMainForm();
-            } else {
-                console.error("Guest not found in sheet");
-                document.getElementById('error-msg').classList.remove('hidden');
-            }
-        })
-        .catch(err => {
-            console.error("Fetch Error:", err);
-            document.getElementById('loading').innerHTML = "Error connecting to server. Check console.";
-        });
+   function checkGuestStatus() {
+    console.log("Checking ID:", token);
+    
+    // Use the NEW URL you just copied
+    fetch(`${webAppUrl}?id=${encodeURIComponent(token)}`, {
+        method: "GET",
+        redirect: "follow" // Forces the browser to follow Google's redirect
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+    })
+    .then(data => {
+        console.log("Success:", data);
+        guestData = data;
+        document.getElementById('loading').classList.add('hidden');
+        if (data.name) {
+            data.isDone ? showDoneView(data) : showMainForm();
+        } else {
+            document.getElementById('error-msg').classList.remove('hidden');
+        }
+    })
+    .catch(err => {
+        console.error("Fetch Error:", err);
+        document.getElementById('loading').innerHTML = "Connection Error. Please refresh.";
+    });
 }
     </script>
 </body>
