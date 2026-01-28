@@ -163,6 +163,30 @@
             fetch(webAppUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
                 .then(() => showDoneView({ ...guestData, attending: payload.attending }));
         }
+    function checkGuestStatus() {
+    console.log("Starting check for ID:", token); // Log to console
+    fetch(`${webAppUrl}?id=${encodeURIComponent(token)}`)
+        .then(res => {
+            console.log("Response received from Google");
+            return res.json();
+        })
+        .then(data => {
+            console.log("Data parsed:", data);
+            guestData = data;
+            document.getElementById('loading').classList.add('hidden');
+            
+            if (data.name) {
+                data.isDone ? showDoneView(data) : showMainForm();
+            } else {
+                console.error("Guest not found in sheet");
+                document.getElementById('error-msg').classList.remove('hidden');
+            }
+        })
+        .catch(err => {
+            console.error("Fetch Error:", err);
+            document.getElementById('loading').innerHTML = "Error connecting to server. Check console.";
+        });
+}
     </script>
 </body>
 </html>
