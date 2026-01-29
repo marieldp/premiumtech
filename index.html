@@ -92,13 +92,19 @@
         fetch(`${webAppUrl}?id=${encodeURIComponent(token)}`, { method: "GET", redirect: "follow" })
         .then(res => res.json())
         .then(data => {
-            guestData = data;
+            // THE FIX: We save the data to the global variable FIRST
+            guestData = data; 
+            
             document.getElementById('loading').classList.add('hidden');
             if (data.name) {
+                // Now, even if we show the "Done" view, guestData is ready for the "Edit" click
                 data.isDone ? showDoneView(data) : showMainForm();
             } else { 
                 document.getElementById('error-msg').classList.remove('hidden'); 
             }
+        })
+        .catch(err => {
+            document.getElementById('loading').innerHTML = "Connection Error. Please refresh.";
         });
     }
 
@@ -122,8 +128,9 @@
         const content = document.getElementById('content');
         content.classList.remove('hidden');
 
-        // Logic to see if they get a plus one
-        const canP1 = String(guestData.allowPlusOne).toLowerCase() === "true" || String(guestData.allowPlusOne).toLowerCase() === "yes";
+        // This now works after reload because checkGuestStatus saved it globally
+        const rawP1 = String(guestData.allowPlusOne).toLowerCase();
+        const canP1 = rawP1 === "true" || rawP1 === "yes";
 
         content.innerHTML = `
             <h2 style="font-family: 'Playfair Display';">Hi ${guestData.name},</h2>
@@ -140,8 +147,7 @@
             <button class="btn" id="submit-btn" onclick="submitRSVP()">Confirm RSVP</button>
         `;
 
-        // This is the "Edit" fix: We run the toggle immediately so the form
-        // looks exactly like it did at the start.
+        // Immediately check if we should show the plus one area
         togglePlusOne(canP1);
     }
 
