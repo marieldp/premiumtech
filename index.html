@@ -122,72 +122,54 @@
     }
 
     function showMainForm() {
-        const content = document.getElementById('content');
-        content.classList.remove('hidden');
+    const content = document.getElementById('content');
+    content.classList.remove('hidden');
 
-        const rawP1 = String(guestData.allowPlusOne || '').toLowerCase().trim();
-        const canP1 = (rawP1 === "true" || rawP1 === "yes" || rawP1 === "1");
+    // Force strict boolean check from guestData
+    const canP1 = (guestData.allowPlusOne === true || guestData.allowPlusOne === "true");
 
-        content.innerHTML = `
-            <h2 style="font-family: 'Playfair Display'; margin: 0;">Hi ${guestData.name},</h2>
-            
-            <label>Will you attend?</label>
-            <select id="attending-select" onchange="togglePlusOne(${canP1})">
-                <option value="Yes">Yes, I'll be there!</option>
-                <option value="No">No, I can't make it</option>
-            </select>
+    content.innerHTML = `
+        <h2 style="font-family: 'Playfair Display'; margin: 0;">Hi ${guestData.name},</h2>
+        
+        <label>Will you attend?</label>
+        <select id="attending-select" onchange="togglePlusOne(${canP1})">
+            <option value="Yes">Yes, I'll be there!</option>
+            <option value="No">No, I can't make it</option>
+        </select>
 
-            <div id="p1-area"></div>
+        <div id="p1-area"></div>
 
-            <label>Email Address (for confirmation)</label>
-            <input type="email" id="guest-email" value="${guestData.email || ''}" placeholder="">
+        <label>Email Address (for confirmation)</label>
+        <input type="email" id="guest-email" value="${guestData.email || ''}">
 
-            <label>Want to send a message for the couple?</label>
-            <textarea id="guest-note" placeholder=""></textarea>
+        <label>Want to send a message for the couple?</label>
+        <textarea id="guest-note" placeholder="Message..."></textarea>
 
-            <button class="btn" id="submit-btn" onclick="submitRSVP()">Confirm RSVP</button>
-        `;
-        togglePlusOne(canP1);
-    }
+        <button class="btn" id="submit-btn" onclick="submitRSVP()">Confirm RSVP</button>
+    `;
+    
+    // This ensures the plus one area logic runs immediately on load
+    togglePlusOne(canP1);
+}
 
     function togglePlusOne(canP1) {
-        const area = document.getElementById('p1-area');
-        const att = document.getElementById('attending-select').value;
-        
-        if (att === "Yes" && canP1) {
-            area.innerHTML = `
-                <label>Are you bringing a plus one?</label>
-                <select id="bringing-p1" onchange="toggleP1Name()">
-                    <option value="No">No</option>
-                    <option value="Yes">Yes</option>
-                </select>
-                <div id="p1-name-wrapper"></div>
-            `;
-        } else { area.innerHTML = ''; }
-    }
-
-    function toggleP1Name() {
-        const wrapper = document.getElementById('p1-name-wrapper');
-        const bringing = document.getElementById('bringing-p1').value;
-        if (bringing === "Yes") {
-            wrapper.innerHTML = '<label>Plus One Full Name</label><input type="text" id="plus-one-name" placeholder="Guest Name">';
-        } else { wrapper.innerHTML = ''; }
-    }
-
-    function showDoneView(data) {
-        const content = document.getElementById('content');
-        content.classList.remove('hidden');
-        content.innerHTML = `
-            <h2 style="text-align: center; font-family: 'Playfair Display';">Thank you!</h2>
-            <p style="text-align: center;">RSVP recorded for ${data.name}.</p>
-            <div style="text-align: center; margin-top: 20px;">
-                <a href="#" onclick="event.preventDefault(); showMainForm();" 
-                   style="font-size: 0.9rem; color: #888; text-decoration: underline; cursor: pointer;">
-                   Change your mind? Edit RSVP
-                </a>
-            </div>
+    const area = document.getElementById('p1-area');
+    const attendanceStatus = document.getElementById('attending-select').value;
+    
+    // Only show the Plus One question if they are attending AND allowed (canP1)
+    if (attendanceStatus === "Yes" && canP1) {
+        area.innerHTML = `
+            <label>Are you bringing a plus one?</label>
+            <select id="bringing-p1" onchange="toggleP1Name()">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+            <div id="p1-name-wrapper"></div>
         `;
+    } else { 
+        area.innerHTML = ''; 
     }
+}
 
     function submitRSVP() {
         const btn = document.getElementById('submit-btn');
