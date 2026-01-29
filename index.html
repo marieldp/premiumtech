@@ -6,67 +6,94 @@
     <title>M & J Wedding</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Great+Vibes&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
     <style>
-        :root { --paper: #fcfaf7; --gold: #bfa17a; --text: #4a4a4a; --accent: #043927; --pink: #f4cfe0; }
-        body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Montserrat', sans-serif; color: var(--text); overflow-x: hidden; }
-
-        /* ENVELOPE STYLES */
-        #envelope-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 2000; display: flex; justify-content: center; align-items: center; }
-        .flap { 
-            position: absolute; width: 100%; height: 50.2%; 
-            background-image: url('6938.jpg'); 
-            background-repeat: repeat; background-color: var(--paper);
-            transition: transform 1.5s cubic-bezier(0.65, 0.05, 0.36, 1); z-index: 1000;
-            box-shadow: 0 0 30px rgba(0,0,0,0.1); 
-        }
-        .top-flap { top: 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .bottom-flap { bottom: 0; border-top: 1px solid rgba(255,255,255,0.8); }
-        
-        #seal { 
-    position: absolute; 
-    width: 120px; 
-    height: 120px; 
-    /* Replace 'seal.png' with your actual filename (e.g., 'stamp.png') */
-    background: url('seal.png') no-repeat center; 
-    background-size: contain;
-    z-index: 1001; 
-    cursor: pointer; 
+        /* ENVELOPE CONTAINER */
+#envelope-wrapper { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100vh; 
+    z-index: 2000; 
     display: flex; 
     justify-content: center; 
-    align-items: center;
-    /* drop-shadow is better for wax shapes than box-shadow */
-    filter: drop-shadow(0 8px 15px rgba(0,0,0,0.4)); 
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    align-items: center; 
+    background-color: #e5e0d8; /* The table surface color */
+    perspective: 1500px; /* Crucial for the 3D flip effect */
 }
 
-/* This makes the stamp 'pop' slightly when someone hovers over it */
-#seal:hover {
-    transform: scale(1.05);
-    filter: drop-shadow(0 12px 20px rgba(0,0,0,0.5));
+/* THE ENVELOPE BODY */
+.envelope {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 400px;
+    background: #fcfaf7; /* Inner paper color */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
 }
 
-#seal span { 
-    display: none; /* Hides the old M&J text so your stamp is the star */
+/* THE FLAPS */
+.flap { 
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    background-image: url('6938.jpg'); 
+    background-repeat: repeat;
+    transition: all 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+    z-index: 1000;
 }
 
-.open .top-flap { transform: translateY(-100%); }
-.open .bottom-flap { transform: translateY(100%); }
-.open #seal { opacity: 0; pointer-events: none; transform: scale(0.8); }
+/* THE TOP FLAP (The Triangle Piece) */
+.top-flap { 
+    top: 0; 
+    height: 50%;
+    clip-path: polygon(0 0, 100% 0, 50% 100%); /* Makes it a triangle */
+    transform-origin: top;
+    z-index: 1002;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
 
-        /* MAIN SITE TRANSITION */
-        #main-site { 
-            opacity: 0; display: none; transition: opacity 1.5s ease;
-        }
-        .show-site #main-site { opacity: 1; display: block; }
+/* THE BOTTOM & SIDES (The Pocket) */
+.bottom-flap { 
+    bottom: 0; 
+    height: 100%;
+    clip-path: polygon(0 100%, 100% 100%, 100% 50%, 50% 50%, 0 50%); /* The 'pocket' shape */
+    z-index: 1001;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+}
 
-        /* CONTENT STYLING */
-        .rsvp-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-top: 20px; text-align: left; }
-        .hidden { display: none !important; }
-        label { font-weight: bold; font-size: 0.8rem; text-transform: uppercase; color: #8b7d6b; display: block; margin-bottom: 5px; margin-top: 15px; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
-        .btn { background: #043927; color: white; border: none; padding: 18px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; margin-top: 20px; transition: 0.3s; }
-        .btn:hover { background: #d4af37; }
-        .btn:disabled { background: #ccc; }
-    </style>
+/* THE SEAL STAMP */
+#seal { 
+    position: absolute; 
+    top: 50%;
+    left: 50%;
+    width: 110px; 
+    height: 110px; 
+    transform: translate(-50%, -50%);
+    background: url('seal.png') no-repeat center; 
+    background-size: contain;
+    z-index: 1003; 
+    cursor: pointer; 
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); 
+    transition: all 0.5s ease;
+}
+
+/* OPEN ANIMATION LOGIC */
+.open .top-flap { 
+    transform: rotateX(180deg); /* Flips the triangle UP */
+    z-index: 1000; /* Moves it behind the letter */
+}
+
+.open #seal { 
+    opacity: 0; 
+    transform: translate(-50%, -80%) scale(0.8);
+    pointer-events: none; 
+}
+
+/* Slide the whole envelope down and away after the flip */
+.open-exit {
+    transform: translateY(100vh);
+    transition: transform 1s ease-in-out 0.8s;
+}
 </head>
 <body style="overflow: hidden;">
 
@@ -196,23 +223,24 @@
         let guestData = null;
 
         function openInvitation() {
-            document.getElementById('envelope-wrapper').classList.add('open');
-            document.body.classList.add('show-site');
-            document.getElementById('main-site').style.display = 'block';
-            document.body.style.overflow = 'auto';
-            
-            setTimeout(() => { 
-                document.getElementById('envelope-wrapper').style.display = 'none'; 
-            }, 1550);
+    const wrapper = document.getElementById('envelope-wrapper');
+    wrapper.classList.add('open'); // Starts the flap flip
+    
+    // Wait for the flip to finish, then slide the whole thing away
+    setTimeout(() => {
+        wrapper.classList.add('open-exit');
+        document.body.classList.add('show-site');
+        document.getElementById('main-site').style.display = 'block';
+        document.body.style.overflow = 'auto';
+    }, 800);
 
-            if (token) {
-                document.getElementById('loading').classList.remove('hidden');
-                checkGuestStatus();
-            } else {
-                document.getElementById('error-msg').classList.remove('hidden');
-            }
-        }
-
+    if (token) {
+        document.getElementById('loading').classList.remove('hidden');
+        checkGuestStatus();
+    } else {
+        document.getElementById('error-msg').classList.remove('hidden');
+    }
+}
         function checkGuestStatus() {
             fetch(`${webAppUrl}?id=${encodeURIComponent(token)}`, { method: "GET", redirect: "follow" })
             .then(res => res.json())
