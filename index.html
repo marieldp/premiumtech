@@ -70,35 +70,43 @@
         <div id="error-msg" class="hidden rsvp-card"><p>Guest not found. Please use the original link.</p></div>
     </div>
 
-   <script>
+<script>
     const webAppUrl = "https://script.google.com/macros/s/AKfycbxYnSDLsvodsS1EfmTrM0b3EWSb9IE9FP8v7_2FJlA52cgokuMf4hDUe6m_vOctiaZM/exec"; 
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('id');
     let guestData = null;
 
+    // This runs when you click the M&J Seal
     function openInvitation() {
+        console.log("Seal clicked!"); // Check your console to see this
         const wrapper = document.getElementById('envelope-wrapper');
+        
+        // 1. Trigger the animation
         wrapper.classList.add('open');
         document.body.classList.add('show-site');
         document.body.style.overflow = 'auto';
 
-        setTimeout(() => { wrapper.style.display = 'none'; }, 1550);
+        // 2. Remove the envelope after animation
+        setTimeout(() => { 
+            wrapper.style.display = 'none'; 
+        }, 1550);
 
+        // 3. Load guest info if token exists
         if (token) {
             document.getElementById('loading').classList.remove('hidden');
             checkGuestStatus();
+        } else {
+            document.getElementById('error-msg').classList.remove('hidden');
         }
     }
 
     function checkGuestStatus() {
-        console.log("Checking ID:", token);
         fetch(`${webAppUrl}?id=${encodeURIComponent(token)}`, {
             method: "GET",
             redirect: "follow"
         })
         .then(res => res.json())
         .then(data => {
-            console.log("Success:", data);
             guestData = data;
             document.getElementById('loading').classList.add('hidden');
             if (data.name) {
@@ -117,7 +125,6 @@
         const content = document.getElementById('content');
         content.classList.remove('hidden');
 
-        // Improved Plus One Detection
         const rawP1 = String(guestData.allowPlusOne || '').toLowerCase().trim();
         const canP1 = (rawP1 === "true" || rawP1 === "yes" || rawP1 === "1");
 
@@ -146,41 +153,54 @@
     function togglePlusOne(canP1) {
         const area = document.getElementById('p1-area');
         const att = document.getElementById('attending-select').value;
+        
         if (att === "Yes" && canP1) {
-            area.innerHTML = '<label>Plus One Full Name</label><input type="text" id="plus-one-name" placeholder="Guest Name">';
+            area.innerHTML = `
+                <label>Are you bringing a plus one?</label>
+                <select id="bringing-p1" onchange="toggleP1Name()">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
+                <div id="p1-name-wrapper"></div>
+            `;
         } else { area.innerHTML = ''; }
+    }
+
+    function toggleP1Name() {
+        const wrapper = document.getElementById('p1-name-wrapper');
+        const bringing = document.getElementById('bringing-p1').value;
+        if (bringing === "Yes") {
+            wrapper.innerHTML = '<label>Plus One Full Name</label><input type="text" id="plus-one-name" placeholder="Guest Name">';
+        } else { wrapper.innerHTML = ''; }
     }
 
     function showDoneView(data) {
         const content = document.getElementById('content');
         content.classList.remove('hidden');
-        content.innerHTML = `<h2 style="text-align: center;">Thank you!</h2><p style="text-align: center;">RSVP recorded for ${data.name}.</p>`;
+        content.innerHTML = `
+            <h2 style="text-align: center; font-family: 'Playfair Display';">Thank you!</h2>
+            <p style="text-align: center;">RSVP recorded for ${data.name}.</p>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="#" onclick="event.preventDefault(); showMainForm();" 
+                   style="font-size: 0.9rem; color: #888; text-decoration: underline; cursor: pointer;">
+                   Change your mind? Edit RSVP
+                </a>
+            </div>
+        `;
     }
 
-            const content = document.getElementById('content');
-            content.classList.remove('hidden');
-            content.innerHTML = `
-                <h2 style="text-align: center; font-family: 'Playfair Display';">Thank you!</h2>
-                <p style="text-align: center;">RSVP recorded for ${data.name}.</p>
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="#" onclick="event.preventDefault(); showMainForm();" 
-                       style="font-size: 0.9rem; color: #888; text-decoration: underline; cursor: pointer;">
-                       Change your mind? Edit RSVP
-                    </a>
-                </div>
-            `;
-        }
     function submitRSVP() {
         const btn = document.getElementById('submit-btn');
         btn.disabled = true;
         btn.innerHTML = "Saving...";
 
+        const p1NameInput = document.getElementById('plus-one-name');
         const payload = {
             token: token,
-            name: guestData.name, // <-- ADDED THIS: Now sending the name to the sheet
+            name: guestData.name,
             email: document.getElementById('guest-email').value,
             attending: document.getElementById('attending-select').value,
-            plusOneName: document.getElementById('plus-one-name')?.value || "None",
+            plusOneName: p1NameInput ? p1NameInput.value : "None",
             note: document.getElementById('guest-note').value
         };
 
@@ -190,7 +210,6 @@
             body: JSON.stringify(payload) 
         })
         .then(() => {
-            // Give it a small delay so Google can finish writing
             setTimeout(() => {
                 showDoneView({ ...guestData, name: guestData.name });
             }, 500);
