@@ -3,220 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wedding Invitation</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <title>M & J Wedding</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Great+Vibes&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
     <style>
-        /* Restoring your original dark/gold theme */
-        :root {
-            --gold: #c5a059;
-            --dark-blue: #1a2a6c;
-            --off-white: #fcfaf7;
-        }
+        :root { --paper: #fcfaf7; --gold: #bfa17a; --text: #4a4a4a; --accent: #8b7d6b; }
+        body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Montserrat', sans-serif; color: var(--text); overflow-x: hidden; }
 
-        body {
-            margin: 0; padding: 0;
-            background-color: var(--off-white);
-            font-family: 'Lato', sans-serif;
-            color: #333;
+        /* ENVELOPE STYLES */
+        #envelope-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 2000; display: flex; justify-content: center; align-items: center; }
+        .flap { 
+            position: absolute; width: 100%; height: 50.2%; 
+            background-image: url('6938.jpg'); 
+            background-repeat: repeat; background-color: var(--paper);
+            transition: transform 1.5s cubic-bezier(0.65, 0.05, 0.36, 1); z-index: 1000;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1); 
         }
-
-        /* The Envelope Animation you had */
-        #envelope-wrapper {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--dark-blue);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            transition: opacity 1s ease;
+        .top-flap { top: 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .bottom-flap { bottom: 0; border-top: 1px solid rgba(255,255,255,0.8); }
+        #seal { 
+            position: absolute; width: 100px; height: 100px; 
+            background: radial-gradient(circle at 30% 30%, var(--gold) 0%, var(--accent) 100%);
+            border-radius: 50%; z-index: 1001; cursor: pointer; display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); transition: all 0.5s ease;
         }
+        #seal span { color: white; font-family: 'Playfair Display'; font-size: 1.2rem; pointer-events: none; }
+        .open .top-flap { transform: translateY(-100%); }
+        .open .bottom-flap { transform: translateY(100%); }
+        .open #seal { opacity: 0; pointer-events: none; }
 
-        .envelope {
-            position: relative;
-            width: 300px; height: 200px;
-            background: #fff;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        /* MAIN SITE CONTENT */
+        #main-site { 
+            opacity: 0; transform: translateY(20px); transition: opacity 1.5s ease 0.8s, transform 1.5s ease 0.8s;
+            max-width: 600px; margin: 0 auto; padding: 60px 20px; text-align: center; 
         }
+        .show-site #main-site { opacity: 1; transform: translateY(0); }
+        .rsvp-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-top: 20px; text-align: left; }
+        .hidden { display: none !important; }
 
-        .envelope::before {
-            content: '';
-            position: absolute;
-            top: 0; z-index: 2;
-            border-left: 150px solid transparent;
-            border-right: 150px solid transparent;
-            border-top: 100px solid #ddd;
-            transform-origin: top;
-            transition: transform 0.5s 0.5s ease;
+        label { font-weight: bold; font-size: 0.8rem; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 5px; margin-top: 15px; }
+        input, select, textarea { 
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; 
+            box-sizing: border-box; font-family: inherit; background-color: #fff;
         }
-
-        #envelope-wrapper.open .envelope::before {
-            transform: rotateX(180deg);
-            z-index: 0;
-        }
-
-        #envelope-wrapper.open {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 40px;
-            text-align: center;
-        }
-
-        h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #111; }
-        label { display: block; margin-top: 25px; text-align: left; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; }
-        
-        select, input, textarea {
-            width: 100%; padding: 12px; margin-top: 8px;
-            border: none; border-bottom: 1px solid #ccc;
-            background: transparent; font-family: inherit; font-size: 1rem;
-        }
-
-        .btn {
-            background-color: var(--dark-blue);
-            color: white; padding: 15px 40px; border: none;
-            letter-spacing: 2px; cursor: pointer; margin-top: 40px; width: 100%;
-        }
-
-        #p1-area { margin-top: 10px; border-left: 2px solid var(--gold); padding-left: 20px; }
-        .hidden { display: none; }
+        .btn { background: var(--accent); color: white; border: none; padding: 18px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; margin-top: 20px; }
+        .btn:disabled { background: #ccc; }
     </style>
 </head>
-<body>
+<body style="overflow: hidden;">
 
-    <div id="envelope-wrapper" onclick="openInvitation()">
-        <div class="envelope">
-            <div style="position:absolute; top:45%; width:100%; text-align:center; font-family:'Playfair Display'; font-style:italic;">
-                Open Invitation
-            </div>
+    <div id="envelope-wrapper">
+        <div class="flap top-flap"></div>
+        <div id="seal" onclick="openInvitation()"><span>M & J</span></div>
+        <div class="flap bottom-flap"></div>
+    </div>
+
+    <div id="main-site">
+        <h1 style="font-family: 'Great Vibes'; font-size: 4rem; color: var(--accent); margin: 0;">M & J</h1>
+        <p style="letter-spacing: 4px; margin-bottom: 30px;">OCTOBER 25, 2027</p>
+        
+        <div id="photo-area" style="width: 100%; height: 300px; background: #eee; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+            [Prenup Photo Placeholder]
         </div>
+
+        <div id="loading" class="hidden">Checking invitation...</div>
+        <div id="content" class="rsvp-card hidden"></div>
+        <div id="error-msg" class="hidden rsvp-card"><p>Guest not found. Please use the original link.</p></div>
     </div>
 
-    <div class="container">
-        <div id="loading" class="hidden">Locating your invitation...</div>
-        <div id="error-msg" class="hidden"><h2>Invitation not found.</h2></div>
+   <script>
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbxYnSDLsvodsS1EfmTrM0b3EWSb9IE9FP8v7_2FJlA52cgokuMf4hDUe6m_vOctiaZM/exec"; 
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('id');
+    let guestData = null;
 
-        <div id="content" class="hidden">
-            </div>
-    </div>
+    function openInvitation() {
+        const wrapper = document.getElementById('envelope-wrapper');
+        wrapper.classList.add('open');
+        document.body.classList.add('show-site');
+        document.body.style.overflow = 'auto';
+        
+        setTimeout(() => { wrapper.style.display = 'none'; }, 1550);
+        
+        if (token) {
+            document.getElementById('loading').classList.remove('hidden');
+            checkGuestStatus();
+        }
+    }
 
-    <script>
-        const webAppUrl = "https://script.google.com/macros/s/AKfycbxYnSDLsvodsS1EfmTrM0b3EWSb9IE9FP8v7_2FJlA52cgokuMf4hDUe6m_vOctiaZM/exec"; 
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('id');
-        let guestData = null;
-
-        function openInvitation() {
-            const wrapper = document.getElementById('envelope-wrapper');
-            wrapper.classList.add('open');
-            if (token) {
-                document.getElementById('loading').classList.remove('hidden');
-                checkGuestStatus();
+    function checkGuestStatus() {
+        console.log("Checking ID:", token);
+        fetch(`${webAppUrl}?id=${encodeURIComponent(token)}`, {
+            method: "GET",
+            redirect: "follow"
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("Success:", data);
+            guestData = data;
+            document.getElementById('loading').classList.add('hidden');
+            if (data.name) {
+                data.isDone ? showDoneView(data) : showMainForm();
+            } else {
+                document.getElementById('error-msg').classList.remove('hidden');
             }
-        }
+        })
+        .catch(err => {
+            console.error("Fetch Error:", err);
+            document.getElementById('loading').innerHTML = "Connection Error. Please refresh.";
+        });
+    }
 
-        function checkGuestStatus() {
-            fetch(`${webAppUrl}?id=${encodeURIComponent(token)}`)
-                .then(res => res.json())
-                .then(data => {
-                    guestData = data;
-                    document.getElementById('loading').classList.add('hidden');
-                    if (data.name) {
-                        data.isDone ? showDoneView(data) : showMainForm();
-                    } else {
-                        document.getElementById('error-msg').classList.remove('hidden');
-                    }
-                });
-        }
+    function showMainForm() {
+        const content = document.getElementById('content');
+        content.classList.remove('hidden');
+        
+        // Improved Plus One Detection
+        const rawP1 = String(guestData.allowPlusOne || '').toLowerCase().trim();
+        const canP1 = (rawP1 === "true" || rawP1 === "yes" || rawP1 === "1");
 
-        function showMainForm() {
-            const content = document.getElementById('content');
-            content.classList.remove('hidden');
+        content.innerHTML = `
+            <h2 style="font-family: 'Playfair Display'; margin: 0;">Hi ${guestData.name},</h2>
             
-            const rawP1 = String(guestData.allowPlusOne || '').toLowerCase().trim();
-            const canP1 = (rawP1 === "true" || rawP1 === "yes" || rawP1 === "1");
+            <label>Will you attend?</label>
+            <select id="attending-select" onchange="togglePlusOne(${canP1})">
+                <option value="Yes">Yes, I'll be there!</option>
+                <option value="No">No, I can't make it</option>
+            </select>
 
-            content.innerHTML = `
-                <h2>Hi ${guestData.name},</h2>
-                
-                <label>Attendance</label>
-                <select id="attending-select" onchange="togglePlusOne(${canP1})">
-                    <option value="Yes">Yes, I'll be there!</option>
-                    <option value="No">No, I can't make it</option>
-                </select>
+            <div id="p1-area"></div>
 
-                <div id="p1-area"></div>
+            <label>Email Address (Optional)</label>
+            <input type="email" id="guest-email" value="${guestData.email || ''}" placeholder="To receive a confirmation copy">
 
-                <label>Email</label>
-                <input type="email" id="guest-email" placeholder="Your email address">
+            <label>Note for the Couple</label>
+            <textarea id="guest-note" placeholder="Message or dietary requirements..."></textarea>
 
-                <label>Message</label>
-                <textarea id="guest-note" placeholder="Any dietary needs or notes?"></textarea>
+            <button class="btn" id="submit-btn" onclick="submitRSVP()">Confirm RSVP</button>
+        `;
+        togglePlusOne(canP1);
+    }
 
-                <button class="btn" id="submit-btn" onclick="submitRSVP()">CONFIRM RSVP</button>
-            `;
-            togglePlusOne(canP1);
-        }
+    function togglePlusOne(canP1) {
+        const area = document.getElementById('p1-area');
+        const att = document.getElementById('attending-select').value;
+        if (att === "Yes" && canP1) {
+            area.innerHTML = '<label>Plus One Full Name</label><input type="text" id="plus-one-name" placeholder="Guest Name">';
+        } else { area.innerHTML = ''; }
+    }
 
-        function togglePlusOne(canP1) {
-            const area = document.getElementById('p1-area');
-            const att = document.getElementById('attending-select').value;
-            if (att === "Yes" && canP1) {
-                area.innerHTML = `
-                    <label>Bringing a Guest?</label>
-                    <select id="bringing-p1" onchange="toggleP1Name()">
-                        <option value="No">No, coming solo</option>
-                        <option value="Yes">Yes, I'm bringing someone</option>
-                    </select>
-                    <div id="p1-name-wrapper"></div>
-                `;
-            } else { area.innerHTML = ''; }
-        }
-
-        function toggleP1Name() {
-            const wrapper = document.getElementById('p1-name-wrapper');
-            const bringing = document.getElementById('bringing-p1').value;
-            if (bringing === "Yes") {
-                wrapper.innerHTML = '<label>Plus One Name</label><input type="text" id="plus-one-name" placeholder="Their full name">';
-            } else { wrapper.innerHTML = ''; }
-        }
-
-        function showDoneView(data) {
+    function showDoneView(data) {
             const content = document.getElementById('content');
             content.classList.remove('hidden');
             content.innerHTML = `
-                <h2>Thank You.</h2>
-                <p>We have received your RSVP, ${data.name}.</p>
-                <button onclick="showMainForm()" style="background:none; border:none; color:#888; text-decoration:underline; cursor:pointer; margin-top:20px;">
-                    Change your mind? Edit RSVP
-                </button>
+                <h2 style="text-align: center; font-family: 'Playfair Display';">Thank you!</h2>
+                <p style="text-align: center;">RSVP recorded for ${data.name}.</p>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="#" onclick="event.preventDefault(); showMainForm();" 
+                       style="font-size: 0.9rem; color: #888; text-decoration: underline; cursor: pointer;">
+                       Change your mind? Edit RSVP
+                    </a>
+                </div>
             `;
         }
+    function submitRSVP() {
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true;
+        btn.innerHTML = "Saving...";
+        
+        const payload = {
+            token: token,
+            name: guestData.name, // <-- ADDED THIS: Now sending the name to the sheet
+            email: document.getElementById('guest-email').value,
+            attending: document.getElementById('attending-select').value,
+            plusOneName: document.getElementById('plus-one-name')?.value || "None",
+            note: document.getElementById('guest-note').value
+        };
 
-        function submitRSVP() {
-            const btn = document.getElementById('submit-btn');
-            btn.disabled = true; btn.innerHTML = "SAVING...";
-            
-            const p1NameInput = document.getElementById('plus-one-name');
-            const payload = {
-                token: token,
-                name: guestData.name,
-                email: document.getElementById('guest-email').value,
-                attending: document.getElementById('attending-select').value,
-                plusOneName: p1NameInput ? p1NameInput.value : "None",
-                note: document.getElementById('guest-note').value
-            };
-
-            fetch(webAppUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
-                .then(() => {
-                    setTimeout(() => showDoneView({ ...guestData }), 500);
-                });
-        }
-    </script>
+        fetch(webAppUrl, { 
+            method: "POST", 
+            mode: "no-cors", 
+            body: JSON.stringify(payload) 
+        })
+        .then(() => {
+            // Give it a small delay so Google can finish writing
+            setTimeout(() => {
+                showDoneView({ ...guestData, name: guestData.name });
+            }, 500);
+        });
+    }
+</script>
 </body>
 </html>
