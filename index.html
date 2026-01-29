@@ -6,7 +6,7 @@
     <title>M & J Wedding</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Great+Vibes&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
     <style>
-        :root { --paper: #fcfaf7; --gold: #bfa17a; --text: #4a4a4a; --accent: #8b7d6b; }
+        :root { --paper: #fcfaf7; --gold: #bfa17a; --text: #4a4a4a; --accent: #043927; --pink: #f4cfe0; }
         body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Montserrat', sans-serif; color: var(--text); overflow-x: hidden; }
 
         /* ENVELOPE STYLES */
@@ -20,220 +20,201 @@
         }
         .top-flap { top: 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
         .bottom-flap { bottom: 0; border-top: 1px solid rgba(255,255,255,0.8); }
+        
         #seal { 
             position: absolute; width: 100px; height: 100px; 
-            background: radial-gradient(circle at 30% 30%, var(--gold) 0%, var(--accent) 100%);
+            background: radial-gradient(circle at 30% 30%, #d4af37 0%, #bfa17a 100%);
             border-radius: 50%; z-index: 1001; cursor: pointer; display: flex; justify-content: center; align-items: center;
             box-shadow: 0 10px 25px rgba(0,0,0,0.3); transition: all 0.5s ease;
         }
         #seal span { color: white; font-family: 'Playfair Display'; font-size: 1.2rem; pointer-events: none; }
+        
         .open .top-flap { transform: translateY(-100%); }
         .open .bottom-flap { transform: translateY(100%); }
         .open #seal { opacity: 0; pointer-events: none; }
 
-        /* MAIN SITE CONTENT */
+        /* MAIN SITE TRANSITION */
         #main-site { 
-            opacity: 0; transform: translateY(20px); transition: opacity 1.5s ease 0.8s, transform 1.5s ease 0.8s;
-            max-width: 600px; margin: 0 auto; padding: 60px 20px; text-align: center; 
+            opacity: 0; display: none; transition: opacity 1.5s ease;
         }
-        .show-site #main-site { opacity: 1; transform: translateY(0); }
+        .show-site #main-site { opacity: 1; display: block; }
+
+        /* CONTENT STYLING */
         .rsvp-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-top: 20px; text-align: left; }
         .hidden { display: none !important; }
-
-        label { font-weight: bold; font-size: 0.8rem; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 5px; margin-top: 15px; }
-        input, select, textarea { 
-            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; 
-            box-sizing: border-box; font-family: inherit; background-color: #fff;
-        }
-        .btn { background: var(--accent); color: white; border: none; padding: 18px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; margin-top: 20px; }
+        label { font-weight: bold; font-size: 0.8rem; text-transform: uppercase; color: #8b7d6b; display: block; margin-bottom: 5px; margin-top: 15px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
+        .btn { background: #043927; color: white; border: none; padding: 18px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; margin-top: 20px; transition: 0.3s; }
+        .btn:hover { background: #d4af37; }
         .btn:disabled { background: #ccc; }
     </style>
 </head>
 <body style="overflow: hidden;">
 
-    <div id="main-site">
-    <section style="
-        height: 100vh; 
-        width: 100%; 
-        background: url('1.jpg'); 
-        background-size: cover; 
-        background-position: center; 
-        display: flex; 
-        align-items: center; 
-        justify-content: flex-end; 
-        position: relative;
-        overflow: hidden;">
-
-        <div style="position: relative; padding-right: 10vw; text-align: right; z-index: 2;">
-            <h1 style="font-family: 'Great Vibes', cursive; font-size: clamp(50px, 7vw, 100px); color: #d4af37; margin: 0; line-height: 1.1;">
-                Mariel <br> 
-                <span style="font-family: 'Georgia', serif; font-size: 0.3em; letter-spacing: 10px; color: #f4cfe0; vertical-align: middle;">&</span> <br>
-                Jasper
-            </h1>
-            <div style="width: 80px; height: 1px; background: #d4af37; margin: 25px 0 25px auto;"></div>
-            <p style="font-family: 'Georgia', serif; letter-spacing: 5px; font-size: clamp(14px, 1.5vw, 18px); text-transform: uppercase; color: #043927;">
-                November 06, 2027
-            </p>
-            <p style="font-family: 'Georgia', serif; font-style: italic; color: #8b7d6b; margin-top: 8px; font-size: 16px;">
-                Save the Date
-            </p>
-            <div style="margin-top: 60px; font-size: 11px; letter-spacing: 4px; color: #d4af37; text-transform: uppercase;">
-                Scroll to RSVP <span style="display:block; margin-top: 10px;">↓</span>
-            </div>
-        </div>
-    </section>
-
-    <section style="padding: 100px 20px; background-color: #fdf0f5; color: #043927; text-align: center;">
-        <h2 style="font-family: 'Great Vibes', cursive; font-size: 45px; margin-bottom: 50px;">The Journey to Forever</h2>
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 60px; max-width: 1000px; margin: 0 auto;">
-            
-            <div style="flex: 1; min-width: 300px; max-width: 400px;">
-                <div style="border: 1px solid #d4af37; padding: 10px; background: #fff; box-shadow: 15px 15px 0px #043927;">
-                    <img src="2.jpg" style="width: 100%; height: auto; display: block;">
-                </div>
-            </div>
-
-            <div style="flex: 1; min-width: 300px; max-width: 400px; margin-top: 80px;">
-                <div style="border: 1px solid #d4af37; padding: 10px; background: #fff; box-shadow: -15px 15px 0px #f4cfe0;">
-                    <img src="3.jpg" style="width: 100%; height: auto; display: block;">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div style="padding: 60px 20px;">
-        <div id="loading" class="hidden">Checking invitation...</div>
-        <div id="content" class="rsvp-card hidden"></div>
-        <div id="error-msg" class="hidden rsvp-card">
-            <p>Guest not found. Please use the original link.</p>
-        </div>
+    <div id="envelope-wrapper">
+        <div class="flap top-flap"></div>
+        <div id="seal" onclick="openInvitation()"><span>M & J</span></div>
+        <div class="flap bottom-flap"></div>
     </div>
-</div>
-<script>
-    const webAppUrl = "https://script.google.com/macros/s/AKfycbw-f-QuQTu7ry8YYVF3TE5EYTFLenryQzEgdY96rmSetu3dU659hJGhhKZQtP3GfsLc/exec"; 
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('id');
-    let guestData = null;
 
-    function openInvitation() {
-        document.getElementById('envelope-wrapper').classList.add('open');
-        document.body.classList.add('show-site');
-        document.body.style.overflow = 'auto';
-        setTimeout(() => { document.getElementById('envelope-wrapper').style.display = 'none'; }, 1550);
-        if (token) {
-            document.getElementById('loading').classList.remove('hidden');
-            checkGuestStatus();
-        } else {
-            document.getElementById('error-msg').classList.remove('hidden');
-        }
-    }
-
-    function checkGuestStatus() {
-        fetch(`${webAppUrl}?id=${encodeURIComponent(token)}`, { method: "GET", redirect: "follow" })
-        .then(res => res.json())
-        .then(data => {
-            // THE FIX: We save the data to the global variable FIRST
-            guestData = data; 
-            
-            document.getElementById('loading').classList.add('hidden');
-            if (data.name) {
-                // Now, even if we show the "Done" view, guestData is ready for the "Edit" click
-                data.isDone ? showDoneView(data) : showMainForm();
-            } else { 
-                document.getElementById('error-msg').classList.remove('hidden'); 
-            }
-        })
-        .catch(err => {
-            document.getElementById('loading').innerHTML = "Connection Error. Please refresh.";
-        });
-    }
-
-    function showDoneView(data) {
-        const content = document.getElementById('content');
-        content.classList.remove('hidden');
-        content.innerHTML = `
-            <div style="text-align: center;">
-                <h2 style="font-family: 'Playfair Display';">Thank you!</h2>
-                <p>RSVP recorded for ${data.name}.</p>
-                <div style="margin-top: 20px;">
-                    <a href="#" onclick="event.preventDefault(); showMainForm();" style="color: #888; text-decoration: underline; font-size: 0.8rem;">
-                        Edit your response
-                    </a>
+    <div id="main-site">
+        
+        <section style="height: 100vh; width: 100%; background: url('1.jpg') center/cover no-repeat; display: flex; align-items: center; justify-content: flex-end; position: relative;">
+            <div style="padding-right: 10vw; text-align: right; z-index: 2;">
+                <h1 style="font-family: 'Great Vibes', cursive; font-size: clamp(60px, 8vw, 110px); color: #d4af37; margin: 0; line-height: 1.1;">
+                    Mariel <br> 
+                    <span style="font-family: 'Georgia', serif; font-size: 0.3em; letter-spacing: 10px; color: var(--pink); vertical-align: middle;">&</span> <br>
+                    Jasper
+                </h1>
+                <div style="width: 80px; height: 1px; background: #d4af37; margin: 25px 0 25px auto;"></div>
+                <p style="font-family: 'Georgia', serif; letter-spacing: 5px; font-size: clamp(14px, 1.5vw, 18px); text-transform: uppercase; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">
+                    November 06, 2027
+                </p>
+                <div style="margin-top: 60px; font-size: 11px; letter-spacing: 4px; color: #d4af37; text-transform: uppercase;">
+                    Scroll to RSVP <span style="display:block; margin-top: 10px;">↓</span>
                 </div>
             </div>
-        `;
-    }
+        </section>
 
-    function showMainForm() {
-        const content = document.getElementById('content');
-        content.classList.remove('hidden');
+        <section style="padding: 100px 20px; background-color: #fdf0f5; color: #043927; text-align: center;">
+            <h2 style="font-family: 'Great Vibes', cursive; font-size: 45px; margin-bottom: 50px;">The Journey to Forever</h2>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 60px; max-width: 1000px; margin: 0 auto;">
+                <div style="flex: 1; min-width: 300px; max-width: 400px;">
+                    <div style="border: 1px solid #d4af37; padding: 10px; background: #fff; box-shadow: 15px 15px 0px #043927;">
+                        <img src="2.jpg" style="width: 100%; height: auto; display: block;">
+                    </div>
+                </div>
+                <div style="flex: 1; min-width: 300px; max-width: 400px; margin-top: 80px;">
+                    <div style="border: 1px solid #d4af37; padding: 10px; background: #fff; box-shadow: -15px 15px 0px var(--pink);">
+                        <img src="3.jpg" style="width: 100%; height: auto; display: block;">
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        // This now works after reload because checkGuestStatus saved it globally
-        const rawP1 = String(guestData.allowPlusOne).toLowerCase();
-        const canP1 = rawP1 === "true" || rawP1 === "yes";
+        <section style="padding: 80px 20px; background: white; text-align: center;">
+            <div style="max-width: 500px; margin: 0 auto;">
+                <div id="loading" class="hidden">Checking invitation...</div>
+                <div id="content" class="rsvp-card hidden"></div>
+                <div id="error-msg" class="hidden rsvp-card"><p>Guest not found. Please use the original link.</p></div>
+            </div>
+        </section>
 
-        content.innerHTML = `
-            <h2 style="font-family: 'Playfair Display';">Hi ${guestData.name},</h2>
-            <label>Will you attend?</label>
-            <select id="attending-select" onchange="togglePlusOne(${canP1})">
-                <option value="Yes">Yes, I'll be there!</option>
-                <option value="No">No, I can't make it</option>
-            </select>
-            <div id="p1-area"></div>
-            <label>Email Address (For confirmation)</label>
-            <input type="email" id="guest-email" value="${guestData.email || ''}">
-            <label>Want to send a message to the couple?</label>
-            <textarea id="guest-note">${guestData.note || ''}</textarea>
-            <button class="btn" id="submit-btn" onclick="submitRSVP()">Confirm RSVP</button>
-        `;
+    </div>
 
-        // Immediately check if we should show the plus one area
-        togglePlusOne(canP1);
-    }
+    <script>
+        const webAppUrl = "https://script.google.com/macros/s/AKfycbw-f-QuQTu7ry8YYVF3TE5EYTFLenryQzEgdY96rmSetu3dU659hJGhhKZQtP3GfsLc/exec"; 
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('id');
+        let guestData = null;
 
-    function togglePlusOne(canP1) {
-        const area = document.getElementById('p1-area');
-        const attending = document.getElementById('attending-select').value;
-        
-        if (attending === "Yes" && canP1) {
-            area.innerHTML = `
-                <label>Are you bringing a plus one?</label>
-                <select id="bringing-p1" onchange="toggleP1Name()">
-                    <option value="No">No</option>
-                    <option value="Yes">Yes</option>
+        function openInvitation() {
+            document.getElementById('envelope-wrapper').classList.add('open');
+            document.body.classList.add('show-site');
+            document.getElementById('main-site').style.display = 'block';
+            document.body.style.overflow = 'auto';
+            
+            setTimeout(() => { 
+                document.getElementById('envelope-wrapper').style.display = 'none'; 
+            }, 1550);
+
+            if (token) {
+                document.getElementById('loading').classList.remove('hidden');
+                checkGuestStatus();
+            } else {
+                document.getElementById('error-msg').classList.remove('hidden');
+            }
+        }
+
+        function checkGuestStatus() {
+            fetch(`${webAppUrl}?id=${encodeURIComponent(token)}`, { method: "GET", redirect: "follow" })
+            .then(res => res.json())
+            .then(data => {
+                guestData = data; 
+                document.getElementById('loading').classList.add('hidden');
+                if (data.name) {
+                    data.isDone ? showDoneView(data) : showMainForm();
+                } else { 
+                    document.getElementById('error-msg').classList.remove('hidden'); 
+                }
+            })
+            .catch(err => {
+                document.getElementById('loading').innerHTML = "Connection Error. Please refresh.";
+            });
+        }
+
+        function showDoneView(data) {
+            const content = document.getElementById('content');
+            content.classList.remove('hidden');
+            content.innerHTML = `
+                <div style="text-align: center;">
+                    <h2 style="font-family: 'Playfair Display';">Thank you!</h2>
+                    <p>RSVP recorded for ${data.name}.</p>
+                    <div style="margin-top: 20px;">
+                        <a href="#" onclick="event.preventDefault(); showMainForm();" style="color: #888; text-decoration: underline; font-size: 0.8rem;">
+                            Edit your response
+                        </a>
+                    </div>
+                </div>`;
+        }
+
+        function showMainForm() {
+            const content = document.getElementById('content');
+            content.classList.remove('hidden');
+            const canP1 = String(guestData.allowPlusOne).toLowerCase() === "true";
+
+            content.innerHTML = `
+                <h2 style="font-family: 'Playfair Display';">Hi ${guestData.name},</h2>
+                <label>Will you attend?</label>
+                <select id="attending-select" onchange="togglePlusOne(${canP1})">
+                    <option value="Yes">Yes, I'll be there!</option>
+                    <option value="No">No, I can't make it</option>
                 </select>
-                <div id="p1-name-wrapper"></div>
-            `;
-        } else {
-            area.innerHTML = '';
+                <div id="p1-area"></div>
+                <label>Email Address</label>
+                <input type="email" id="guest-email" value="${guestData.email || ''}">
+                <label>Message to the couple</label>
+                <textarea id="guest-note">${guestData.note || ''}</textarea>
+                <button class="btn" id="submit-btn" onclick="submitRSVP()">Confirm RSVP</button>`;
+            togglePlusOne(canP1);
         }
-    }
 
-    function toggleP1Name() {
-        const wrapper = document.getElementById('p1-name-wrapper');
-        const bringing = document.getElementById('bringing-p1').value;
-        if (bringing === "Yes") {
-            wrapper.innerHTML = '<label>Plus One Full Name</label><input type="text" id="plus-one-name" placeholder="Guest Name">';
-        } else {
-            wrapper.innerHTML = '';
+        function togglePlusOne(canP1) {
+            const area = document.getElementById('p1-area');
+            const attending = document.getElementById('attending-select').value;
+            if (attending === "Yes" && canP1) {
+                area.innerHTML = `
+                    <label>Bringing a plus one?</label>
+                    <select id="bringing-p1" onchange="toggleP1Name()">
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                    <div id="p1-name-wrapper"></div>`;
+            } else { area.innerHTML = ''; }
         }
-    }
 
-    function submitRSVP() {
-        const btn = document.getElementById('submit-btn');
-        btn.disabled = true; btn.innerHTML = "Saving...";
-        const p1NameInput = document.getElementById('plus-one-name');
-        const payload = {
-            token: token,
-            name: guestData.name,
-            email: document.getElementById('guest-email').value,
-            attending: document.getElementById('attending-select').value,
-            plusOneName: p1NameInput ? p1NameInput.value : "None",
-            note: document.getElementById('guest-note').value
-        };
-        fetch(webAppUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
-        .then(() => { showDoneView({ ...guestData }); });
-    }
-</script>
+        function toggleP1Name() {
+            const wrapper = document.getElementById('p1-name-wrapper');
+            if (document.getElementById('bringing-p1').value === "Yes") {
+                wrapper.innerHTML = '<label>Plus One Name</label><input type="text" id="plus-one-name" placeholder="Guest Name">';
+            } else { wrapper.innerHTML = ''; }
+        }
+
+        function submitRSVP() {
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true; btn.innerHTML = "Saving...";
+            const p1NameInput = document.getElementById('plus-one-name');
+            const payload = {
+                token: token,
+                name: guestData.name,
+                email: document.getElementById('guest-email').value,
+                attending: document.getElementById('attending-select').value,
+                plusOneName: p1NameInput ? p1NameInput.value : "None",
+                note: document.getElementById('guest-note').value
+            };
+            fetch(webAppUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
+            .then(() => { showDoneView({ ...guestData }); });
+        }
+    </script>
 </body>
 </html>
