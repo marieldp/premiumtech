@@ -130,15 +130,16 @@ const webAppUrl = "https://script.google.com/macros/s/AKfycbzW__hG2f3Chy2RxwB5I-
     const content = document.getElementById('content');
     content.classList.remove('hidden');
 
-    // EXTREME CHECK: Convert to string, lowercase it, and check for any 'positive' value
+    // 1. Determine permission and SAVE IT to a global attribute on the content div
     const rawVal = String(guestData.allowPlusOne).toLowerCase().trim();
     const canP1 = (rawVal === "true" || rawVal === "yes" || rawVal === "1");
+    content.setAttribute('data-can-p1', canP1); 
 
     content.innerHTML = `
         <h2 style="font-family: 'Playfair Display';">Hi ${guestData.name},</h2>
         
         <label>Will you attend?</label>
-        <select id="attending-select">
+        <select id="attending-select" onchange="togglePlusOne()">
             <option value="Yes">Yes, I'll be there!</option>
             <option value="No">No, I can't make it</option>
         </select>
@@ -154,22 +155,18 @@ const webAppUrl = "https://script.google.com/macros/s/AKfycbzW__hG2f3Chy2RxwB5I-
         <button class="btn" id="submit-btn" onclick="submitRSVP()">Confirm RSVP</button>
     `;
 
-    // Re-attach the event listener manually to be safe
-    const select = document.getElementById('attending-select');
-    select.onchange = () => togglePlusOne(canP1);
-
-    // Run it immediately
-    togglePlusOne(canP1);
+    // 2. Run immediately
+    togglePlusOne();
 }
 
-function togglePlusOne(canP1) {
+function togglePlusOne() {
     const area = document.getElementById('p1-area');
     const att = document.getElementById('attending-select').value;
     
-    // Debugging line - you can remove this once it works
-    console.log("Attending:", att, "Can Have Plus One:", canP1);
+    // Retrieve the permission we saved on the div earlier
+    const canP1 = document.getElementById('content').getAttribute('data-can-p1') === 'true';
 
-    if (att === "Yes" && canP1 === true) {
+    if (att === "Yes" && canP1) {
         area.innerHTML = `
             <label>Are you bringing a plus one?</label>
             <select id="bringing-p1" onchange="toggleP1Name()">
