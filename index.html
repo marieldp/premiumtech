@@ -59,8 +59,8 @@
 
     <div id="main-site">
         <h1 style="font-family: 'Great Vibes'; font-size: 4rem; color: var(--accent); margin: 0;">M & J</h1>
-        <p style="letter-spacing: 4px; margin-bottom: 30px;">OCTOBER 25, 2027</p>
-        
+        <p style="letter-spacing: 4px; margin-bottom: 30px;">November 6, 2027</p>
+
         <div id="photo-area" style="width: 100%; height: 300px; background: #eee; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
             [Prenup Photo Placeholder]
         </div>
@@ -81,9 +81,9 @@
         wrapper.classList.add('open');
         document.body.classList.add('show-site');
         document.body.style.overflow = 'auto';
-        
+
         setTimeout(() => { wrapper.style.display = 'none'; }, 1550);
-        
+
         if (token) {
             document.getElementById('loading').classList.remove('hidden');
             checkGuestStatus();
@@ -116,7 +116,7 @@
     function showMainForm() {
         const content = document.getElementById('content');
         content.classList.remove('hidden');
-        
+
         // Improved Plus One Detection
         const rawP1 = String(guestData.allowPlusOne || '').toLowerCase().trim();
         const canP1 = (rawP1 === "true" || rawP1 === "yes" || rawP1 === "1");
@@ -152,6 +152,11 @@
     }
 
     function showDoneView(data) {
+        const content = document.getElementById('content');
+        content.classList.remove('hidden');
+        content.innerHTML = `<h2 style="text-align: center;">Thank you!</h2><p style="text-align: center;">RSVP recorded for ${data.name}.</p>`;
+    }
+
             const content = document.getElementById('content');
             content.classList.remove('hidden');
             content.innerHTML = `
@@ -169,7 +174,7 @@
         const btn = document.getElementById('submit-btn');
         btn.disabled = true;
         btn.innerHTML = "Saving...";
-        
+
         const payload = {
             token: token,
             name: guestData.name, // <-- ADDED THIS: Now sending the name to the sheet
