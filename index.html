@@ -6,6 +6,7 @@
     <title>Wedding Invitation</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Lato:wght@300;400&display=swap" rel="stylesheet">
     <style>
+        /* Restoring your original dark/gold theme */
         :root {
             --gold: #c5a059;
             --dark-blue: #1a2a6c;
@@ -13,15 +14,13 @@
         }
 
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             background-color: var(--off-white);
             font-family: 'Lato', sans-serif;
             color: #333;
-            overflow: hidden; /* Prevent scrolling until envelope is opened */
         }
 
-        /* --- Envelope Animation Styles --- */
+        /* The Envelope Animation you had */
         #envelope-wrapper {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -35,8 +34,7 @@
 
         .envelope {
             position: relative;
-            width: 300px;
-            height: 200px;
+            width: 300px; height: 200px;
             background: #fff;
             cursor: pointer;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
@@ -63,71 +61,45 @@
             pointer-events: none;
         }
 
-        /* --- Main Content Styles --- */
         .container {
             max-width: 600px;
             margin: 50px auto;
             padding: 40px;
-            background: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border-radius: 8px;
             text-align: center;
         }
 
-        h2 { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 2rem; }
-        
-        label { display: block; margin-top: 20px; font-weight: bold; text-align: left; font-size: 0.9rem; color: #666; }
+        h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #111; }
+        label { display: block; margin-top: 25px; text-align: left; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; }
         
         select, input, textarea {
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-family: inherit;
+            width: 100%; padding: 12px; margin-top: 8px;
+            border: none; border-bottom: 1px solid #ccc;
+            background: transparent; font-family: inherit; font-size: 1rem;
         }
 
         .btn {
-            background-color: var(--gold);
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            margin-top: 30px;
-            width: 100%;
-            transition: background 0.3s;
+            background-color: var(--dark-blue);
+            color: white; padding: 15px 40px; border: none;
+            letter-spacing: 2px; cursor: pointer; margin-top: 40px; width: 100%;
         }
 
-        .btn:hover { background-color: #b38f4d; }
+        #p1-area { margin-top: 10px; border-left: 2px solid var(--gold); padding-left: 20px; }
         .hidden { display: none; }
-        
-        #p1-area {
-            background: #f9f9f9;
-            padding: 0 15px 15px 15px;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>
 
     <div id="envelope-wrapper" onclick="openInvitation()">
         <div class="envelope">
-            <div style="position:absolute; top:40%; width:100%; text-align:center; font-family:'Playfair Display'; font-style:italic;">
-                Click to Open
+            <div style="position:absolute; top:45%; width:100%; text-align:center; font-family:'Playfair Display'; font-style:italic;">
+                Open Invitation
             </div>
         </div>
     </div>
 
     <div class="container">
-        <div id="loading" class="hidden">Checking invitation...</div>
-        <div id="error-msg" class="hidden">
-            <h2>Oops!</h2>
-            <p>We couldn't find your invitation. Please check the link in your message.</p>
-        </div>
+        <div id="loading" class="hidden">Locating your invitation...</div>
+        <div id="error-msg" class="hidden"><h2>Invitation not found.</h2></div>
 
         <div id="content" class="hidden">
             </div>
@@ -142,8 +114,6 @@
         function openInvitation() {
             const wrapper = document.getElementById('envelope-wrapper');
             wrapper.classList.add('open');
-            document.body.style.overflow = 'auto';
-            
             if (token) {
                 document.getElementById('loading').classList.remove('hidden');
                 checkGuestStatus();
@@ -151,24 +121,17 @@
         }
 
         function checkGuestStatus() {
-            fetch(`${webAppUrl}?id=${encodeURIComponent(token)}`, {
-                method: "GET",
-                redirect: "follow"
-            })
-            .then(res => res.json())
-            .then(data => {
-                guestData = data;
-                document.getElementById('loading').classList.add('hidden');
-                if (data.name) {
-                    data.isDone ? showDoneView(data) : showMainForm();
-                } else {
-                    document.getElementById('error-msg').classList.remove('hidden');
-                }
-            })
-            .catch(err => {
-                console.error("Error:", err);
-                document.getElementById('loading').innerHTML = "Connection Error. Please refresh.";
-            });
+            fetch(`${webAppUrl}?id=${encodeURIComponent(token)}`)
+                .then(res => res.json())
+                .then(data => {
+                    guestData = data;
+                    document.getElementById('loading').classList.add('hidden');
+                    if (data.name) {
+                        data.isDone ? showDoneView(data) : showMainForm();
+                    } else {
+                        document.getElementById('error-msg').classList.remove('hidden');
+                    }
+                });
         }
 
         function showMainForm() {
@@ -179,11 +142,9 @@
             const canP1 = (rawP1 === "true" || rawP1 === "yes" || rawP1 === "1");
 
             content.innerHTML = `
-                <h2 style="margin-bottom: 10px;">Hi ${guestData.name},</h2>
-                <p>We are so excited to celebrate with you!</p>
-                <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
+                <h2>Hi ${guestData.name},</h2>
                 
-                <label>Will you attend?</label>
+                <label>Attendance</label>
                 <select id="attending-select" onchange="togglePlusOne(${canP1})">
                     <option value="Yes">Yes, I'll be there!</option>
                     <option value="No">No, I can't make it</option>
@@ -191,13 +152,13 @@
 
                 <div id="p1-area"></div>
 
-                <label>Email Address (Optional)</label>
-                <input type="email" id="guest-email" placeholder="For confirmation copy">
+                <label>Email</label>
+                <input type="email" id="guest-email" placeholder="Your email address">
 
-                <label>Note for the Couple</label>
-                <textarea id="guest-note" placeholder="Dietary requirements or a message..."></textarea>
+                <label>Message</label>
+                <textarea id="guest-note" placeholder="Any dietary needs or notes?"></textarea>
 
-                <button class="btn" id="submit-btn" onclick="submitRSVP()">Confirm RSVP</button>
+                <button class="btn" id="submit-btn" onclick="submitRSVP()">CONFIRM RSVP</button>
             `;
             togglePlusOne(canP1);
         }
@@ -205,76 +166,56 @@
         function togglePlusOne(canP1) {
             const area = document.getElementById('p1-area');
             const att = document.getElementById('attending-select').value;
-            
             if (att === "Yes" && canP1) {
                 area.innerHTML = `
-                    <label>Are you bringing a plus one?</label>
+                    <label>Bringing a Guest?</label>
                     <select id="bringing-p1" onchange="toggleP1Name()">
-                        <option value="No">No</option>
-                        <option value="Yes">Yes</option>
+                        <option value="No">No, coming solo</option>
+                        <option value="Yes">Yes, I'm bringing someone</option>
                     </select>
                     <div id="p1-name-wrapper"></div>
                 `;
-            } else { 
-                area.innerHTML = ''; 
-            }
+            } else { area.innerHTML = ''; }
         }
 
         function toggleP1Name() {
             const wrapper = document.getElementById('p1-name-wrapper');
             const bringing = document.getElementById('bringing-p1').value;
-            
             if (bringing === "Yes") {
-                wrapper.innerHTML = `
-                    <label>Plus One Full Name</label>
-                    <input type="text" id="plus-one-name" placeholder="Enter guest's full name">
-                `;
-            } else {
-                wrapper.innerHTML = '';
-            }
+                wrapper.innerHTML = '<label>Plus One Name</label><input type="text" id="plus-one-name" placeholder="Their full name">';
+            } else { wrapper.innerHTML = ''; }
         }
 
         function showDoneView(data) {
             const content = document.getElementById('content');
             content.classList.remove('hidden');
             content.innerHTML = `
-                <h2>Thank you!</h2>
-                <p>RSVP successfully recorded for <strong>${data.name}</strong>.</p>
-                <div style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
-                    <button onclick="showMainForm()" style="background:none; border:none; color:#888; text-decoration:underline; cursor:pointer;">
-                        Change your mind? Edit RSVP
-                    </button>
-                </div>
+                <h2>Thank You.</h2>
+                <p>We have received your RSVP, ${data.name}.</p>
+                <button onclick="showMainForm()" style="background:none; border:none; color:#888; text-decoration:underline; cursor:pointer; margin-top:20px;">
+                    Change your mind? Edit RSVP
+                </button>
             `;
         }
 
         function submitRSVP() {
             const btn = document.getElementById('submit-btn');
-            btn.disabled = true;
-            btn.innerHTML = "Sending...";
+            btn.disabled = true; btn.innerHTML = "SAVING...";
             
             const p1NameInput = document.getElementById('plus-one-name');
-            const p1Value = p1NameInput ? p1NameInput.value : "None";
-
             const payload = {
                 token: token,
                 name: guestData.name,
                 email: document.getElementById('guest-email').value,
                 attending: document.getElementById('attending-select').value,
-                plusOneName: p1Value,
+                plusOneName: p1NameInput ? p1NameInput.value : "None",
                 note: document.getElementById('guest-note').value
             };
 
-            fetch(webAppUrl, { 
-                method: "POST", 
-                mode: "no-cors", 
-                body: JSON.stringify(payload) 
-            })
-            .then(() => {
-                setTimeout(() => {
-                    showDoneView({ ...guestData, name: guestData.name });
-                }, 800);
-            });
+            fetch(webAppUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
+                .then(() => {
+                    setTimeout(() => showDoneView({ ...guestData }), 500);
+                });
         }
     </script>
 </body>
