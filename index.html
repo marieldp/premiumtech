@@ -10,36 +10,34 @@
 body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Montserrat', sans-serif; color: var(--text); overflow-x: hidden; }
 
 /* ENVELOPE STYLES */
-/* THE TABLE SURFACE */
-/* THE TABLE SURFACE */
-/* THE TABLE SURFACE */
-/* THE TABLE SURFACE */
+
+/* THE WRAPPER: Ensures absolute dead-center */
 #envelope-wrapper {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    /* This is the key: it must be the full height of the screen */
-    height: 100vh; 
+    width: 100vw;
+    height: 100vh; /* Fills the whole screen */
     display: flex;
-    justify-content: center; /* Centers horizontally */
-    align-items: center;     /* Centers vertically */
+    justify-content: center;
+    align-items: center;
     z-index: 9999;
     background-color: #f4f1ea;
-    transition: transform 0.8s ease, opacity 0.8s ease;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* THE ENVELOPE - Centered on screen */
+/* THE ENVELOPE: Remove any top margins that might be pushing it up */
 .envelope { 
     position: relative; 
     width: 85vw; 
     max-width: 500px; 
     height: 56.6vw; 
     max-height: 333px; 
+    margin: 0 !important; /* Forces it to ignore other spacing */
     background: #ebe7e0; 
     box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-    display: block;
-    margin: auto; /* Keeps it centered in the flex wrapper */
 }
 
 /* THE TOP TRIANGLE (Lid) */
@@ -67,7 +65,7 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
     clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
 }
 
-/* THE SEAM LINES - Using a more visible SVG */
+/* THE SEAM LINES: Thick and Fading */
 .envelope-lines {
     position: absolute;
     top: 0;
@@ -76,8 +74,8 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
     height: 100%;
     z-index: 4;
     pointer-events: none;
-    /* This SVG draws the lines precisely to the center point */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cline x1='0' y1='0' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.2' stroke-width='1.5'/%3E%3Cline x1='100%25' y1='0' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.2' stroke-width='1.5'/%3E%3C/svg%3E");
+    /* We use a gradient stroke here: Starts solid at corners (0%), fades to transparent at center (50%) */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:black;stop-opacity:0.3' /%3E%3Cstop offset='50%25' style='stop-color:black;stop-opacity:0' /%3E%3C/linearGradient%3E%3ClinearGradient id='grad2' x1='100%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:black;stop-opacity:0.3' /%3E%3Cstop offset='50%25' style='stop-color:black;stop-opacity:0' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cline x1='0' y1='0' x2='50%25' y2='50%25' stroke='url(%23grad1)' stroke-width='4'/%3E%3Cline x1='100%25' y1='0' x2='50%25' y2='50%25' stroke='url(%23grad2)' stroke-width='4'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-size: cover;
 }
