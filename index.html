@@ -50,15 +50,14 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
     filter: drop-shadow(0 6px 4px rgba(0,0,0,0.3));
 }
 
-/* THE BORDER LINE: Stays on top of the texture for sharpness */
+/* 1. TOP FLAP LINE (The Lid Edge) */
 .top-flap::after {
     content: '';
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    /* Subtle dark 'seam' color */
-    background: rgba(0, 0, 0, 0.2); 
-    /* This creates a 1.5px border along the diagonal V-edges */
-    clip-path: polygon(50% 100%, 0 0, 1.2% 0, 50% 98.5%, 98.8% 0, 100% 0);
+    background: rgba(0, 0, 0, 0.2); /* Soft dark seam */
+    /* This creates a very thin 1% border on the diagonal edges */
+    clip-path: polygon(50% 100%, 0 0, 0.8% 0, 50% 98.5%, 99.2% 0, 100% 0);
     pointer-events: none;
 }
 
@@ -73,15 +72,14 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
     box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
 }
 
-/* THE BORDER LINES FOR THE POCKET */
+/* 2. BOTTOM POCKET LINE (The V-Notch Edge) */
 .envelope-pocket-main::after {
     content: '';
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    /* Matching the dark gold/brown from your top flap */
-    background: rgba(139, 121, 94, 0.4); 
-    /* This draws the 'V' lines on the pocket edges */
-    clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 1.5%, 50% 51.5%, 0 1.5%);
+    background: rgba(0, 0, 0, 0.15); /* Slightly lighter seam */
+    /* This draws the matching V-line on the pocket's top edge */
+    clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 1.2%, 50% 51.2%, 0 1.2%);
     pointer-events: none;
 }
 
