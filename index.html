@@ -42,18 +42,17 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 4;
+    z-index: 2; /* Lower than the seal so it stays behind it */
     pointer-events: none;
     
-    /* Using 50%25 to ensure center-lock */
-
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cline x1='0' y1='0' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.2' stroke-width='2'/%3E%3Cline x1='100%25' y1='0' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.2' stroke-width='2'/%3E%3Cline x1='0' y1='100%25' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.15' stroke-width='2'/%3E%3Cline x1='100%25' y1='100%25' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.15' stroke-width='2'/%3E%3C/svg%3E");
+    /* Solid lines meeting at 50/50 */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cline x1='0' y1='0' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.2' stroke-width='3'/%3E%3Cline x1='100%25' y1='0' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.2' stroke-width='3'/%3E%3Cline x1='0' y1='100%25' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.15' stroke-width='1.5'/%3E%3Cline x1='100%25' y1='100%25' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.15' stroke-width='1.5'/%3E%3C/svg%3E");
     background-size: 100% 100%;
     background-repeat: no-repeat;
 
-    /* REMOVED the mask-image lines that were causing the fade */
-    -webkit-mask-image: none;
-    mask-image: none;
+    /* REMOVE THESE IF THEY ARE STILL THERE */
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
 }
 .top-flap {
     position: absolute;
