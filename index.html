@@ -79,15 +79,17 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    
-    /* ADJUST THESE VALUES */
-    width: 15vw;       /* Try 15vw to 20vw for a good size */
-    max-width: 100px;  /* This stops it from getting too huge on laptops */
-    height: auto;      /* Keeps the circle from looking like an egg */
-    
-    z-index: 10;       /* Ensures it sits ON TOP of the lines and flap */
+    width: 100px; /* This was the original width before it got small */
+    height: 100px;
+    z-index: 10; /* This ensures it sits on top of the lines */
     cursor: pointer;
     transition: transform 0.3s ease;
+}
+
+#seal img {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 #seal:hover {
