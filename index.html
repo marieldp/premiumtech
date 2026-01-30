@@ -33,17 +33,30 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
 }
 
 /* THE TOP TRIANGLE (Lid) */
+/* THE TOP TRIANGLE (Lid) */
 .top-flap { 
     position: absolute; 
     top: 0; left: 0; width: 100%; height: 50%; 
     z-index: 4;
-    background-image: linear-gradient(rgba(0,0,0,0.03), rgba(0,0,0,0.03)), url('6938.jpg'); 
+    /* Removed the gradient, back to pure image */
+    background-image: url('6938.jpg'); 
     background-size: cover;
     clip-path: polygon(0 0, 100% 0, 50% 100%); 
     transform-origin: top;
     transition: transform 0.8s ease-in-out;
-    /* This creates the 'crease' line at the bottom of the triangle */
-    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+    /* Natural drop shadow for depth */
+    filter: drop-shadow(0 3px 2px rgba(0,0,0,0.2));
+}
+
+/* Creating the sharp border lines at the bottom of the V */
+.top-flap::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    /* This draws a 1px dark-gold line on the bottom edges of the triangle */
+    background: rgba(184, 134, 11, 0.4); 
+    clip-path: polygon(50% 100%, 0 0, 1% 0, 50% 98%, 99% 0, 100% 0);
+    pointer-events: none;
 }
 
 /* THE FRONT POCKET (V-Notch) */
