@@ -18,31 +18,61 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
     transition: transform 1s ease-in-out 1.2s, opacity 1s ease-in-out 1.2s;
 }
 
-/* THE ENVELOPE CONTAINER */
+/* THE ENVELOPE BODY */
 .envelope { 
     position: relative; 
     width: 100vw; 
-    height: 60vh; /* Not full height, so it looks like an envelope shape */
-    max-width: none; 
-    background: #f4f1ed; 
-    box-shadow: 0 0 100px rgba(0,0,0,0.3);
+    max-width: 600px; /* Limits width on desktop so it doesn't look stretched */
+    height: 400px;    /* Fixed height for a classic look */
+    background: #ebe7e0; /* A slightly darker 'inside' color */
+    box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+    overflow: visible; /* Allows the flap to flip UP outside the box */
 }
 
-/* THE FLAPS (Using your 6938.jpg) */
+/* THE TOP TRIANGLE (The Lid) */
 .top-flap { 
-    position: absolute; top: 0; width: 100%; height: 50%; z-index: 4;
-    background-image: url('6938.jpg'); background-size: cover;
-    clip-path: polygon(0 0, 100% 0, 50% 100%); /* Triangle Shape */
+    position: absolute; 
+    top: 0; 
+    width: 100%; 
+    height: 50%; /* Meets exactly in the middle */
+    z-index: 4;
+    background-image: url('6938.jpg'); 
+    background-size: cover;
+    clip-path: polygon(0 0, 100% 0, 50% 100%); 
     transform-origin: top;
-    transition: transform 0.8s ease-in-out;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* THE BOTTOM POCKET (The 'V' Shape) */
 .envelope-pocket { 
-    position: absolute; bottom: 0; width: 100%; height: 100%; z-index: 3;
-    background-image: url('6938.jpg'); background-size: cover;
-    clip-path: polygon(0 100%, 100% 100%, 100% 50%, 50% 50%, 0 50%); /* Pocket Shape */
+    position: absolute; 
+    bottom: 0; 
+    width: 100%; 
+    height: 100%; 
+    z-index: 3;
+    background-image: url('6938.jpg'); 
+    background-size: cover;
+    /* This creates the side and bottom flaps look */
+    clip-path: polygon(0 50%, 50% 50%, 100% 50%, 100% 100%, 0 100%);
+    /* Subtle shadow to show where the top flap sits on the bottom */
+    filter: drop-shadow(0 -2px 5px rgba(0,0,0,0.1));
 }
 
+/* THE LETTER (Hidden inside) */
+.letter {
+    position: absolute; 
+    top: 10%; 
+    left: 5%; 
+    width: 90%; 
+    height: 80%;
+    background: white; 
+    z-index: 1; 
+    display: flex; 
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
 /* THE WAX SEAL (seal.png) */
 #seal { 
     position: absolute; top: 50%; left: 50%; width: 100px; height: 100px; 
@@ -93,13 +123,9 @@ input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; bo
 
 <div id="envelope-wrapper">
     <div class="envelope">
-        <div class="flap top-flap"></div>
-        <div class="envelope-pocket"></div>
-        <div class="letter">
-            <h2 style="font-family: 'Great Vibes'; color: #d4af37; margin: 0;">M & J</h2>
-            <p style="font-family: 'Georgia'; font-size: 10px; letter-spacing: 2px;">2027</p>
-        </div>
-        <div id="seal" onclick="openInvitation()"></div>
+        <div class="letter"> <h2 style="font-family: 'Great Vibes'; color: #d4af37; margin: 0;">M & J</h2>
+            <p style="font-family: 'Georgia'; font-size: 10px; letter-spacing: 2px;">2027</p></div> <div class="envelope-pocket"></div> <div class="flap top-flap"></div> <div id="seal" onclick="openInvitation()"></div> </div>
+           
     </div>
 </div>
 
