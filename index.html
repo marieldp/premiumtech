@@ -24,13 +24,20 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
 }
 
 .envelope { 
-    position: relative; /* This allows the 'envelope-lines' to anchor to it */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* Responsive Width & Height */
     width: 85vw; 
     max-width: 500px; 
     height: 56.6vw; 
     max-height: 333px; 
+    
     background: #ebe7e0; 
     box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    overflow: visible; /* Important so shadows/lines don't clip */
 }
 
 /* TOP FLAP - Resetting the shadow for a thinner look */
