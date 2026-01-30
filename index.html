@@ -50,12 +50,10 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
     background-size: 100% 100%;
     background-repeat: no-repeat;
 
-    /* REFINED MASK: We changed 10% to 4% so the hole in the middle is smaller */
-    /* This forces the lines to go deeper toward the center */
-    -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 4%, black 50%);
-    mask-image: radial-gradient(circle at 50% 50%, transparent 4%, black 50%);
+    /* REMOVED the mask-image lines that were causing the fade */
+    -webkit-mask-image: none;
+    mask-image: none;
 }
-
 .top-flap {
     position: absolute;
     top: 0; left: 0;
