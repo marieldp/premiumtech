@@ -36,29 +36,32 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
     display: block;
 }
 
+/* 2. The Lines - Meeting at the new 60% mark */
 .envelope-lines {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 2; /* Lower than the seal so it stays behind it */
-    pointer-events: none;
-    
-    /* Solid lines meeting at 50/50 */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cline x1='0' y1='0' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.2' stroke-width='3'/%3E%3Cline x1='100%25' y1='0' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.2' stroke-width='3'/%3E%3Cline x1='0' y1='100%25' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.15' stroke-width='1.5'/%3E%3Cline x1='100%25' y1='100%25' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.15' stroke-width='1.5'/%3E%3C/svg%3E");
+    z-index: 2;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cline x1='0' y1='0' x2='50%25' y2='60%25' stroke='black' stroke-opacity='0.2' stroke-width='3'/%3E%3Cline x1='100%25' y1='0' x2='50%25' y2='60%25' stroke='black' stroke-opacity='0.2' stroke-width='3'/%3E%3Cline x1='0' y1='100%25' x2='50%25' y2='60%25' stroke='black' stroke-opacity='0.15' stroke-width='1.5'/%3E%3Cline x1='100%25' y1='100%25' x2='50%25' y2='60%25' stroke='black' stroke-opacity='0.15' stroke-width='1.5'/%3E%3C/svg%3E");
     background-size: 100% 100%;
-    background-repeat: no-repeat;
-
-    /* REMOVE THESE IF THEY ARE STILL THERE */
-    -webkit-mask-image: none !important;
-    mask-image: none !important;
+    mask-image: none !important; /* Ensuring no fading */
 }
+/* 1. The Top Flap - Now correctly shaped as a triangle */
 .top-flap {
-    /* ... existing code ... */
-    height: 60%; /* Increased height to make the point go lower */
-    clip-path: polygon(0 0, 100% 0, 50% 100%); 
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60%; /* This is how far down the point goes */
     z-index: 3;
+    background: url('6938.jpg') center/cover;
+    /* This ensures it stays a triangle and doesn't cover the whole paper */
+    clip-path: polygon(0 0, 100% 0, 50% 100%); 
+    transform-origin: top;
+    transition: transform 0.8s ease-in-out;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
 }
 /* THE POCKET */
 .envelope-pocket-main { 
@@ -69,15 +72,15 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
     clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
 }    
 /* THE SEAL */
-#seal { 
-    position: absolute; 
-    top: 50%; left: 50%; 
-    width: 75px; height: 75px; 
-    transform: translate(-50%, -50%); 
-    z-index: 5; cursor: pointer;
-    background: url('seal.png') no-repeat center/contain;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); 
-    transition: opacity 0.3s ease, transform 0.3s ease;
+#seal {
+    position: absolute;
+    top: 60%; /* Matches the flap height */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90px;
+    height: 90px;
+    z-index: 10;
+    cursor: pointer;
 }
 
 #seal:hover {
