@@ -16,13 +16,17 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
 /* THE TABLE SURFACE */
 #envelope-wrapper {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100vh;
-    display: flex; /* This centers the envelope */
-    justify-content: center;
-    align-items: center;
-    z-index: 3000;
-    background-color: #e5e0d8;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* This is the key: it must be the full height of the screen */
+    height: 100vh; 
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;     /* Centers vertically */
+    z-index: 9999;
+    background-color: #f4f1ea;
+    transition: transform 0.8s ease, opacity 0.8s ease;
 }
 
 /* THE ENVELOPE - Centered on screen */
