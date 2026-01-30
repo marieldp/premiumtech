@@ -25,54 +25,55 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
     margin: 0;
 }
 
-.envelope { 
-    position: relative; 
-    width: 85vw; 
-    max-width: 500px; 
-    height: 56.6vw; 
-    max-height: 333px; 
-    background: #ebe7e0; 
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-    display: block;
+/* 1. Main Envelope Base */
+.envelope {
+    position: relative;
+    width: 85vw;
+    max-width: 500px;
+    height: 56.6vw;
+    max-height: 333px;
+    background: url('6938.jpg') center/cover; /* The main paper texture */
+    z-index: 1;
 }
 
-/* 2. The Lines - Meeting at the new 60% mark */
+/* 2. The Lines (The "X") - Drawing them at the 60% meeting point */
 .envelope-lines {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 2;
+    z-index: 2; /* Sits ON TOP of the base paper */
+    pointer-events: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cline x1='0' y1='0' x2='50%25' y2='60%25' stroke='black' stroke-opacity='0.2' stroke-width='3'/%3E%3Cline x1='100%25' y1='0' x2='50%25' y2='60%25' stroke='black' stroke-opacity='0.2' stroke-width='3'/%3E%3Cline x1='0' y1='100%25' x2='50%25' y2='60%25' stroke='black' stroke-opacity='0.15' stroke-width='1.2'/%3E%3Cline x1='100%25' y1='100%25' x2='50%25' y2='60%25' stroke='black' stroke-opacity='0.15' stroke-width='1.2'/%3E%3C/svg%3E");
     background-size: 100% 100%;
+    background-repeat: no-repeat;
 }
-/* 1. The Top Flap - Now correctly shaped as a triangle */
+
+/* 3. The Top Flap - Lowered to 60% to close that white gap */
 .top-flap {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 60%; /* This must match the 'y2' of your lines */
-    z-index: 3;
-    
-    /* Ensure your image path is correct so it's not transparent white */
-    background: url('6938.jpg') center/cover; 
-    
-    /* This creates the triangle shape */
-    clip-path: polygon(0 0, 100% 0, 50% 100%); 
-    
+    height: 60%; 
+    z-index: 3; /* Sits ON TOP of the lines */
+    background: url('6938.jpg') center/cover;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
     transform-origin: top;
     transition: transform 0.8s ease-in-out;
 }
-/* THE POCKET */
-.envelope-pocket-main { 
-    position: absolute; 
-    top: 0; left: 0; width: 100%; height: 100%; 
-    z-index: 3;
-    background: url('6938.jpg') center/cover;
-    clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
-}    
+
+/* 4. The Seal - Centered on the flap tip */
+#seal {
+    position: absolute;
+    top: 60%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90px;
+    height: 90px;
+    z-index: 10; /* Sits on top of EVERYTHING */
+}
 /* THE SEAL */
 #seal {
     position: absolute;
@@ -87,6 +88,15 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
 #seal:hover {
     transform: translate(-50%, -50%) scale(1.1); /* Adds a nice "pop" when touched */
 }
+
+    /* THE POCKET */
+.envelope-pocket-main { 
+    position: absolute; 
+    top: 0; left: 0; width: 100%; height: 100%; 
+    z-index: 3;
+    background: url('6938.jpg') center/cover;
+    clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
+}    
 
 /* THE LETTER */
 .letter {
