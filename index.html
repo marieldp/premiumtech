@@ -45,14 +45,15 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
     z-index: 4;
     pointer-events: none;
     
-    /* Using absolute percentages in the SVG to force corner-to-center contact */
+    /* Using 50%25 to ensure center-lock */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cline x1='0' y1='0' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.2' stroke-width='4'/%3E%3Cline x1='100%25' y1='0' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.2' stroke-width='4'/%3E%3Cline x1='0' y1='100%25' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.2' stroke-width='4'/%3E%3Cline x1='100%25' y1='100%25' x2='50%25' y2='50%25' stroke='black' stroke-opacity='0.2' stroke-width='4'/%3E%3C/svg%3E");
     background-size: 100% 100%;
     background-repeat: no-repeat;
 
-    /* The Fading Effect - Adjusted to be more subtle at the tips */
-    -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 5%, black 60%);
-    mask-image: radial-gradient(circle at 50% 50%, transparent 5%, black 60%);
+    /* REFINED MASK: We changed 10% to 4% so the hole in the middle is smaller */
+    /* This forces the lines to go deeper toward the center */
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 4%, black 50%);
+    mask-image: radial-gradient(circle at 50% 50%, transparent 4%, black 50%);
 }
 
 .top-flap {
