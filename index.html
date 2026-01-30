@@ -55,14 +55,10 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
     mask-image: none !important;
 }
 .top-flap {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 50.5%; /* Added 0.5% extra to ensure it covers the line tips */
-    z-index: 5;
-    background: url('6938.jpg') center/cover;
-    clip-path: polygon(0 0, 100% 0, 50% 100%);
-    transform-origin: top;
-    transition: transform 0.8s ease-in-out;
+    /* ... existing code ... */
+    height: 60%; /* Increased height to make the point go lower */
+    clip-path: polygon(0 0, 100% 0, 50% 100%); 
+    z-index: 3;
 }
 /* THE POCKET */
 .envelope-pocket-main { 
