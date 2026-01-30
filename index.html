@@ -139,17 +139,16 @@ input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; bo
 <body style="overflow: hidden;">
 
 <div id="envelope-wrapper">
-<div class="envelope">
-<div class="letter">...</div>
-<div class="envelope-pocket-main"></div>
-        <div class="envelope-lines"></div> <div class="top-flap"></div>
-        <div id="seal" onclick="openInvitation()"></div>
-        <img src="seal.png" alt="Seal">
+    <div class="envelope" style="position: relative; margin: auto;">
+        <div class="letter">...</div>
+        <div class="envelope-pocket-main"></div>
         <div class="envelope-lines"></div> 
         <div class="top-flap"></div>
         
-       
-</div>
+        <div id="seal" onclick="openInvitation()" style="position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; z-index: 9999; display: block;">
+            <img src="seal.png" alt="Seal" style="width: 100%; height: 100%; object-fit: contain; display: block;">
+        </div>
+    </div>
 </div>
 
 <div id="main-site">
