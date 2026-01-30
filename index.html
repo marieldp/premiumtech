@@ -12,68 +12,72 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
 /* ENVELOPE STYLES */
 /* THE TABLE SURFACE */
 /* THE TABLE SURFACE */
-<div id="envelope-wrapper">
-    <div class="envelope">
-        <div class="letter">
-            <h2 style="font-family: 'Great Vibes'; color: #d4af37; margin: 0;">M & J</h2>
-        </div>
-        <div class="envelope-pocket"></div>
-        <div class="top-flap"></div>
-        <div id="seal" onclick="openInvitation()"></div>
-    </div>
-</div>
+/* THE TABLE SURFACE */
+#envelope-wrapper { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh; 
+    z-index: 2000; display: flex; justify-content: center; align-items: center; 
+    background-color: #e5e0d8; perspective: 1200px;
+    transition: all 0.8s ease-in-out;
+}
 
-/* THE ENVELOPE - Responsive Size */
+/* THE ENVELOPE - The master controller of size */
 .envelope { 
     position: relative; 
-    width: 90vw;           /* Uses 90% of screen width */
-    max-width: 500px;      /* Prevents it from getting too huge on PC */
-    aspect-ratio: 3 / 2;   /* Maintains perfect proportions */
+    width: 85vw;           /* Always takes up 85% of the screen width */
+    max-width: 550px;      /* But never gets awkwardly huge on a laptop */
+    aspect-ratio: 3 / 2;   /* Forces the 3:2 classic envelope shape */
     background: #ebe7e0; 
-    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    box-shadow: 0 5vw 10vw rgba(0,0,0,0.2); /* Shadow scales with screen! */
 }
 
 /* THE TOP TRIANGLE */
 .top-flap { 
-    position: absolute; top: 0; width: 100%; height: 50%; z-index: 4;
+    position: absolute; top: 0; left: 0; width: 100%; height: 60%; 
+    z-index: 4;
     background-image: url('6938.jpg'); background-size: cover;
     clip-path: polygon(0 0, 100% 0, 50% 100%); 
     transform-origin: top;
     transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* THE BOTTOM POCKET - Meets the triangle perfectly */
-.envelope-pocket { 
-    position: absolute; bottom: 0; width: 100%; height: 100%; z-index: 3;
+/* THE FRONT POCKET */
+.envelope-front { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+    z-index: 3;
     background-image: url('6938.jpg'); background-size: cover;
-    /* This shape covers the bottom and sides so no 'letter' peaks through the sides */
-    clip-path: polygon(0 0, 15% 50%, 0 100%, 100% 100%, 100% 50%, 85% 50%, 100% 0, 100% 100%, 0 100%);
-    /* Simplified backup if the one above is too complex: 
-       clip-path: polygon(0 50%, 50% 50%, 100% 50%, 100% 100%, 0 100%); */
+    /* This shape meets the triangle flap to create a seamless seal */
+    clip-path: polygon(0 30%, 50% 60%, 100% 30%, 100% 100%, 0 100%);
 }
 
-/* THE WAX SEAL - Resizes with envelope */
+/* THE WAX SEAL - Scales proportionally */
 #seal { 
-    position: absolute; top: 50%; left: 50%; 
-    width: 20%; height: auto; aspect-ratio: 1/1; /* Scales with envelope width */
-    transform: translate(-50%, -50%); z-index: 5; cursor: pointer;
-    background: url('seal.png') no-repeat center; background-size: contain;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4)); 
+    position: absolute; 
+    top: 45%; left: 50%; 
+    width: 22%;            /* Scale is relative to the envelope width */
+    aspect-ratio: 1/1; 
+    transform: translate(-50%, -50%); 
+    z-index: 5; cursor: pointer;
+    background: url('seal.png') no-repeat center/contain;
+    filter: drop-shadow(0 0.5vw 1vw rgba(0,0,0,0.4)); 
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* THE LETTER */
+/* THE LETTER INSIDE */
 .letter {
-    position: absolute; top: 5%; left: 5%; width: 90%; height: 90%;
-    background: white; z-index: 1; display: flex; flex-direction: column;
-    justify-content: center; align-items: center; 
-    box-shadow: inset 0 0 30px rgba(0,0,0,0.05);
+    position: absolute; top: 10%; left: 5%; width: 90%; height: 80%;
+    background: white; z-index: 2;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    box-shadow: inset 0 0 5vw rgba(0,0,0,0.03);
+    transition: transform 0.6s ease-out 0.4s;
 }
 
-/* ANIMATION */
+/* ANIMATION STATES */
 .open .top-flap { transform: rotateX(180deg); z-index: 0; }
-.open #seal { opacity: 0; transform: translate(-50%, -50%) scale(1.5); pointer-events: none; }
-.envelope-exit { transform: translateY(100vh); opacity: 0; }
+.open #seal { opacity: 0; transform: translate(-50%, -50%) scale(1.4); pointer-events: none; }
+.open .letter { transform: translateY(-15%); }
+
+/* EXIT ANIMATION */
+.envelope-exit { transform: translateY(110vh); opacity: 0; pointer-events: none; }
 
 
 /* MAIN SITE TRANSITION */
@@ -96,9 +100,12 @@ input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; bo
 
 <div id="envelope-wrapper">
     <div class="envelope">
-        <div class="letter"> <h2 style="font-family: 'Great Vibes'; color: #d4af37; margin: 0;">M & J</h2>
-            <p style="font-family: 'Georgia'; font-size: 10px; letter-spacing: 2px;">2027</p></div> <div class="envelope-pocket"></div> <div class="flap top-flap"></div> <div id="seal" onclick="openInvitation()"></div> </div>
-           
+        <div class="letter">
+            <h2 style="font-family: 'Great Vibes'; color: #d4af37; margin: 0; font-size: 5vw;">M & J</h2>
+        </div>
+        <div class="envelope-front"></div>
+        <div class="top-flap"></div>
+        <div id="seal" onclick="openInvitation()"></div>
     </div>
 </div>
 
