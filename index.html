@@ -66,28 +66,24 @@ clip-path: polygon(0 0, 100% 0, 50% 100%);
 /* 4. THE SEAL - FIXED POSITIONING */
 /* 4. THE SEAL - LOCKED TO THE ENVELOPE */
 #seal {
-position: absolute;
-top: 60%; 
-left: 50%;
-/* This is the most important line to keep it centered */
-transform: translate(-50%, -50%); 
-
-/* Reduced size to fit the envelope proportions better */
-width: 70px; 
-height: 70px;
-
-z-index: 999; 
-display: flex;
-justify-content: center;
-align-items: center;
-cursor: pointer;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%) !important;
+    width: 80px;  /* Set your desired seal size here */
+    height: 80px;
+    z-index: 9999 !important;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #seal img {
-/* This makes the image fill the 70px box without spilling out */
-width: 100%;
-height: auto;
-display: block;
+    /* This is the magic line that stops the "Large Seal" problem */
+    width: 100%; 
+    height: auto;
+    display: block;
 }
 
 #seal:hover {
