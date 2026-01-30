@@ -55,12 +55,11 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
     content: '';
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    /* CHANGED: Using a dark gold/bronze color so it's not the same as the shadow */
-    background: rgba(139, 121, 94, 0.8); 
-    /* THICKER: Adjusted percentages slightly to make the line 2px wide */
-    clip-path: polygon(50% 100%, 0 0, 1.5% 0, 50% 98%, 98.5% 0, 100% 0);
+    /* Subtle dark 'seam' color */
+    background: rgba(0, 0, 0, 0.2); 
+    /* This creates a 1.5px border along the diagonal V-edges */
+    clip-path: polygon(50% 100%, 0 0, 1.2% 0, 50% 98.5%, 98.8% 0, 100% 0);
     pointer-events: none;
-    z-index: 10; /* Ensures it sits above the shadow filter */
 }
 
 /* THE FRONT POCKET (V-Notch) */
@@ -70,9 +69,20 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
     z-index: 3;
     background-image: url('6938.jpg'); 
     background-size: cover;
-    /* This creates the V-cutout that the top flap sits in */
     clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
     box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* THE BORDER LINES FOR THE POCKET */
+.envelope-pocket-main::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    /* Matching the dark gold/brown from your top flap */
+    background: rgba(139, 121, 94, 0.4); 
+    /* This draws the 'V' lines on the pocket edges */
+    clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 1.5%, 50% 51.5%, 0 1.5%);
+    pointer-events: none;
 }
 
 /* THE SEAL */
