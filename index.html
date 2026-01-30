@@ -74,15 +74,24 @@ body, html { margin: 0; padding: 0; background-color: #e5e0d8; font-family: 'Mon
     clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
 }    
 /* THE SEAL */
-#seal { 
-    position: absolute; 
-    top: 50%; left: 50%; 
-    width: 125px; height: 125px; 
-    transform: translate(-50%, -50%); 
-    z-index: 5; cursor: pointer;
-    background: url('seal.png') no-repeat center/contain;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); 
-    transition: opacity 0.3s ease, transform 0.3s ease;
+#seal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* ADJUST THESE VALUES */
+    width: 15vw;       /* Try 15vw to 20vw for a good size */
+    max-width: 100px;  /* This stops it from getting too huge on laptops */
+    height: auto;      /* Keeps the circle from looking like an egg */
+    
+    z-index: 10;       /* Ensures it sits ON TOP of the lines and flap */
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+#seal:hover {
+    transform: translate(-50%, -50%) scale(1.1); /* Adds a nice "pop" when touched */
 }
 
 /* THE LETTER */
