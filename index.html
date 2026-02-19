@@ -582,15 +582,15 @@ transform: translate(-50%, -50%);
 width: 100%;
 }
 #seal img { width: 100%; display: block; }    
-.seal-bob-wrapper {
-position: absolute;
-top: 58%;
-left: 50%;
-width: 18%;
-min-width: 65px;
-z-index: 100 !important;
-animation: flap-bob 4s ease-in-out infinite; 
-cursor: pointer;
+.seal-bob-wrapper { 
+    position: absolute; 
+    top: 100%; /* Centers it perfectly on the bottom edge of the flap */
+    left: 50%; 
+    width: 18%; 
+    min-width: 65px; 
+    z-index: 100 !important; 
+    /* Removed the bobbing animation because the whole flap bobs now */
+    cursor: pointer; 
 }
 
 /* Animations & Utilities */
@@ -854,8 +854,15 @@ z-index: 0;
         </div>
 
         <div class="internal-shadow"></div> 
+        
         <div class="flap-container">
             <div class="top-flap" style="background-image: url('6938.jpg');"></div> 
+            
+            <div class="seal-bob-wrapper">
+                <div id="seal" onclick="openInvitation()">
+                    <img src="seal.png" alt="Seal">
+                </div>
+            </div>
         </div>
 
         <div class="envelope-pocket-main" style="background-image: url('6938.jpg');"></div> 
@@ -865,12 +872,7 @@ z-index: 0;
         
         <div id="envelope-label">Fetching invitation...</div>
         
-        <div class="seal-bob-wrapper">
-            <div id="seal" onclick="openInvitation()">
-                <img src="seal.png" alt="Seal">
-            </div>
         </div>
-    </div>
 </div>
 
 <audio id="bg-music" loop><source src="bgm.mp3" id="config-audio" type="audio/mpeg"></audio>
@@ -1639,7 +1641,7 @@ function openInvitation() {
     
     document.getElementById('envelope-wrapper').classList.add('open');
     const seal = document.getElementById('seal');
-    seal.style.opacity = "0";
+   // THE FIX: We only disable clicking, we DO NOT set opacity to 0 anymore!
     seal.style.pointerEvents = "none";
 }
 
