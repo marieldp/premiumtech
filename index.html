@@ -7,273 +7,197 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Allison&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;700&family=Pinyon+Script&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-
 <style>
     /* =========================================
-       1. TEMPLATE SETTINGS (CHANGE DESIGN HERE)
+       TEMPLATE COLORS
        ========================================= */
     :root {
-        /* --- COLORS --- */
-        --primary-dark: #043927;   /* Emerald Green */
+        --primary-dark: #043927;   /* Emerald */
         --accent-gold: #d4af37;    /* Gold */
-        --soft-pink: #f4cfe0;      /* Blush/Pink */
-        --paper-bg: #fcfaf7;       /* Off-white Paper */
-        --white: #ffffff;
+        --soft-pink: #f4cfe0;      /* Pink */
+        --paper-bg: #fcfaf7;       /* Off-White */
         --text-grey: #4a4a4a;
-        
-        /* --- FONTS (EXACT MAPPING) --- */
-        --font-letter-script: 'Allison', cursive;        /* Envelope Letter "M&J" */
-        --font-hero-script: 'Great Vibes', cursive;      /* Landing Page Names & RSVP */
-        --font-section-script: 'Pinyon Script', cursive; /* Section Headers (Entourage, Celebration) */
-        --font-headers: 'Playfair Display', serif;       /* Names & Venues */
-        --font-body: 'Montserrat', sans-serif;           /* UI Text */
-        --font-classic: 'Georgia', serif;                /* Italic details */
     }
 
-    /* =========================================
-       2. GLOBAL STYLES
-       ========================================= */
-    @font-face {
-        font-family: 'Arielle';
-        src: url('https://fonts.cdnfonts.com/s/16288/Arielle.woff');
-        font-weight: normal; font-style: normal;
+    #gifting img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important; 
+        padding: 10px; 
+    }
+    
+    /* --- MUSIC ICON ANIMATION --- */
+    @keyframes music-pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.4); } 
+        100% { transform: scale(1); }
     }
 
-    body, html {
-        margin: 0; padding: 0;
+    .pulsing {
+        display: inline-block !important; 
+        animation: music-pulse 1.2s infinite ease-in-out;
+    }
+
+    /* --- BALANCED SPLIT TIMELINE --- */
+    #timeline {
+        position: relative;
+        overflow: hidden;
+        padding: 100px 20px;
         background-color: var(--paper-bg);
-        font-family: var(--font-body);
-        color: var(--text-grey);
-        width: 100%;
-        overflow-x: hidden !important;
+    }
+
+    .timeline-container {
+        max-width: 1000px;
+        margin: 0 auto;
         position: relative;
     }
 
-    /* Utility Classes to replace repetitive inline styles */
-    .text-center { text-align: center; }
-    .hidden { display: none !important; }
-    .paper-texture {
-        background-color: var(--paper-bg);
-        background-image: url("https://www.transparenttextures.com/patterns/handmade-paper.png");
+    /* THE CENTRAL VERTICAL LINE */
+    .timeline-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 2px;
+        background: var(--primary-dark); 
+        transform: translateX(-50%);
+        opacity: 0.3;
+        z-index: 0;
     }
 
-    /* --- ANIMATIONS --- */
-    .reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: all 1.5s ease-out; }
-    .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
-    
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    .reveal-text { opacity: 0; }
-    .show-site .reveal-text { animation: fadeInUp 1.5s ease-out forwards; }
-    .show-site .delay-1 { animation-delay: 0.1s; }
-    .show-site .delay-2 { animation-delay: 0.3s; }
-    .show-site .delay-3 { animation-delay: 0.5s; }
-    
-    @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-5px);} 60% {transform: translateY(-3px);} }
-    @keyframes music-pulse { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
-    .pulsing { display: inline-block !important; animation: music-pulse 1.2s infinite ease-in-out; }
-
-    /* =========================================
-       3. SECTION STYLES
-       ========================================= */
-
-    /* --- HERO SECTION --- */
-    #landing-hero {
-        height: 100dvh !important; width: 100%; position: relative; overflow: hidden;
-        display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-        padding-top: 5dvh; clip-path: inset(0 0 0 0);
-        background-color: var(--primary-dark);
-        background-repeat: no-repeat; background-position: center top; background-size: cover;
-    }
-    .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to bottom, rgba(4, 57, 39, 0.8) 0%, rgba(4, 57, 39, 0) 100%); z-index: 1; }
-    .hero-content { position: relative; text-align: center; z-index: 2; max-width: 90vw; }
-    .hero-names { font-family: var(--font-hero-script); font-size: clamp(50px, 8vw, 100px); color: var(--accent-gold); margin: 0; line-height: 1.1; text-shadow: 2px 2px 12px rgba(0,0,0,0.6); }
-    
-    /* --- FORMAL INVITATION --- */
-    .card-outer { position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; background-color: var(--primary-dark); border: 1px solid var(--accent-gold); border-radius: 2px; z-index: 0; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
-    .card-inner { background: var(--white); border: 1px solid var(--accent-gold); padding: 15px; position: relative; z-index: 1; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-    .card-content { border: 1.5px solid var(--accent-gold); padding: 70px 40px; position: relative; }
-    .corner { position: absolute; width: 30px; height: 30px; border-color: var(--accent-gold); border-style: solid; }
-    .tl { top: 12px; left: 12px; border-width: 2px 0 0 2px; } .tr { top: 12px; right: 12px; border-width: 2px 2px 0 0; }
-    .bl { bottom: 12px; left: 12px; border-width: 0 0 2px 2px; } .br { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; }
-
-    /* --- ENTOURAGE --- */
-    .entourage-container {
-        background-color: var(--paper-bg); max-width: 900px; margin: 0 auto; padding: 0;
-        border-radius: 4px; box-shadow: 0 30px 70px rgba(0,0,0,0.5); border: 1px solid var(--accent-gold);
-        overflow: hidden; position: relative;
-    }
-    .role-label { font-family: var(--font-body); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700; }
-    .role-name { font-family: var(--font-headers); font-size: clamp(16px, 4vw, 19px); color: var(--primary-dark); line-height: 1.8; margin-top: 15px; }
-    
-    /* --- CELEBRATION (Venues) --- */
-    .venue-card { background: var(--white); border: 1px solid var(--accent-gold); padding: 12px; position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; }
-    .venue-offset { position: absolute; top: 15px; left: 15px; right: -15px; bottom: -15px; background-color: var(--primary-dark); border: 1px solid var(--accent-gold); border-radius: 2px; z-index: 0; }
-    .btn-maps {
-        display: inline-block; padding: 12px 25px; border: 1px solid var(--primary-dark); color: var(--primary-dark);
-        text-decoration: none; font-family: var(--font-body); font-size: 10px; letter-spacing: 2px; font-weight: 700; transition: all 0.3s ease;
-    }
-    .btn-maps:hover { background-color: var(--primary-dark); color: var(--white); }
-
-    /* --- TIMELINE --- */
-    .timeline-container { max-width: 1000px; margin: 0 auto; position: relative; }
-    .timeline-container::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: var(--primary-dark); transform: translateX(-50%); opacity: 0.3; z-index: 0; }
-    .timeline-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 60px; position: relative; z-index: 1; }
-    .timeline-content-side, .timeline-image-side { width: 49%; position: relative; }
-    .timeline-image-side img { max-width: 180px; max-height: 180px; object-fit: contain; animation: none; filter: none !important; opacity: 1; }
-    .center-dot { position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; background: var(--accent-gold); border: 4px solid var(--soft-pink); border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 0 5px var(--paper-bg); z-index: 10; }
-    .timeline-row.normal { flex-direction: row; } .timeline-row.normal .timeline-content-side { text-align: right; padding-right: 30px; } .timeline-row.normal .timeline-image-side { justify-content: flex-start; padding-left: 30px; }
-    .timeline-row.reverse { flex-direction: row-reverse; } .timeline-row.reverse .timeline-content-side { text-align: left; padding-left: 30px; } .timeline-row.reverse .timeline-image-side { justify-content: flex-end; padding-right: 30px; }
-    .timeline-time { font-family: var(--font-body); color: var(--accent-gold); font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; display: block; }
-    .timeline-title { font-family: var(--font-headers); color: var(--primary-dark); font-size: 2.2rem; margin: 0 0 10px 0; line-height: 1.1; }
-    .timeline-desc { font-family: var(--font-classic); font-size: 16px; color: #666; line-height: 1.5; font-style: italic; margin: 0; }
-
-    /* --- ENVELOPE STYLES (Firefox Fixed) --- */
-/* --- ENVELOPE STYLES (Fixed for Firefox & Chrome) --- */
-    #envelope-wrapper {
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-        display: flex; justify-content: center; align-items: center;
-        z-index: 9999 !important; background-color: #f4f1ea;
-        transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    #envelope-wrapper.wrapper-exit {
-        opacity: 0 !important;
-        transform: scale(1.15) !important;
-        pointer-events: none;
-        transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
+    /* THE ROW WRAPPER */
+    .timeline-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 60px; 
+        position: relative;
+        z-index: 1;
     }
 
-    .envelope {
-        position: relative; width: 90vw; height: 60vw; max-width: 600px; max-height: 400px;
-        z-index: 10 !important; perspective: 1500px;
+    /* THE TWO SIDES */
+    .timeline-content-side, 
+    .timeline-image-side {
+        width: 49%; 
+        position: relative;
+        box-sizing: border-box;
     }
 
-    /* Layers */
-    .envelope-back {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        z-index: 1 !important; filter: brightness(0.9);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        background-size: cover; background-position: center;
-    }
-    
-    .envelope-pocket-main {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        z-index: 3 !important;
-        clip-path: polygon(0 0, 50% 60%, 100% 0, 100% 100%, 0 100%);
-        background-size: cover; background-position: center;
-    }
-    
-    /* THE FLAP (Top Triangle) */
-    .flap-container {
-        position: absolute; top: 0; left: 0; width: 100%; height: 60%;
-        z-index: 10; /* Start on top */
-        transform-origin: top;
-        transform-style: preserve-3d;
-        
-        /* 1. Animation (Bobbing) Settings */
-        animation: flap-bob 4s ease-in-out infinite;
-        
-        /* 2. Transition Settings (Opening Speed) */
-        /* Note: We delay the z-index change so it only goes behind AFTER it opens */
-        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.1s step-end 0.8s;
-        
-        filter: drop-shadow(0 5px 6px rgba(0,0,0,0.3));
-    }
-    
-    .top-flap {
-        width: 100%; height: 100%;
-        clip-path: polygon(0 0, 100% 0, 50% 100%);
-        background-size: center; background-position: center;
+    /* --- THE IMAGE SIDE --- */
+    .timeline-image-side {
+        display: flex;
+        align-items: center;
+        justify-content: center !important; /* FIX: Centers Timeline Images */
     }
 
-    /* THE OPEN STATE (When clicked) */
-    .open .flap-container {
-        animation: none !important; /* Stop bobbing immediately */
-        transform: rotateX(180deg); /* Flip up */
-        z-index: 1; /* Send behind AFTER transition (handled by transition-delay above) */
+    /* THE IMAGE ITSELF */
+    .timeline-image-side img {
+        max-width: 180px; 
+        max-height: 180px;
+        object-fit: contain;
+        animation: none; 
+        filter: none !important; 
+        opacity: 1; 
+        display: block;
     }
 
-    /* THE LETTER */
-    .letter {
-        position: absolute; bottom: 0; left: 15%; width: 70%; height: 70%;
-        background: white; z-index: 2 !important; border: 1px solid var(--accent-gold);
-        display: flex; flex-direction: column; justify-content: center !important;
-        align-items: center; text-align: center;
-        padding: 20px 20px 60px 20px; box-sizing: border-box;
-        box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
-        
-        /* Initial State */
-        transform: translateY(0);
-        opacity: 0;
-        visibility: hidden;
-        
-        /* Slide Up Animation */
-        transition: transform 1.0s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s;
+    /* THE CENTER DOT */
+    .center-dot {
+        position: absolute;
+        left: 50%;
+        top: 50%; 
+        width: 16px;
+        height: 16px;
+        background: var(--accent-gold); 
+        border: 4px solid var(--soft-pink); 
+        border-radius: 50%;
+        transform: translate(-50%, -50%); 
+        box-shadow: 0 0 0 5px var(--paper-bg); 
+        z-index: 10;
     }
 
-    /* Letter Open State */
-    .open .letter {
-        visibility: visible;
-        opacity: 1;
-        transform: translateY(-50%);
-        /* Slight delay so flap clears first */
-        transition-delay: 0.4s;
+    /* --- TYPOGRAPHY --- */
+    .event-time {
+        font-family: 'Montserrat', sans-serif;
+        color: var(--accent-gold); 
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+        display: block;
     }
 
-    /* Bottom Flap & Decorations */
-    .bottom-flap {
-        position: absolute; bottom: 0; left: 0; width: 100%; height: 43%;
-        z-index: 6; clip-path: polygon(0 100%, 100% 100%, 55% 0, 45% 0);
-        filter: brightness(0.98); background-size: cover; background-position: center;
-    }
-    .bottom-flap-lines, .envelope-lines {
-        position: absolute; width: 100%; height: 100%; pointer-events: none;
-        background-size: 100% 100%;
-    }
-    .bottom-flap-lines { bottom: 0; z-index: 7; height: 43%; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,100 L45,0 L55,0 L100,100' fill='none' stroke='black' stroke-opacity='0.08' stroke-width='0.4'/%3E%3C/svg%3E"); }
-    .envelope-lines { top: 0; z-index: 4; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L50,60 L100,0' fill='none' stroke='black' stroke-opacity='0.05' stroke-width='0.4'/%3E%3C/svg%3E"); }
-
-    /* Keyframes */
-    @keyframes flap-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-    
-    /* Seal & Label */
-    #seal { position: relative; transform: translate(-50%, -50%); width: 100%; }
-    #seal img { width: 100%; display: block; }
-    .seal-bob-wrapper {
-        position: absolute; top: 58%; left: 50%; width: 18%; min-width: 65px;
-        z-index: 100 !important; animation: flap-bob 4s ease-in-out infinite; cursor: pointer;
-    }
-    
-    #envelope-label {
-        position: absolute; bottom: 5% !important; left: 0; width: 100%; text-align: center;
-        z-index: 1000 !important; display: block !important;
-        font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 5px;
-        text-transform: uppercase; color: #666;
-        opacity: 0; transition: opacity 1.5s ease; pointer-events: none;
-    }
-    #envelope-label.reveal-active { opacity: 1 !important; }
-    #envelope-label span {
-        display: block; font-family: var(--font-hero-script); font-size: 2.5rem;
-        color: var(--primary-dark); text-transform: none; margin-top: 5px;
+    .timeline-content-side h3 {
+        font-family: 'Playfair Display', serif;
+        color: var(--primary-dark); 
+        font-size: 2.2rem;
+        margin: 0 0 10px 0;
+        line-height: 1.1;
     }
 
-    /* --- RSVP CARD --- */
-    .rsvp-card { background: #fff; padding: 40px; max-width: 600px; margin: 0 auto; border: 1px solid var(--accent-gold); box-shadow: 0 15px 45px rgba(4, 57, 39, 0.15); text-align: center; display: flex; flex-direction: column; }
-    .rsvp-card h2 { font-family: var(--font-hero-script); color: var(--primary-dark); font-size: 3rem; margin-bottom: 20px; }
-    .rsvp-card input, .rsvp-card select, .rsvp-card textarea { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px; font-family: var(--font-body); font-size: 1rem; background: var(--paper-bg); color: var(--primary-dark); box-sizing: border-box; }
-    .rsvp-card button { background-color: var(--primary-dark); color: white; font-family: var(--font-body); text-transform: uppercase; letter-spacing: 2px; padding: 15px 30px; border: none; cursor: pointer; margin-top: 10px; transition: background 0.3s ease; }
-    
-    /* --- MOBILE RESPONSIVENESS --- */
+    .timeline-content-side p {
+        font-family: 'Georgia', serif;
+        font-size: 16px;
+        color: #666;
+        line-height: 1.5;
+        font-style: italic;
+        margin: 0;
+    }
+
+    /* --- ALTERNATING SIDES LOGIC (HUGGING THE LINE) --- */
+    .timeline-row.normal { flex-direction: row; }
+    .timeline-row.normal .timeline-content-side { text-align: right; padding-right: 30px; }
+    .timeline-row.normal .timeline-image-side { justify-content: center; padding-left: 30px; }
+
+    .timeline-row.reverse { flex-direction: row-reverse; }
+    .timeline-row.reverse .timeline-content-side { text-align: left; padding-left: 30px; }
+    .timeline-row.reverse .timeline-image-side { justify-content: center; padding-right: 30px; }
+
+
+    /* iPhone 15 Plus Fix: Nudge the RSVP up on mobile screens */
     @media (max-width: 768px) {
-        .envelope { width: 95vw; height: 70vw; }
-        #envelope-label { bottom: 15%; font-size: 0.75rem; }
-        .letter { width: 90%; height: 85%; left: 5%; padding: 10px; }
-        .letter h2 { font-size: 1.8rem; margin-bottom: 5px; }
-        .letter p { font-size: 0.7rem; margin: 5px 0 10px 0; }
-        .letter button { padding: 6px 15px; font-size: 0.7rem; }
-        .open .letter { transform: translateY(-60%); }
-        #scroll-container { bottom: 90px !important; right: 25px !important; }
-        #entourage p { font-size: 16px !important; line-height: 1.8 !important; margin-top: 5px !important; margin-bottom: 20px !important; padding: 0 15px; display: block; letter-spacing: 0.5px; }
+        #scroll-container {
+            bottom: 90px !important; 
+            right: 25px !important;
+        }
+
+        #entourage p {
+            font-size: 16px !important;
+            line-height: 1.8 !important; 
+            margin-top: 5px !important;
+            margin-bottom: 20px !important; 
+            padding: 0 15px;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+
         #entourage h2 { font-size: 42px !important; }
+        
+        #dress-code div[style*="display: grid"] {
+            grid-template-columns: 1fr !important; 
+            gap: 40px !important;
+            padding: 0 10px;
+        }
+
+        #dress-code img { max-height: 250px !important; }
+
+        #dress-code div[style*="flex-wrap: wrap"] {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important; 
+            gap: 30px 10px !important;
+            justify-items: center;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        #dress-code div[style*="display: flex; align-items: center; gap: 12px"] {
+            flex-direction: column !important; 
+            text-align: center;
+            gap: 8px !important;
+        }
+
         .timeline-container { padding: 40px 5px !important; width: 100% !important; }
         .timeline-container::before { left: 50% !important; transform: translateX(-50%); }
         .timeline-content-side, .timeline-image-side { width: 50% !important; box-sizing: border-box; }
@@ -281,44 +205,145 @@
         .timeline-content-side h3 { font-size: 1.1rem !important; margin-bottom: 5px !important; }
         .timeline-content-side p { font-size: 0.7rem !important; line-height: 1.3 !important; }
         .event-time { font-size: 9px !important; }
+
         .timeline-row.normal .timeline-content-side { padding-right: 15px !important; text-align: right !important; }
         .timeline-row.normal .timeline-image-side { padding-left: 15px !important; justify-content: flex-start !important; }
         .timeline-row.reverse .timeline-content-side { padding-left: 15px !important; text-align: left !important; }
         .timeline-row.reverse .timeline-image-side { padding-right: 15px !important; justify-content: flex-end !important; }
         .center-dot { width: 12px !important; height: 12px !important; border-width: 2px !important; left: 50% !important; }
-        #gifting div[style*="display: flex"] { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 30px 10px !important; justify-items: center; max-width: 300px; margin: 0 auto; }
+        
+        /* Mobile Envelope Formatting */
+        .envelope { width: 95vw; height: 70vw; }
+        #envelope-label { bottom: 15%; font-size: 0.75rem; }
+        .letter { width: 90%; height: 85%; left: 5%; padding: 10px; }
+        .letter h2 { font-size: 1.8rem; margin-bottom: 5px; }
+        .letter p { font-size: 0.7rem; margin: 5px 0 10px 0; }
+        .letter button { padding: 6px 15px; font-size: 0.7rem; }
+        .open .letter { transform: translateY(-60%); }
     }
+
+    body, html {
+        margin: 0; padding: 0; background-color: #e5e0d8; 
+        font-family: 'Montserrat', sans-serif; color: var(--text-grey); 
+        overflow: hidden; height: 100%; 
+        width: 100%; overflow-x: hidden !important; position: relative;
+    }
+
+    #main-site { width: 100%; overflow-x: hidden !important; }
+    #months, #days, #hours, #minutes, #seconds { display: inline-block; white-space: nowrap !important; hyphens: none !important; -webkit-hyphens: none !important; }
+    #entourage p { font-weight: 400; letter-spacing: 0.3px; margin-top: 8px; animation: fadeInName 0.8s ease forwards; }
+
+    #main-site section:first-of-type { background-position: center 15% !important; }
+
+    .paper-texture {
+        background-color: var(--paper-bg);
+        background-image: url("https://www.transparenttextures.com/patterns/handmade-paper.png"); 
+    }
+
+    .reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: all 1.5s ease-out; }
+    .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    .reveal-text { opacity: 0; }
+    .show-site .reveal-text { animation: fadeInUp 1.5s ease-out forwards; }
+    .show-site .delay-1 { animation-delay: 0.1s; } 
+    .show-site .delay-2 { animation-delay: 0.3s; } 
+    .show-site .delay-3 { animation-delay: 0.5s; } 
+
+    @font-face { font-family: 'Arielle'; src: url('https://fonts.cdnfonts.com/s/16288/Arielle.woff'); font-weight: normal; font-style: normal; }
+
+    /* Envelope System */
+    #envelope-wrapper {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        display: flex; justify-content: center; align-items: center;
+        z-index: 9999 !important; background-color: #f4f1ea;
+        transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .envelope { position: relative; width: 90vw; height: 60vw; max-width: 600px; max-height: 400px; z-index: 10 !important; perspective: 1500px; }
+    .envelope-back { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('6938.jpg') center/cover no-repeat; z-index: 1 !important; filter: brightness(0.9); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+    .envelope-pocket-main { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3 !important; background: url('6938.jpg') center/cover no-repeat; clip-path: polygon(0 0, 50% 60%, 100% 0, 100% 100%, 0 100%); }
+    .envelope-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 4 !important; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L50,60 L100,0' fill='none' stroke='black' stroke-opacity='0.05' stroke-width='0.4'/%3E%3C/svg%3E"); background-size: 100% 100%; }
+
+    .letter {
+        position: absolute; bottom: 0; left: 15%; width: 70%; height: 70%; background: white;
+        z-index: 2 !important; border: 1px solid var(--accent-gold); 
+        display: flex; flex-direction: column; justify-content: center !important; align-items: center; text-align: center;
+        padding-top: 20px !important; padding-bottom: 60px !important; padding-left: 20px; padding-right: 20px;
+        box-sizing: border-box; box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+        transform: translateY(0); opacity: 0; visibility: hidden; transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s;
+    }
+    .letter h2 { font-family: 'Allison', cursive !important; font-size: 3.2rem !important; color: var(--primary-dark); font-weight: 400; margin-top: 0 !important; margin-bottom: 5px; line-height: 1; }
+    .letter p { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-grey); margin: 10px 0 20px 0; }
+    .letter button { padding: 10px 25px; font-family: 'Montserrat', sans-serif; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; border: 1px solid var(--primary-dark); transition: all 0.3s ease; }
+    .letter button.btn-yes { background-color: var(--primary-dark); color: white; }
+    .letter button.btn-yes:hover { background-color: var(--accent-gold); border-color: var(--accent-gold); }
+    .letter button.btn-no { background-color: transparent; color: var(--primary-dark); }
+    .letter button.btn-no:hover { background-color: var(--paper-bg); color: var(--accent-gold); border-color: var(--accent-gold); }
+
+    #envelope-wrapper.wrapper-exit { opacity: 0 !important; transform: scale(1.15) !important; pointer-events: none; transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) !important; }
+    .open .letter { visibility: visible; opacity: 1; transform: translateY(-50%); }
+
+    .bottom-flap { position: absolute; bottom: 0; left: 0; width: 100%; height: 43%; z-index: 6; background: url('6938.jpg') center/cover no-repeat; clip-path: polygon(0 100%, 100% 100%, 55% 0, 45% 0); filter: brightness(0.98); }
+    .bottom-flap-lines { position: absolute; bottom: 0; left: 0; width: 100%; height: 43%; z-index: 7; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,100 L45,0 L55,0 L100,100' fill='none' stroke='black' stroke-opacity='0.08' stroke-width='0.4'/%3E%3C/svg%3E"); background-size: 100% 100%; }
+    
+    .flap-container { position: absolute; top: 0; left: 0; width: 100%; height: 60%; z-index: 10 !important; transform-origin: top; transform-style: preserve-3d; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); animation: flap-bob 4s ease-in-out infinite; filter: drop-shadow(0 5px 6px rgba(0,0,0,0.3)); }
+    .top-flap { width: 100%; height: 100%; background: url('6938.jpg') center/cover no-repeat; clip-path: polygon(0 0, 100% 0, 50% 100%); }
+
+    #seal { position: relative; transform: translate(-50%, -50%); width: 100%; }
+    #seal img { width: 100%; display: block; }    
+    .seal-bob-wrapper { position: absolute; top: 58%; left: 50%; width: 18%; min-width: 65px; z-index: 100 !important; animation: flap-bob 4s ease-in-out infinite; cursor: pointer; }
+
+    .open .flap-container { animation: none !important; transform: rotateX(160deg); z-index: 1 !important; }
+    @keyframes flap-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+    @keyframes elegantPulse { 0%, 100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.4; } 50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.8; } }
+    .hidden { display: none !important; }
+
+    /* --- RSVP FORM STYLING --- */
+    .rsvp-card { background: #fff; padding: 40px; max-width: 600px; margin: 0 auto; border: 1px solid var(--accent-gold); box-shadow: 0 15px 45px rgba(4, 57, 39, 0.15); text-align: center; display: flex; flex-direction: column; }
+    .rsvp-card h2 { font-family: 'Great Vibes', cursive; color: var(--primary-dark); font-size: 3rem; margin-bottom: 20px; }
+    .rsvp-card label { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-grey); margin-bottom: 8px; text-align: left; width: 100%; display: block; }
+    .rsvp-card input, .rsvp-card select, .rsvp-card textarea { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Montserrat', sans-serif; font-size: 1rem; background: var(--paper-bg); color: var(--primary-dark); box-sizing: border-box; }
+    .rsvp-card input:focus, .rsvp-card select:focus, .rsvp-card textarea:focus { outline: none; border-color: var(--accent-gold); background: white; }
+    .rsvp-card button { background-color: var(--primary-dark); color: white; font-family: 'Montserrat', sans-serif; text-transform: uppercase; letter-spacing: 2px; padding: 15px 30px; border: none; cursor: pointer; margin-top: 10px; transition: background 0.3s ease; }
+    .rsvp-card button:hover { background-color: var(--accent-gold); }
+
+    #envelope-label { position: absolute; bottom: 5% !important; left: 0; width: 100%; text-align: center; z-index: 1000 !important; display: block !important; font-family: 'Montserrat', sans-serif; font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase; color: #666; opacity: 0; transition: opacity 1.5s ease; pointer-events: none; }
+    #envelope-label span { display: block; font-family: 'Great Vibes', cursive; font-size: 2.5rem; color: var(--primary-dark); text-transform: none; margin-top: 5px; }
+    #envelope-label.reveal-active { opacity: 1 !important; }
+
+    @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-5px);} 60% {transform: translateY(-3px);} }
+
+    #main-site section:first-of-type { height: 100dvh !important; width: 100%; position: relative; clip-path: inset(0 0 0 0); overflow: hidden; background-color: var(--primary-dark); }
+    #main-site section:first-of-type::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('1.jpg') no-repeat center top; background-size: cover; z-index: 0; }
+    #main-site section:nth-of-type(2) { position: relative; z-index: 10; margin-top: 0; }
+    #landing-hero { height: 100dvh !important; width: 100%; position: relative; overflow: hidden; clip-path: inset(0 0 0 0); background-color: var(--primary-dark); }
+    #landing-hero::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('1.jpg') no-repeat center top; background-size: cover; z-index: 0; }
 </style>
 </head>
 <body>
 
 <div id="envelope-wrapper">
     <div class="envelope">
-        <div class="envelope-back" style="background-image: url('6938.jpg');"></div>
-        
+        <div class="envelope-back"></div>
         <div class="letter">
             <div class="letter-content">
-                <h2 class="ui-envelope-initials" style="font-family: var(--font-letter-script); color: var(--primary-dark); margin: 0; font-size: 2.3rem;">M & J</h2>
-                <p style="font-family: var(--font-body); font-size: 0.8rem; margin: 10px 0;">Experience with music?</p>
+                <h2 id="config-initials" style="font-family: 'Great Vibes'; color: var(--primary-dark); margin: 0; font-size: 2.3rem;">M & J</h2>
+                <p style="font-family: 'Montserrat'; font-size: 0.8rem; margin: 10px 0;">Experience with music?</p>
                 <div style="display:flex; gap:10px; justify-content:center;">
-                    <button type="button" onclick="handleMusic(true, event)" style="padding:8px 20px; background:var(--primary-dark); color:var(--accent-gold); border:none; cursor:pointer; font-family: var(--font-body); text-transform: uppercase;">YES</button>
-                    <button type="button" onclick="handleMusic(false, event)" style="padding:8px 20px; background:white; border:1px solid var(--primary-dark); cursor:pointer; font-family: var(--font-body); text-transform: uppercase;">NO</button>
+                    <button type="button" onclick="handleMusic(true, event)" style="padding:8px 20px; background:var(--primary-dark); color:white; border:none; cursor:pointer;">YES</button>
+                    <button type="button" onclick="handleMusic(false, event)" style="padding:8px 20px; background:white; border:1px solid var(--primary-dark); cursor:pointer;">NO</button>
                 </div>
             </div>
         </div>
-
         <div class="internal-shadow"></div> 
         <div class="flap-container">
-            <div class="top-flap" style="background-image: url('6938.jpg');"></div> 
+            <div class="top-flap"></div> 
         </div>
-
-        <div class="envelope-pocket-main" style="background-image: url('6938.jpg');"></div> 
+        <div class="envelope-pocket-main"></div> 
         <div class="envelope-lines"></div> 
-        <div class="bottom-flap" style="background-image: url('6938.jpg');"></div> 
+        <div class="bottom-flap"></div> 
         <div class="bottom-flap-lines"></div> 
-        
         <div id="envelope-label">Fetching invitation...</div>
-        
         <div class="seal-bob-wrapper">
             <div id="seal" onclick="openInvitation()">
                 <img src="seal.png" alt="Seal">
@@ -327,236 +352,350 @@
     </div>
 </div>
 
-<audio id="bg-music" loop><source src="" id="ui-music-src" type="audio/mpeg"></audio>
+<audio id="bg-music" loop><source src="bgm.mp3" id="config-audio" type="audio/mpeg"></audio>
 
-<div id="main-site" style="display:none;">
-    
-    <section id="landing-hero" style="background-image: url('1.jpg');">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1 class="reveal-text delay-1" style="font-family: var(--font-hero-script); font-size: clamp(50px, 8vw, 100px); color: var(--accent-gold); margin: 0; line-height: 1.1; text-shadow: 2px 2px 12px rgba(0,0,0,0.6);">
-                <span class="ui-bride-name">Mariel</span> 
-                <span style="font-family: var(--font-classic); font-size: 0.4em; letter-spacing: 5px; color: var(--soft-pink); vertical-align: middle;">&</span> 
-                <span class="ui-groom-name">Jasper</span>
+<div id="main-site">
+    <section style="height: 100dvh !important; width: 100% !important; position: relative !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: flex-start !important; padding-top: 5dvh !important; background: url('1.jpg') no-repeat center top / cover scroll !important; clip-path: inset(0 0 0 0);">
+
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to bottom, rgba(4, 57, 39, 0.8) 0%, rgba(4, 57, 39, 0) 100%); z-index: 1;"></div>
+
+        <div style="position: relative; text-align: center; z-index: 2; max-width: 90vw;">
+            <h1 class="reveal-text delay-1" style="font-family: 'Great Vibes', cursive; font-size: clamp(50px, 8vw, 100px); color: var(--accent-gold); margin: 0; line-height: 1.1; text-shadow: 2px 2px 12px rgba(0,0,0,0.6);">
+                <span id="config-bride-1">Mariel</span> <span style="font-family: 'Georgia', serif; font-size: 0.4em; letter-spacing: 5px; color: var(--soft-pink); vertical-align: middle;">&</span> <span id="config-groom-1">Jasper</span>
             </h1>
 
             <div class="reveal-text delay-2" style="width: 80px; height: 1px; background: var(--accent-gold); margin: 15px auto;"></div>
 
-            <p class="reveal-text delay-2 ui-wedding-date" style="font-family: var(--font-classic); letter-spacing: 4px; font-size: 14px; text-transform: uppercase; color: var(--white); margin: 5px 0;">
+            <p id="config-date-1" class="reveal-text delay-2" style="font-family: 'Georgia', serif; letter-spacing: 4px; font-size: 14px; text-transform: uppercase; color: #fff; margin: 5px 0;">
                 November 6, 2027
             </p>
 
-            <p class="reveal-text delay-3" style="font-family: var(--font-classic); font-style: italic; color: var(--soft-pink); font-size: 14px; margin: 0;">
+            <p class="reveal-text delay-3" style="font-family: 'Georgia', serif; font-style: italic; color: var(--soft-pink); font-size: 14px; margin: 0;">
                 Save the Date
             </p>
-            
-            <div class="reveal-text delay-3" style="margin-top: 20px; color: white; font-family: var(--font-body); letter-spacing: 2px; font-size: 0.9rem;">
-                <span id="months">0</span> MO <span id="days">0</span> D <span id="hours">0</span> H <span id="minutes">0</span> M
-            </div>
         </div>
 
-        <div style="position: absolute; bottom: 10dvh; right: 20px; text-align: right; z-index: 9999; color: var(--accent-gold); text-transform: uppercase; font-family: var(--font-classic);">
+        <div style="position: absolute; bottom: 10dvh; right: 20px; text-align: right; z-index: 9999; color: var(--accent-gold); text-transform: uppercase; font-family: 'Georgia', serif;">
             <div style="font-size: 14px; letter-spacing: 3px; font-weight: bold; text-shadow: 2px 2px 3px rgba(0,0,0,1), -1px -1px 2px rgba(0,0,0,1);">
-                Scroll to RSVP <span style="display:block; font-size: 28px; margin-top: 2px; animation: bounce 2s infinite;">↓</span>
+                Scroll to RSVP 
+                <span style="display:block; font-size: 28px; margin-top: 2px; animation: bounce 2s infinite;">↓</span>
             </div>
         </div>
     </section>
 
-    <section id="formal-invitation" class="paper-texture" style="padding: 100px 20px; background-color: #fdf0f5; text-align: center; position: relative; z-index: 10; margin-top: -1px; overflow: hidden;">
+    <section id="formal-invitation" class="paper-texture" style="padding: 100px 20px; background-color: var(--paper-bg); color: var(--primary-dark); text-align: center; position: relative; z-index: 10; margin-top: -1px; overflow: hidden;">
         <div class="reveal-on-scroll" style="max-width: 750px; margin: 0 auto; position: relative;">
-            <div class="card-outer"></div>
-            <div class="card-inner">
-                <div class="card-content">
-                    <div class="corner tl"></div><div class="corner tr"></div>
-                    <div class="corner bl"></div><div class="corner br"></div>
-
-                    <p style="font-family: var(--font-classic); letter-spacing: 5px; font-size: 11px; text-transform: uppercase; color: var(--accent-gold); margin-bottom: 35px; font-weight: 700;">Together with their families</p>
+            <div style="position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; background-color: var(--primary-dark); border: 1px solid var(--accent-gold); border-radius: 2px; z-index: 0; box-shadow: 0 10px 40px rgba(0,0,0,0.2);"></div>
+            <div style="background: var(--white); border: 1px solid var(--accent-gold); padding: 15px; position: relative; z-index: 1; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                <div style="border: 1.5px solid var(--accent-gold); padding: 70px 40px; position: relative;">
                     
-                    <h2 style="font-family: var(--font-hero-script); font-size: clamp(55px, 12vw, 95px); color: var(--primary-dark); margin: 0; font-weight: 400; line-height: 1.1;">
-                        <span class="ui-bride-name">Mariel</span> & <span class="ui-groom-name">Jasper</span>
-                    </h2>
+                    <div style="position: absolute; top: 12px; left: 12px; width: 30px; height: 30px; border-top: 2px solid var(--accent-gold); border-left: 2px solid var(--accent-gold);"></div>
+                    <div style="position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; border-top: 2px solid var(--accent-gold); border-right: 2px solid var(--accent-gold);"></div>
+
+                    <p style="font-family: 'Georgia', serif; letter-spacing: 5px; font-size: 11px; text-transform: uppercase; color: var(--accent-gold); margin-bottom: 35px; font-weight: 700;">Together with their families</p>
+                    
+                    <h2 style="font-family: 'Great Vibes', cursive; font-size: clamp(55px, 12vw, 95px); color: var(--primary-dark); margin: 0; font-weight: 400; line-height: 1.1;"><span id="config-bride-2">Mariel</span> & <span id="config-groom-2">Jasper</span></h2>
                     
                     <div style="margin: 35px 0; color: var(--soft-pink); font-size: 35px; line-height: 1;">❦</div>
                     
-                    <p style="font-family: var(--font-classic); font-size: 19px; line-height: 2.0; color: var(--primary-dark); font-style: italic; max-width: 80%; margin: 0 auto;">
+                    <p style="font-family: 'Georgia', serif; font-size: 19px; line-height: 2.0; color: var(--primary-dark); font-style: italic; max-width: 80%; margin: 0 auto;">
                         request the honor of your presence as they exchange marriage vows and celebrate the beginning of their life together
                     </p>
 
                     <div style="margin-top: 55px; padding-top: 35px; border-top: 1px solid var(--soft-pink); display: inline-block; width: 100%;">
-                        <p style="font-family: var(--font-body); font-weight: 700; letter-spacing: 6px; font-size: 14px; text-transform: uppercase; color: var(--accent-gold); margin: 0;">Saturday</p>
-                        <p class="ui-wedding-date-caps" style="font-family: var(--font-headers); font-size: clamp(24px, 5vw, 36px); margin: 15px 0; color: var(--primary-dark); letter-spacing: 4px; font-weight: 700;">NOVEMBER 06, 2027</p>
-                        <p class="ui-wedding-time" style="font-family: var(--font-body); font-weight: 400; letter-spacing: 6px; font-size: 14px; text-transform: uppercase; color: var(--accent-gold); margin: 0;">At Two O'Clock in the Afternoon</p>
+                        <p style="font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 6px; font-size: 14px; text-transform: uppercase; color: var(--accent-gold); margin: 0;">Saturday</p>
+                        <p id="config-date-2" style="font-family: 'Playfair Display', serif; font-size: clamp(24px, 5vw, 36px); margin: 15px 0; color: var(--primary-dark); letter-spacing: 4px; font-weight: 700;">NOVEMBER 06, 2027</p>
+                        <p id="config-time-1" style="font-family: 'Montserrat', sans-serif; font-weight: 400; letter-spacing: 6px; font-size: 14px; text-transform: uppercase; color: var(--accent-gold); margin: 0;">At Two O'Clock in the Afternoon</p>
                     </div>
+                    <div style="position: absolute; bottom: 12px; left: 12px; width: 30px; height: 30px; border-bottom: 2px solid var(--accent-gold); border-left: 2px solid var(--accent-gold);"></div>
+                    <div style="position: absolute; bottom: 12px; right: 12px; width: 30px; height: 30px; border-bottom: 2px solid var(--accent-gold); border-right: 2px solid var(--accent-gold);"></div>
                 </div>
             </div>
         </div>
     </section>
 
     <section id="entourage" style="padding: 100px 15px; background-color: var(--primary-dark); text-align: center;">
-        <div class="entourage-container reveal-on-scroll paper-texture">
+        <div class="reveal-on-scroll paper-texture" style="background-color: var(--paper-bg); max-width: 900px; margin: 0 auto; padding: 0; border-radius: 4px; box-shadow: 0 30px 70px rgba(0,0,0,0.5); border: 1px solid var(--accent-gold); overflow: hidden; position: relative;">
+
             <img src="flower.png" alt="Floral Top" style="position: absolute; top: -4vw; left: 0; width: 100%; height: auto; display: block; transform: rotate(180deg) scale(1.05); z-index: 5; pointer-events: none;">
 
-            <div style="padding: 160px 20px 140px 20px; position: relative; z-index: 2;">
+            <div style="padding: 160px 20px 140px 20px; position: relative; z-index: 2; word-wrap: break-word; overflow-wrap: break-word;">
+
                 <div style="margin-bottom: 60px;">
-                    <h2 style="font-family: var(--font-section-script); font-size: clamp(40px, 10vw, 65px); color: var(--accent-gold); margin-bottom: 10px; line-height: 1.1;">The Entourage</h2>
+                    <h2 style="font-family: 'Pinyon Script', cursive; font-size: clamp(40px, 10vw, 65px); color: var(--accent-gold); margin-bottom: 10px; line-height: 1.1;">The Entourage</h2>
                     <div style="width: 50px; height: 1px; background: var(--accent-gold); margin: 0 auto; opacity: 0.5;"></div>
                 </div>
 
                 <div style="margin-bottom: 60px;">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px;">
-                        <div><span class="role-label">Parents of the Bride</span><p id="Parents_Bride" class="role-name"></p></div>
-                        <div><span class="role-label">Parents of the Groom</span><p id="Parents_Groom" class="role-name"></p></div>
+                        <div>
+                            <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700;">Parents of the Bride</span>
+                            <p id="Parents_Bride" style="font-family: 'Playfair Display', serif; font-size: clamp(16px, 4vw, 19px); color: var(--primary-dark); line-height: 1.8; margin-top: 15px;"></p>
+                        </div>
+                        <div>
+                            <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700;">Parents of the Groom</span>
+                            <p id="Parents_Groom" style="font-family: 'Playfair Display', serif; font-size: clamp(16px, 4vw, 19px); color: var(--primary-dark); line-height: 1.8; margin-top: 15px;"></p>
+                        </div>
                     </div>
                 </div>
 
                 <div style="margin-bottom: 60px;">
-                    <span class="role-label" style="font-size: 11px; letter-spacing: 4px; display: block; margin-bottom: 25px;">Principal Sponsors</span>
+                    <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700; display: block; margin-bottom: 25px;">Principal Sponsors</span>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px;">
-                        <p id="Principal_Sponsors_Male" class="role-name"></p>
-                        <p id="Principal_Sponsors_Female" class="role-name"></p>
+                        <p id="Principal_Sponsors_Male" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--primary-dark); line-height: 2.0;"></p>
+                        <p id="Principal_Sponsors_Female" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--primary-dark); line-height: 2.0;"></p>
                     </div>
                 </div>
 
                 <div style="margin-bottom: 60px;">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px;">
-                        <div><span class="role-label">Maid of Honor</span><p id="Maid_of_Honor" class="role-name"></p></div>
-                        <div><span class="role-label">Best Man</span><p id="Best_Man" class="role-name"></p></div>
+                        <div>
+                            <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700;">Maid of Honor</span>
+                            <p id="Maid_of_Honor" style="font-family: 'Playfair Display', serif; font-size: clamp(18px, 5vw, 20px); color: var(--primary-dark); margin-top: 10px;"></p>
+                        </div>
+                        <div>
+                            <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700;">Best Man</span>
+                            <p id="Best_Man" style="font-family: 'Playfair Display', serif; font-size: clamp(18px, 5vw, 20px); color: var(--primary-dark); margin-top: 10px;"></p>
+                        </div>
                     </div>
                 </div>
 
                 <div style="margin-bottom: 60px;">
-                    <span class="role-label" style="font-size: 11px; letter-spacing: 4px; display: block; margin-bottom: 30px;">Secondary Sponsors</span>
+                    <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700; display: block; margin-bottom: 30px;">Secondary Sponsors</span>
                     <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
-                        <div style="flex: 1 1 200px;"><span class="role-label" style="font-size: 9px; letter-spacing: 2px; font-weight: 800;">To Light Our Path</span><p id="Sponsors_Candle" class="role-name"></p></div>
-                        <div style="flex: 1 1 200px;"><span class="role-label" style="font-size: 9px; letter-spacing: 2px; font-weight: 800;">To Clothe Us As One</span><p id="Sponsors_Veil" class="role-name"></p></div>
-                        <div style="flex: 1 1 200px;"><span class="role-label" style="font-size: 9px; letter-spacing: 2px; font-weight: 800;">To Bind Us Together</span><p id="Sponsors_Cord" class="role-name"></p></div>
+                        <div style="flex: 1 1 200px;"> <span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-gold); font-weight: 800;">To Light Our Path</span>
+                            <p id="Sponsors_Candle" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--primary-dark); margin-top: 5px;"></p>
+                        </div>
+                        <div style="flex: 1 1 200px;">
+                            <span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-gold); font-weight: 800;">To Clothe Us As One</span>
+                            <p id="Sponsors_Veil" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--primary-dark); margin-top: 5px;"></p>
+                        </div>
+                        <div style="flex: 1 1 200px;">
+                            <span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-gold); font-weight: 800;">To Bind Us Together</span>
+                            <p id="Sponsors_Cord" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--primary-dark); margin-top: 5px;"></p>
+                        </div>
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 60px;">
-                    <div><span class="role-label">Bridesmaids</span><p id="Bridesmaids" class="role-name"></p></div>
-                    <div><span class="role-label">Groomsmen</span><p id="Groomsmen" class="role-name"></p></div>
+                    <div>
+                        <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700;">Bridesmaids</span>
+                        <p id="Bridesmaids" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--primary-dark); line-height: 2.0; margin-top: 15px;"></p>
+                    </div>
+                    <div>
+                        <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700;">Groomsmen</span>
+                        <p id="Groomsmen" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--primary-dark); line-height: 2.0; margin-top: 15px;"></p>
+                    </div>
                 </div>
 
                 <div style="margin-bottom: 60px;">
                     <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
-                        <div style="flex: 1 1 140px;"><span class="role-label" style="font-size: 9px;">Ring Bearer</span><p id="Ring_Bearer" class="role-name"></p></div>
-                        <div style="flex: 1 1 140px;"><span class="role-label" style="font-size: 9px;">Coin Bearer</span><p id="Coin_Bearer" class="role-name"></p></div>
-                        <div style="flex: 1 1 140px;"><span class="role-label" style="font-size: 9px;">Bible Bearer</span><p id="Bible_Bearer" class="role-name"></p></div>
+                        <div style="flex: 1 1 140px;">
+                            <span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold);">Ring Bearer</span>
+                            <p id="Ring_Bearer" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--primary-dark); margin-top: 10px;"></p>
+                        </div>
+                        <div style="flex: 1 1 140px;">
+                            <span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold);">Coin Bearer</span>
+                            <p id="Coin_Bearer" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--primary-dark); margin-top: 10px;"></p>
+                        </div>
+                        <div style="flex: 1 1 140px;">
+                            <span style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold);">Bible Bearer</span>
+                            <p id="Bible_Bearer" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--primary-dark); margin-top: 10px;"></p>
+                        </div>
                     </div>
                 </div>
 
                 <div style="margin-bottom: 20px;">
-                    <span class="role-label">Flower Girls</span>
-                    <p id="Flower_Girls" class="role-name"></p>
+                    <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700;">Flower Girls</span>
+                    <p id="Flower_Girls" style="font-family: 'Playfair Display', serif; font-size: clamp(15px, 4vw, 17px); color: var(--primary-dark); line-height: 2.0; margin-top: 15px;"></p>
                 </div>
-            </div>
+                
+            </div> 
             <img src="flower.png" alt="Floral Footer" style="position: absolute; bottom: -4vw; left: 0; width: 100%; height: auto; display: block; transform: scale(1.05); z-index: 5; pointer-events: none;">
         </div>
     </section>
 
+
     <section id="celebration" style="padding: 50px 20px 100px 20px; background-color: #fdf0f5; text-align: center;">
         <div class="reveal-on-scroll" style="max-width: 1000px; margin: 0 auto;">
-            <h2 style="font-family: var(--font-section-script); font-size: clamp(45px, 8vw, 60px); color: var(--primary-dark); margin-bottom: 60px;">The Celebration</h2>
-            <div class="venue-grid">
+            
+            <h2 style="font-family: 'Pinyon Script', cursive; font-size: clamp(45px, 8vw, 60px); color: var(--primary-dark); margin-bottom: 60px;">The Celebration</h2>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 80px 40px; align-items: stretch;">
+                
                 <div style="position: relative; display: flex; flex-direction: column;">
-                    <div class="venue-offset"></div>
-                    <div class="venue-card">
-                        <img src="church1.jpg" alt="The Church" class="venue-img">
+                    <div style="position: absolute; top: 15px; left: 15px; right: -15px; bottom: -15px; background-color: var(--primary-dark); border: 1px solid var(--accent-gold); border-radius: 2px; z-index: 0;"></div>
+                    
+                    <div style="background: var(--white); border: 1px solid var(--accent-gold); padding: 12px; position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%;">
+                        
+                        <img src="church1.jpg" alt="The Church" style="width: 100%; height: 280px; object-fit: cover; display: block; border: 1px solid var(--soft-pink);">
+                        
                         <div style="padding: 30px 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                            
                             <div>
-                                <span class="role-label">The Ceremony</span>
+                                <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700;">The Ceremony</span>
+                                
                                 <div style="min-height: 80px; display: flex; align-items: center; justify-content: center;">
-                                    <h3 class="ui-church-name" style="font-family: var(--font-headers); font-size: 24px; color: var(--primary-dark); margin: 0; line-height: 1.2;">Santuario de San Antonio Parish</h3>
+                                    <h3 id="config-church-name" style="font-family: 'Playfair Display', serif; font-size: 24px; color: var(--primary-dark); margin: 0; line-height: 1.2;">Santuario de San Antonio Parish</h3> 
                                 </div>
-                                <p class="ui-ceremony-time" style="font-family: var(--font-body); font-size: 13px; color: var(--primary-dark); letter-spacing: 1px; font-weight: 600; text-transform: uppercase; margin-bottom: 25px;">1:00 PM IN THE AFTERNOON</p>
-                                <p class="ui-church-address" style="font-family: var(--font-classic); font-size: 15px; color: var(--primary-dark); font-style: italic; margin-bottom: 25px;">3117 McKinley Rd, Forbes Park, Makati City</p>
+
+                                <p id="config-church-time" style="font-family: 'Montserrat', sans-serif; font-size: 13px; color: var(--primary-dark); letter-spacing: 1px; font-weight: 600; text-transform: uppercase; margin-bottom: 25px;">
+                                    1:00 PM IN THE AFTERNOON
+                                </p>
+
+                                <p id="config-church-address" style="font-family: 'Georgia', serif; font-size: 15px; color: var(--primary-dark); font-style: italic; margin-bottom: 25px;">
+                                    3117 McKinley Rd, Forbes Park, Makati City, 1220 Metro Manila
+                                </p>
                             </div>
+                            
                             <div>
-                                <a href="#" target="_blank" class="btn-maps ui-church-map">GET DIRECTIONS</a>
+                                <a id="config-church-map" href="https://www.google.com/maps/search/?api=1&query=Santuario+de+San+Antonio+Parish+Forbes+Park" target="_blank" style="
+                                    display: inline-block; 
+                                    padding: 12px 25px; 
+                                    border: 1px solid var(--primary-dark); 
+                                    color: var(--primary-dark); 
+                                    text-decoration: none; 
+                                    font-family: 'Montserrat', sans-serif; 
+                                    font-size: 10px; 
+                                    letter-spacing: 2px; 
+                                    font-weight: 700; 
+                                    transition: all 0.3s ease;
+                                " 
+                                onmouseover="this.style.backgroundColor='var(--primary-dark)'; this.style.color='#ffffff'" 
+                                onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--primary-dark)'">
+                                    GET DIRECTIONS
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div style="position: relative; display: flex; flex-direction: column;">
-                    <div class="venue-offset"></div>
-                    <div class="venue-card">
-                        <img src="bl.jpeg" alt="The Reception" class="venue-img">
+                    <div style="position: absolute; top: 15px; left: 15px; right: -15px; bottom: -15px; background-color: var(--primary-dark); border: 1px solid var(--accent-gold); border-radius: 2px; z-index: 0;"></div>
+                    
+                    <div style="background: var(--white); border: 1px solid var(--accent-gold); padding: 12px; position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%;">
+                        
+                        <img src="bl.jpeg" alt="The Reception" style="width: 100%; height: 280px; object-fit: cover; display: block; border: 1px solid var(--soft-pink);">
+                        
                         <div style="padding: 30px 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                            
                             <div>
-                                <span class="role-label">The Reception</span>
+                                <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700;">The Reception</span>
+                                
                                 <div style="min-height: 80px; display: flex; align-items: center; justify-content: center;">
-                                    <h3 style="font-family: var(--font-headers); font-size: 24px; color: var(--primary-dark); margin: 0; line-height: 1.2;">
-                                        <span class="ui-reception-name">The Blue Leaf Mckinley</span><br>
-                                        <span class="ui-reception-sub" style="font-size: 0.8em; font-weight: 400;">Banyan Pavillion</span>
+                                    <h3 style="font-family: 'Playfair Display', serif; font-size: 24px; color: var(--primary-dark); margin: 0; line-height: 1.2;">
+                                        <span id="config-reception-name">The Blue Leaf Mckinley</span><br>
+                                        <span id="config-reception-sub" style="font-size: 0.8em; font-weight: 400;">Banyan Pavillion</span>
                                     </h3>
                                 </div>
-                                <p class="ui-reception-time" style="font-family: var(--font-body); font-size: 13px; color: var(--primary-dark); letter-spacing: 1px; font-weight: 600; text-transform: uppercase; margin-bottom: 25px;">4:00 IN THE AFTERNOON</p>
-                                <p class="ui-reception-address" style="font-family: var(--font-classic); font-size: 15px; color: var(--primary-dark); font-style: italic; margin-bottom: 15px;">100 Park Avenue, McKinley Hill Village, Taguig</p>
-                                <p style="font-family: var(--font-body); font-size: 10px; color: var(--accent-gold); letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 25px;">Valet Parking Available</p>
+
+                                <p id="config-reception-time" style="font-family: 'Montserrat', sans-serif; font-size: 13px; color: var(--primary-dark); letter-spacing: 1px; font-weight: 600; text-transform: uppercase; margin-bottom: 25px;">
+                                    4:00 IN THE AFTERNOON
+                                </p>
+
+                                <p id="config-reception-address" style="font-family: 'Georgia', serif; font-size: 15px; color: var(--primary-dark); font-style: italic; margin-bottom: 15px;">
+                                    100 Park Avenue, McKinley Hill Village, Taguig, 1633 Metro Manila
+                                </p>
+                                
+                                <p style="font-family: 'Montserrat', sans-serif; font-size: 10px; color: var(--accent-gold); letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 25px;">
+                                    Valet Parking Available
+                                </p>
                             </div>
+
                             <div>
-                                <a href="#" target="_blank" class="btn-maps ui-reception-map">GET DIRECTIONS</a>
+                                <a id="config-reception-map" href="https://www.google.com/maps/search/?api=1&query=The+Blue+Leaf+McKinley+Taguig" target="_blank" style="
+                                    display: inline-block; 
+                                    padding: 12px 25px; 
+                                    border: 1px solid var(--primary-dark); 
+                                    color: var(--primary-dark); 
+                                    text-decoration: none; 
+                                    font-family: 'Montserrat', sans-serif; 
+                                    font-size: 10px; 
+                                    letter-spacing: 2px; 
+                                    font-weight: 700; 
+                                    transition: all 0.3s ease;
+                                " 
+                                onmouseover="this.style.backgroundColor='var(--primary-dark)'; this.style.color='#ffffff'" 
+                                onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--primary-dark)'">
+                                    GET DIRECTIONS
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
 
     <section id="timeline">
-        <div class="reveal-on-scroll" style="max-width: 1000px; margin: 0 auto; text-align: center;">
-            <h2 style="font-family: var(--font-section-script); font-size: clamp(45px, 8vw, 60px); color: var(--primary-dark); margin-bottom: 60px;">The Wedding Timeline</h2>
+        <div class="reveal-on-scroll" style="max-width: 1000px; margin: 0 auto;">
+            <h2 style="font-family: 'Pinyon Script', cursive; font-size: clamp(45px, 8vw, 60px); color: var(--primary-dark); margin-bottom: 60px; text-align: center;">The Wedding Timeline</h2>
         </div>
+
         <div class="timeline-container">
+
             <div class="timeline-row normal reveal-on-scroll">
                 <div class="timeline-content-side">
-                    <span class="event-time">01:00 PM</span>
+                    <span class="event-time" id="config-tl-time-1">01:00 PM</span>
                     <h3>The Ceremony</h3>
-                    <p class="ui-church-name-short">Santuario de San Antonio Parish</p>
+                    <p id="config-tl-desc-1">Santuario de San Antonio Parish<br>McKinley Rd, Makati</p>
                 </div>
                 <div class="center-dot"></div>
-                <div class="timeline-image-side"><img src="church.png" alt="Church"></div>
+                <div class="timeline-image-side">
+                    <img src="church.png" alt="Church">
+                </div>
             </div>
+
             <div class="timeline-row reverse reveal-on-scroll">
                 <div class="timeline-content-side">
-                    <span class="event-time">04:00 PM</span>
+                    <span class="event-time" id="config-tl-time-2">04:00 PM</span>
                     <h3>Cocktail Hour</h3>
-                    <p>The Blue Leaf Foyer<br>A time for toasts & conversations</p>
+                    <p id="config-tl-desc-2">The Blue Leaf Foyer<br>A time for toasts & conversations</p>
                 </div>
                 <div class="center-dot"></div>
-                <div class="timeline-image-side"><img src="cocktail.png" alt="Toast"></div>
+                <div class="timeline-image-side">
+                    <img src="cocktail.png" alt="Toast">
+                </div>
             </div>
+
             <div class="timeline-row normal reveal-on-scroll">
                 <div class="timeline-content-side">
-                    <span class="event-time">05:00 PM</span>
+                    <span class="event-time" id="config-tl-time-3">05:00 PM</span>
                     <h3>Dinner & Reception</h3>
-                    <p>The Blue Leaf Main Hall<br>Grand Entrance of the Couple</p>
+                    <p id="config-tl-desc-3">The Blue Leaf Main Hall<br>Grand Entrance of the Couple</p>
                 </div>
                 <div class="center-dot"></div>
-                <div class="timeline-image-side"><img src="reception.png" alt="Dinner"></div>
+                <div class="timeline-image-side">
+                    <img src="reception.png" alt="Dinner">
+                </div>
             </div>
+
             <div class="timeline-row reverse reveal-on-scroll">
                 <div class="timeline-content-side">
-                    <span class="event-time">07:00 PM</span>
+                    <span class="event-time" id="config-tl-time-4">07:00 PM</span>
                     <h3>The After Party</h3>
-                    <p>Dancing Under the Stars<br>Drinks & Late Night Snacks</p>
+                    <p id="config-tl-desc-4">Dancing Under the Stars<br>Drinks & Late Night Snacks</p>
                 </div>
                 <div class="center-dot"></div>
-                <div class="timeline-image-side"><img src="party.png" alt="Music"></div>
+                <div class="timeline-image-side">
+                    <img src="party.png" alt="Music">
+                </div>
             </div>
+
         </div>
     </section>
 
-    <section style="padding: 100px 20px; background-color: #ffffff; color: var(--primary-dark); text-align: center;">
+    <section style="padding: 100px 20px; background-color: var(--white); color: var(--primary-dark); text-align: center;">
         <div class="reveal-on-scroll" style="max-width: 1000px; margin: 0 auto;">
-            <h2 style="font-family: var(--font-hero-script); font-size: clamp(45px, 8vw, 60px); color: var(--primary-dark); margin-bottom: 50px;">The Journey to Forever</h2>
+            <h2 style="font-family: 'Great Vibes', cursive; font-size: clamp(45px, 8vw, 60px); color: var(--primary-dark); margin-bottom: 50px;">The Journey to Forever</h2>
+            
             <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 60px;">
+                
                 <div style="flex: 1; min-width: 300px;">
                     <img src="2.jpg" style="width: 100%; border: 1px solid var(--accent-gold); padding: 10px; background: #fff; box-shadow: 15px 15px 0px var(--primary-dark);">
                 </div>
+                
                 <div style="flex: 1; min-width: 300px; margin-top: 80px; transition-delay: 0.3s;">
                     <img src="3.jpg" style="width: 100%; border: 1px solid var(--accent-gold); padding: 10px; background: #fff; box-shadow: -15px 15px 0px var(--soft-pink);">
                 </div>
@@ -566,7 +705,7 @@
 
     <section style="padding: 100px 0; background-color: var(--primary-dark); text-align: center;">
         <div class="reveal-on-scroll" style="max-width: 800px; margin: 0 auto; padding: 0 20px;">
-            <h2 style="font-family: var(--font-hero-script); font-size: 40px; color: var(--accent-gold); margin-bottom: 30px;">Our Story in Motion</h2>
+            <h2 style="font-family: 'Great Vibes', cursive; font-size: 40px; color: var(--accent-gold); margin-bottom: 30px;">Our Story in Motion</h2>
             <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border: 1px solid var(--accent-gold);">
                 <iframe src="https://www.youtube.com/embed/8RjcJXikhrk?rel=0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe>
             </div>
@@ -581,121 +720,175 @@
         </div>
     </section>
 
+    <section id="dress-code" style="padding: 80px 20px; background-color: var(--white); text-align: center;">
+        <div class="reveal-on-scroll" style="max-width: 1000px; margin: 0 auto;">
+            <h2 style="font-family: 'Pinyon Script', cursive; font-size: clamp(45px, 8vw, 60px); color: var(--primary-dark); margin-bottom: 20px;">Dress Code</h2>
+            <div style="width: 50px; height: 1px; background: var(--accent-gold); margin: 0 auto 40px auto;"></div>
+            <p style="font-family: 'Georgia', serif; font-size: 16px; color: #4a4a4a; line-height: 1.8; font-style: italic; max-width: 600px; margin: 0 auto 60px auto;">
+                We kindly ask you to dress in formal attire, strictly following our celebration color palette. We request that guests reserve wearing white for the bride.
+            </p>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+                <div style="display: flex; align-items: center; gap: 12px; flex-direction: column;">
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background-color: var(--primary-dark); border: 2px solid var(--accent-gold);"></div>
+                    <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; text-transform: uppercase; letter-spacing: 2px;">Emerald</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; flex-direction: column;">
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background-color: var(--accent-gold); border: 2px solid var(--primary-dark);"></div>
+                    <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; text-transform: uppercase; letter-spacing: 2px;">Gold</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; flex-direction: column;">
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background-color: var(--soft-pink); border: 2px solid var(--primary-dark);"></div>
+                    <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; text-transform: uppercase; letter-spacing: 2px;">Blush</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; flex-direction: column;">
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background-color: #000000; border: 2px solid var(--accent-gold);"></div>
+                    <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; text-transform: uppercase; letter-spacing: 2px;">Black</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="reminders" style="padding: 80px 20px; background-color: #fdf0f5;">
         <div class="reveal-on-scroll" style="max-width: 1100px; margin: 0 auto;">
-            <h2 style="font-family: var(--font-section-script); font-size: clamp(45px, 8vw, 60px); color: var(--primary-dark); margin-bottom: 80px; text-align: center;">Important Reminders</h2>
+            
+            <h2 style="font-family: 'Pinyon Script', cursive; font-size: clamp(45px, 8vw, 60px); color: var(--primary-dark); margin-bottom: 80px; text-align: center;">Important Reminders</h2>
+
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 60px 40px;">
+                
                 <div>
                     <div style="text-align: center; margin-bottom: 15px;">
-                        <span style="font-family: var(--font-body); font-size: 30px; color: var(--accent-gold); font-weight: 700; opacity: 0.4; display: block;">01</span>
-                        <h3 style="font-family: var(--font-body); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary-dark); font-weight: 700; margin-top: 5px;">RSVP</h3>
+                        <span style="font-family: 'Montserrat', sans-serif; font-size: 30px; color: var(--accent-gold); font-weight: 700; opacity: 0.4; display: block;">01</span>
+                        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary-dark); font-weight: 700; margin-top: 5px;">RSVP</h3>
                     </div>
-                    <p style="font-family: var(--font-classic); font-size: 14px; color: var(--primary-dark); line-height: 1.8; text-align: justify;">
-                        Kindly respond by <strong class="ui-rsvp-deadline">October 1st, 2027</strong>. To ensure a seamless dining experience for all our guests, we are unable to accommodate late RSVPs or any changes to the guest list after this date.
+                    <p style="font-family: 'Georgia', serif; font-size: 14px; color: var(--primary-dark); line-height: 1.8; text-align: justify; text-justify: inter-word;">
+                        Kindly respond by <strong id="config-rsvp-deadline">October 1st, 2027</strong>. To ensure a seamless dining experience for all our guests, we are unable to accommodate late RSVPs or any changes to the guest list after this date.
                     </p>
                 </div>
+
                 <div>
                     <div style="text-align: center; margin-bottom: 15px;">
-                        <span style="font-family: var(--font-body); font-size: 30px; color: var(--accent-gold); font-weight: 700; opacity: 0.4; display: block;">02</span>
-                        <h3 style="font-family: var(--font-body); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary-dark); font-weight: 700; margin-top: 5px;">Strictly by Invitation</h3>
+                        <span style="font-family: 'Montserrat', sans-serif; font-size: 30px; color: var(--accent-gold); font-weight: 700; opacity: 0.4; display: block;">02</span>
+                        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary-dark); font-weight: 700; margin-top: 5px;">Strictly by Invitation</h3>
                     </div>
-                    <p style="font-family: var(--font-classic); font-size: 14px; color: var(--primary-dark); line-height: 1.8; text-align: justify;">
+                    <p style="font-family: 'Georgia', serif; font-size: 14px; color: var(--primary-dark); line-height: 1.8; text-align: justify; text-justify: inter-word;">
                         We love your little ones, but due to venue restrictions, this will be an <strong>adults-only affair</strong>. We are unable to accommodate children or additional guests not specifically named on the invitation.
                     </p>
                 </div>
+
                 <div>
                     <div style="text-align: center; margin-bottom: 15px;">
-                        <span style="font-family: var(--font-body); font-size: 30px; color: var(--accent-gold); font-weight: 700; opacity: 0.4; display: block;">03</span>
-                        <h3 style="font-family: var(--font-body); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary-dark); font-weight: 700; margin-top: 5px;">Punctuality</h3>
+                        <span style="font-family: 'Montserrat', sans-serif; font-size: 30px; color: var(--accent-gold); font-weight: 700; opacity: 0.4; display: block;">03</span>
+                        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary-dark); font-weight: 700; margin-top: 5px;">Punctuality</h3>
                     </div>
-                    <p style="font-family: var(--font-classic); font-size: 14px; color: var(--primary-dark); line-height: 1.8; text-align: justify;">
-                        The ceremony begins promptly at <strong class="ui-ceremony-start-time">1:00 PM</strong>. We request that you arrive by 12:30 PM to be seated comfortably. The church doors will be closed once the entourage enters.
+                    <p style="font-family: 'Georgia', serif; font-size: 14px; color: var(--primary-dark); line-height: 1.8; text-align: justify; text-justify: inter-word;">
+                        The ceremony begins promptly at <strong id="config-reminder-time">1:00 PM</strong>. We request that you arrive by 12:30 PM to be seated comfortably. The church doors will be closed once the entourage enters.
                     </p>
                 </div>
+
                 <div>
                     <div style="text-align: center; margin-bottom: 15px;">
-                        <span style="font-family: var(--font-body); font-size: 30px; color: var(--accent-gold); font-weight: 700; opacity: 0.4; display: block;">04</span>
-                        <h3 style="font-family: var(--font-body); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary-dark); font-weight: 700; margin-top: 5px;">Dress Code</h3>
+                        <span style="font-family: 'Montserrat', sans-serif; font-size: 30px; color: var(--accent-gold); font-weight: 700; opacity: 0.4; display: block;">04</span>
+                        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary-dark); font-weight: 700; margin-top: 5px;">Dress Code</h3>
                     </div>
-                    <p style="font-family: var(--font-classic); font-size: 14px; color: var(--primary-dark); line-height: 1.8; text-align: justify;">
+                    <p style="font-family: 'Georgia', serif; font-size: 14px; color: var(--primary-dark); line-height: 1.8; text-align: justify; text-justify: inter-word;">
                         Formal Attire. We would love for you to dress in our celebration palette. Please see our dress code section for details. We kindly ask that guests reserve wearing white for the bride.
                     </p>
                 </div>
+
                 <div>
                     <div style="text-align: center; margin-bottom: 15px;">
-                        <span style="font-family: var(--font-body); font-size: 30px; color: var(--accent-gold); font-weight: 700; opacity: 0.4; display: block;">05</span>
-                        <h3 style="font-family: var(--font-body); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary-dark); font-weight: 700; margin-top: 5px;">Parking & Logistics</h3>
+                        <span style="font-family: 'Montserrat', sans-serif; font-size: 30px; color: var(--accent-gold); font-weight: 700; opacity: 0.4; display: block;">05</span>
+                        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary-dark); font-weight: 700; margin-top: 5px;">Parking & Logistics</h3>
                     </div>
-                    <p style="font-family: var(--font-classic); font-size: 14px; color: var(--primary-dark); line-height: 1.8; text-align: justify;">
+                    <p style="font-family: 'Georgia', serif; font-size: 14px; color: var(--primary-dark); line-height: 1.8; text-align: justify; text-justify: inter-word;">
                         For your convenience and ease, complimentary valet parking is available at the main entrance of the Blue Leaf McKinley. Please allow extra time for drop-off.
                     </p>
                 </div>
+
                 <div>
                     <div style="text-align: center; margin-bottom: 15px;">
-                        <span style="font-family: var(--font-body); font-size: 30px; color: var(--accent-gold); font-weight: 700; opacity: 0.4; display: block;">06</span>
-                        <h3 style="font-family: var(--font-body); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary-dark); font-weight: 700; margin-top: 5px;">The Hashtag</h3>
+                        <span style="font-family: 'Montserrat', sans-serif; font-size: 30px; color: var(--accent-gold); font-weight: 700; opacity: 0.4; display: block;">06</span>
+                        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary-dark); font-weight: 700; margin-top: 5px;">The Hashtag</h3>
                     </div>
-                    <p style="font-family: var(--font-classic); font-size: 14px; color: var(--primary-dark); line-height: 1.8; text-align: justify;">
-                        Share the love! We would love to see the celebration through your eyes. Please tag your photos on social media with our official hashtag: <strong class="ui-hashtag">#MarielGetsJasper</strong>
+                    <p style="font-family: 'Georgia', serif; font-size: 14px; color: var(--primary-dark); line-height: 1.8; text-align: justify; text-justify: inter-word;">
+                        Share the love! We would love to see the celebration through your eyes. Please tag your photos on social media with our official hashtag: <strong class="config-hashtag-text">#MarielGetsJasper</strong>
                     </p>
                 </div>
+
             </div>
         </div>
     </section>
 
     <section id="gifting" style="padding: 80px 20px; text-align: center; background-color: #ffffff;">
         <div class="reveal-on-scroll" style="max-width: 1100px; margin: 0 auto;">
-            <h2 style="font-family: var(--font-section-script); font-size: clamp(45px, 8vw, 60px); color: var(--primary-dark); margin-bottom: 20px;">Gifting</h2>
+            
+            <h2 style="font-family: 'Pinyon Script', cursive; font-size: clamp(45px, 8vw, 60px); color: var(--primary-dark); margin-bottom: 20px;">Gifting</h2>
+            
             <div style="width: 50px; height: 1px; background: var(--accent-gold); margin: 0 auto 40px auto;"></div>
-            <p style="font-family: var(--font-classic); font-size: 16px; color: #4a4a4a; line-height: 1.8; font-style: italic; max-width: 600px; margin: 0 auto 60px auto;">
+
+            <p style="font-family: 'Georgia', serif; font-size: 16px; color: #4a4a4a; line-height: 1.8; font-style: italic; max-width: 600px; margin: 0 auto 60px auto;">
                 Your presence at our wedding is the greatest gift of all. However, should you wish to honor us with a gift, a contribution to our future home would be warmly appreciated.
             </p>
+
             <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+                
                 <div style="flex: 1; min-width: 280px; max-width: 320px;">
                     <div style="aspect-ratio: 1 / 1; width: 100%; border: 1.5px solid var(--accent-gold); background: #fff; padding: 20px; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
                         <img src="gcash.jpg" style="width: 100% !important; height: 100% !important; object-fit: contain !important;">
                     </div>
-                    <span class="role-label">GCash</span>
-                    <p style="font-family: var(--font-body); font-size: 14px; color: var(--primary-dark); margin: 5px 0; font-weight: 600;">Mariel or Jasper</p>
+                    <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700;">GCash</span>
+                    <p style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--primary-dark); margin: 5px 0; font-weight: 600;" class="config-couple-or">Mariel or Jasper</p>
                 </div>
+
                 <div style="flex: 1; min-width: 280px; max-width: 320px; transition-delay: 0.2s;">
                     <div style="aspect-ratio: 1 / 1; width: 100%; border: 1.5px solid var(--accent-gold); background: #fff; padding: 20px; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
                         <img src="maya.jpg" style="width: 100% !important; height: 100% !important; object-fit: contain !important;">
                     </div>
-                    <span class="role-label">Maya</span>
-                    <p style="font-family: var(--font-body); font-size: 14px; color: var(--primary-dark); margin: 5px 0; font-weight: 600;">Mariel or Jasper</p>
+                    <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700;">Maya</span>
+                    <p style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--primary-dark); margin: 5px 0; font-weight: 600;" class="config-couple-or">Mariel or Jasper</p>
                 </div>
+
                 <div style="flex: 1; min-width: 280px; max-width: 320px; transition-delay: 0.4s;">
                     <div style="aspect-ratio: 1 / 1; width: 100%; border: 1.5px solid var(--accent-gold); background: #fff; padding: 20px; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
                         <img src="maribank.png" style="width: 100% !important; height: 100% !important; object-fit: contain !important;">
                     </div>
-                    <span class="role-label">MariBank</span>
-                    <p style="font-family: var(--font-body); font-size: 14px; color: var(--primary-dark); margin: 5px 0; font-weight: 600;">Mariel or Jasper</p>
+                    <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700;">MariBank</span>
+                    <p style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--primary-dark); margin: 5px 0; font-weight: 600;" class="config-couple-or">Mariel or Jasper</p>
                 </div>
+
             </div>
         </div>
     </section>
 
-    <section id="footer" style="padding: 40px 20px 30px 20px; background-color: var(--primary-dark); color: var(--white); text-align: center;">
+    <section id="footer" style="padding: 40px 20px 30px 20px; background-color: var(--primary-dark); color: #ffffff; text-align: center;">
+        
         <div class="reveal-on-scroll" style="max-width: 800px; margin: 0 auto;">
-            <h2 style="font-family: var(--font-section-script); font-size: clamp(32px, 5vw, 45px); color: var(--white); margin-top: 0; margin-bottom: 15px; line-height: 1.2;">
+            
+            <h2 style="font-family: 'Pinyon Script', cursive; font-size: clamp(32px, 5vw, 45px); color: #ffffff; margin-top: 0; margin-bottom: 15px; line-height: 1.2;">
                 We can't wait to celebrate with you <span style="color: var(--soft-pink); font-size: 0.8em;">❦</span>
             </h2>
+
             <div style="margin-bottom: 20px;">
-                <p style="font-family: var(--font-body); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700; margin-bottom: 4px;">Questions?</p>
-                <p style="font-family: var(--font-classic); font-size: 14px; line-height: 1.2; color: #e0e0e0; margin: 0;">
-                    <span class="ui-coordinator">Coordinator Name</span> | <span style="font-style: italic; opacity: 0.8;" class="ui-coordinator-num">0917 123 4567</span>
+                <p style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700; margin-bottom: 4px;">
+                    Questions?
+                </p>
+                <p style="font-family: 'Georgia', serif; font-size: 14px; line-height: 1.2; color: #e0e0e0; margin: 0;">
+                    <span id="config-coord-name">Coordinator Name</span>  |  <span style="font-style: italic; opacity: 0.8;" id="config-coord-num">0917 123 4567</span>
                 </p>
             </div>
+
             <div style="border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 15px; margin-top: 15px;">
-                <p style="font-family: var(--font-body); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-gold); margin: 0;">
-                    <span class="ui-hashtag">#MarielGetsJasper</span> | <span class="ui-wedding-year">2027</span>
+                <p style="font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-gold); margin: 0;">
+                    <span class="config-hashtag-text">#MarielGetsJasper</span>  |  <span id="config-wedding-year">2027</span>
                 </p>
             </div>
+
         </div>
     </section>
 
-</div> <button id="musicBtn" onclick="toggleMusic()" style="
+</div>
+
+<button id="musicBtn" onclick="toggleMusic()" style="
     position: fixed; 
     bottom: 30px; 
     right: 30px; 
@@ -714,132 +907,119 @@
     opacity: 0; 
     transition: opacity 0.5s ease, background-color 0.3s ease, color 0.3s ease;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    padding: 0 !important; /* THE FIX: Centers the Music Icon */
 ">
     <span id="musicIcon">♪</span>
 </button>
 
 <script>
-/* ------------------------------------------------
-   TEMPLATE CONFIGURATION (EDIT THIS SECTION ONLY)
-   ------------------------------------------------
-*/
+/* =========================================================
+   TEMPLATE CONFIGURATION
+   Change names, dates, links, and text here. The script 
+   will safely apply them to your HTML without breaking layout.
+   ========================================================= */
 const CONFIG = {
-    // Basic Details
-    brideName: "Mariel",
-    groomName: "Jasper",
-    weddingDate: "November 6, 2027", // Format: Month DD, YYYY
-    weddingTime: "2:00 PM", // For countdown logic
-    weddingTimeText: "At Two O'Clock in the Afternoon", // Display text
-    weddingYear: "2027",
+    // --- 1. Basic Details ---
+    bride: "Mariel",
+    groom: "Jasper",
+    dateFull: "November 6, 2027",       // Example: November 6, 2027
+    dateCaps: "NOVEMBER 06, 2027",      // Example: NOVEMBER 06, 2027
+    year: "2027",
     
-    // Venues
+    // --- 2. Venues & Times ---
+    timeCountdown: "2:00 PM",           // Used for the countdown timer logic
+    timeText: "At Two O'Clock in the Afternoon",
+    
     churchName: "Santuario de San Antonio Parish",
-    churchNameShort: "Santuario de San Antonio Parish", // For timeline
+    churchNameShort: "Santuario de San Antonio Parish", // Used in timeline
     churchAddress: "3117 McKinley Rd, Forbes Park, Makati City",
-    churchMapLink: "https://www.google.com/maps/search/?api=1&query=Santuario+de+San+Antonio+Parish+Forbes+Park",
-    ceremonyStartTime: "1:00 PM",
+    churchTime: "1:00 PM IN THE AFTERNOON",
+    churchStartTime: "1:00 PM",         // Used in reminders
+    churchMap: "https://www.google.com/maps/search/?api=1&query=Santuario+de+San+Antonio+Parish+Forbes+Park",
     
     receptionName: "The Blue Leaf Mckinley",
     receptionSub: "Banyan Pavillion",
     receptionAddress: "100 Park Avenue, McKinley Hill Village, Taguig",
-    receptionMapLink: "https://www.google.com/maps/search/?api=1&query=The+Blue+Leaf+McKinley+Taguig",
     receptionTime: "4:00 IN THE AFTERNOON",
+    receptionMap: "https://www.google.com/maps/search/?api=1&query=The+Blue+Leaf+McKinley+Taguig",
     
-    // Reminders
+    // --- 3. Timeline Items ---
+    tlTime1: "01:00 PM", tlDesc1: "Santuario de San Antonio Parish<br>McKinley Rd, Makati",
+    tlTime2: "04:00 PM", tlDesc2: "The Blue Leaf Foyer<br>A time for toasts & conversations",
+    tlTime3: "05:00 PM", tlDesc3: "The Blue Leaf Main Hall<br>Grand Entrance of the Couple",
+    tlTime4: "07:00 PM", tlDesc4: "Dancing Under the Stars<br>Drinks & Late Night Snacks",
+    
+    // --- 4. Details & Tech ---
     rsvpDeadline: "October 1st, 2027",
     hashtag: "#MarielGetsJasper",
-    coordinatorName: "Coordinator Name",
-    coordinatorNum: "0917 123 4567",
-    
-    // Tech
-    webAppUrl: "https://script.google.com/macros/s/AKfycbzrtwb3bnwahRGg94f6Eu3Qj1zsfGw3hga7Y5a23q293gI60mFJ818kGw5zbYtuKTBn/exec",
-    musicFile: "bgm.mp3"
+    coordName: "Coordinator Name",
+    coordNum: "0917 123 4567",
+    musicFile: "bgm.mp3",
+    webAppUrl: "https://script.google.com/macros/s/AKfycbzrtwb3bnwahRGg94f6Eu3Qj1zsfGw3hga7Y5a23q293gI60mFJ818kGw5zbYtuKTBn/exec"
 };
 
 // =========================================================
-//  DO NOT EDIT BELOW THIS LINE (LOGIC PRESERVED)
+//  DO NOT EDIT BELOW THIS LINE (System Logic)
 // =========================================================
 
-// 1. INJECT CONFIG DATA INTO HTML
+// Safe text injector
+const applyText = (id, text) => { const el = document.getElementById(id); if (el) el.innerHTML = text; };
+const applyClassText = (cls, text) => { document.querySelectorAll('.' + cls).forEach(el => el.innerHTML = text); };
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Names & Initials
-    updateText('.ui-bride-name', CONFIG.brideName);
-    updateText('.ui-groom-name', CONFIG.groomName);
-    updateText('.ui-envelope-initials', `${CONFIG.brideName.charAt(0)} & ${CONFIG.groomName.charAt(0)}`);
+    // Inject Configuration
+    applyText('config-initials', `${CONFIG.bride.charAt(0)} & ${CONFIG.groom.charAt(0)}`);
+    applyText('config-bride-1', CONFIG.bride); applyText('config-bride-2', CONFIG.bride);
+    applyText('config-groom-1', CONFIG.groom); applyText('config-groom-2', CONFIG.groom);
+    applyText('config-date-1', CONFIG.dateFull); applyText('config-date-2', CONFIG.dateCaps);
+    applyText('config-time-1', CONFIG.timeText);
     
-    // Date & Time
-    updateText('.ui-wedding-date', CONFIG.weddingDate);
-    updateText('.ui-wedding-date-caps', CONFIG.weddingDate.toUpperCase());
-    updateText('.ui-wedding-time', CONFIG.weddingTimeText.toUpperCase());
-    updateText('.ui-wedding-year', CONFIG.weddingYear);
+    applyText('config-church-name', CONFIG.churchName);
+    applyText('config-church-time', CONFIG.churchTime);
+    applyText('config-church-address', CONFIG.churchAddress);
+    const cmap = document.getElementById('config-church-map'); if(cmap) cmap.href = CONFIG.churchMap;
     
-    // Venues
-    updateText('.ui-church-name', CONFIG.churchName);
-    updateText('.ui-church-name-short', CONFIG.churchNameShort);
-    updateText('.ui-church-address', CONFIG.churchAddress);
-    updateHref('.ui-church-map', CONFIG.churchMapLink);
-    updateText('.ui-ceremony-time', CONFIG.ceremonyStartTime + " IN THE AFTERNOON");
-    updateText('.ui-ceremony-start-time', CONFIG.ceremonyStartTime);
+    applyText('config-reception-name', CONFIG.receptionName);
+    applyText('config-reception-sub', CONFIG.receptionSub);
+    applyText('config-reception-time', CONFIG.receptionTime);
+    applyText('config-reception-address', CONFIG.receptionAddress);
+    const rmap = document.getElementById('config-reception-map'); if(rmap) rmap.href = CONFIG.receptionMap;
     
-    updateText('.ui-reception-name', CONFIG.receptionName);
-    updateText('.ui-reception-sub', CONFIG.receptionSub);
-    updateText('.ui-reception-address', CONFIG.receptionAddress);
-    updateHref('.ui-reception-map', CONFIG.receptionMapLink);
-    updateText('.ui-reception-time', CONFIG.receptionTime);
+    applyClassText('ui-church-name-short', CONFIG.churchNameShort);
+    applyText('config-tl-time-1', CONFIG.tlTime1); applyText('config-tl-desc-1', CONFIG.tlDesc1);
+    applyText('config-tl-time-2', CONFIG.tlTime2); applyText('config-tl-desc-2', CONFIG.tlDesc2);
+    applyText('config-tl-time-3', CONFIG.tlTime3); applyText('config-tl-desc-3', CONFIG.tlDesc3);
+    applyText('config-tl-time-4', CONFIG.tlTime4); applyText('config-tl-desc-4', CONFIG.tlDesc4);
     
-    // Reminders & Footer
-    updateText('.ui-rsvp-deadline', CONFIG.rsvpDeadline);
-    updateText('.ui-hashtag', CONFIG.hashtag);
-    updateText('.ui-coordinator', CONFIG.coordinatorName);
-    updateText('.ui-coordinator-num', CONFIG.coordinatorNum);
+    applyText('config-rsvp-deadline', CONFIG.rsvpDeadline);
+    applyText('config-reminder-time', CONFIG.churchStartTime);
+    applyClassText('config-hashtag-text', CONFIG.hashtag);
+    applyClassText('config-couple-or', `${CONFIG.bride} or ${CONFIG.groom}`);
     
-    // Music Source
-    const audioSrc = document.getElementById('ui-music-src');
-    if(audioSrc) audioSrc.src = CONFIG.musicFile;
-    document.getElementById('bg-music').load();
+    applyText('config-coord-name', CONFIG.coordName);
+    applyText('config-coord-num', CONFIG.coordNum);
+    applyText('config-wedding-year', CONFIG.year);
 
-    // Start Logic
-    initializeSite();
-});
+    const msrc = document.getElementById('config-audio'); if(msrc) msrc.src = CONFIG.musicFile;
+    const audioEl = document.getElementById('bg-music'); if(audioEl) audioEl.load();
 
-// Helper Functions
-function updateText(selector, text) {
-    document.querySelectorAll(selector).forEach(el => el.textContent = text);
-}
-function updateHref(selector, link) {
-    document.querySelectorAll(selector).forEach(el => el.href = link);
-}
-
-// 2. MAIN LOGIC (RSVP, ENTOURAGE, ETC.)
-const urlParams = new URLSearchParams(window.location.search);
-const token = urlParams.get('id');
-let guestData = null;
-
-function initializeSite() {
-    // Guest Check
+    // Init Logic
     if (token) checkGuestStatus();
     else {
         const lbl = document.getElementById('envelope-label');
-        if (lbl) {
-            lbl.innerHTML = `With love, to <span>Guest</span>`;
-            lbl.classList.add('reveal-active');
-        }
+        if (lbl) { lbl.innerHTML = `With love, to <span>Guest</span>`; lbl.classList.add('reveal-active'); }
     }
 
-    // Scroll Observer
     const revealElements = document.querySelectorAll('.reveal-on-scroll');
-    if (typeof observer !== 'undefined') {
-        revealElements.forEach(el => observer.observe(el));
-    }
+    if (typeof observer !== 'undefined') revealElements.forEach(el => observer.observe(el));
 
-    // Load Entourage
     loadEntourage();
+    setInterval(updateCountdown, 1000); updateCountdown();
+});
 
-    // Start Countdown
-    console.log("Countdown starting...");
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-}
+const urlParams = new URLSearchParams(window.location.search);
+const token = urlParams.get('id');
+let guestData = null;
 
 function checkGuestStatus() {
     fetch(`${CONFIG.webAppUrl}?id=${encodeURIComponent(token)}`)
@@ -856,17 +1036,22 @@ function checkGuestStatus() {
 }
 
 function openInvitation() {
-    document.getElementById('envelope-wrapper').classList.add('open');
+    // FIREFOX FIX: Stop CSS animation immediately before adding the 'open' transform state
+    const flap = document.querySelector('.flap-container');
+    if (flap) { flap.style.animation = 'none'; }
+    
+    // Very tiny delay ensures browser registers the animation stop before triggering flip
+    setTimeout(() => {
+        document.getElementById('envelope-wrapper').classList.add('open');
+    }, 10);
+    
     const seal = document.getElementById('seal');
     seal.style.opacity = "0";
     seal.style.pointerEvents = "none";
 }
 
 function handleMusic(play, event) {
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
+    if (event) { event.preventDefault(); event.stopPropagation(); }
 
     const mBtn = document.getElementById('musicBtn');
     const mIcon = document.getElementById('musicIcon');
@@ -877,16 +1062,16 @@ function handleMusic(play, event) {
     if (mBtn) {
         mBtn.style.display = 'flex'; 
         if (play) {
-            mBtn.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-gold');
-            mBtn.style.color = getComputedStyle(document.documentElement).getPropertyValue('--primary-dark');
+            mBtn.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-gold').trim();
+            mBtn.style.color = getComputedStyle(document.documentElement).getPropertyValue('--primary-dark').trim();
             mIcon.classList.add("pulsing"); 
             if (audio) {
                 audio.volume = 1.0; 
                 audio.play().catch(e => console.error("Playback failed:", e));
             }
         } else {
-            mBtn.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-dark');
-            mBtn.style.color = getComputedStyle(document.documentElement).getPropertyValue('--accent-gold');
+            mBtn.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-dark').trim();
+            mBtn.style.color = getComputedStyle(document.documentElement).getPropertyValue('--accent-gold').trim();
             mIcon.classList.remove("pulsing");
         }
     }
@@ -901,9 +1086,7 @@ function handleMusic(play, event) {
         if (typeof setupMusicObserver === "function") { setupMusicObserver(); }
     }, 100);
 
-    setTimeout(() => {
-        document.getElementById('envelope-wrapper').style.display = "none";
-    }, 800);
+    setTimeout(() => { document.getElementById('envelope-wrapper').style.display = "none"; }, 800);
 }
 
 function showMainForm() {
@@ -970,14 +1153,9 @@ function showDoneView(data) {
          </div>`;
 }
 
-// SMART SCROLL REVEAL OBSERVER
 const observerOptions = { threshold: 0.1 }; 
 const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-        }
-    });
+    entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); } });
 }, observerOptions);
 
 function loadEntourage() {
@@ -988,18 +1166,9 @@ function loadEntourage() {
             const el = document.getElementById(roleID);
             if (el) {
                 let text = data[roleID].trim();
-                if (text.includes(',')) {
-                    // List of people
-                    el.innerHTML = text.split(',').map(n => n.trim()).join('<br>');
-                } 
-                else if (text.includes('&')) {
-                    // Couple/Parents
-                    let names = text.split('&');
-                    el.innerHTML = names[0].trim() + '<br>' + names[1].trim();
-                } 
-                else {
-                    el.innerHTML = text;
-                }
+                if (text.includes(',')) { el.innerHTML = text.split(',').map(n => n.trim()).join('<br>'); } 
+                else if (text.includes('&')) { let names = text.split('&'); el.innerHTML = names[0].trim() + '<br>' + names[1].trim(); } 
+                else { el.innerHTML = text; }
                 el.style.opacity = "1";
             }
         });
@@ -1007,10 +1176,8 @@ function loadEntourage() {
     });
 }
 
-// THE COUNTDOWN LOGIC
 function updateCountdown() {
-    // Combines config Date and Time
-    const wedding = new Date(`${CONFIG.weddingDate} ${CONFIG.weddingTime}`).getTime();
+    const wedding = new Date(`${CONFIG.dateFull} ${CONFIG.timeCountdown}`).getTime();
     const now = new Date().getTime();
     const diff = wedding - now;
 
@@ -1020,40 +1187,29 @@ function updateCountdown() {
     const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 30.44)) / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-    const setDisplay = (id, val) => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.textContent = Math.max(0, val).toString();
-        }
-    };
+    const setDisplay = (id, val) => { const el = document.getElementById(id); if (el) { el.textContent = Math.max(0, val).toString(); } };
 
     setDisplay("months", months);
     setDisplay("days", days);
     setDisplay("hours", hours);
     setDisplay("minutes", minutes);
-    // setDisplay("seconds", seconds); // Optional if you want seconds
 }
 
-// TOGGLE MUSIC FUNCTION
 function toggleMusic() {
     var audio = document.getElementById("bg-music");
     var btn = document.getElementById("musicBtn");
     var icon = document.getElementById("musicIcon");
     
-    // Get colors from CSS variables
     const gold = getComputedStyle(document.documentElement).getPropertyValue('--accent-gold').trim();
     const green = getComputedStyle(document.documentElement).getPropertyValue('--primary-dark').trim();
 
     if (audio.paused) {
-        // TURN ON
         audio.play();
         btn.style.backgroundColor = gold; 
         btn.style.color = green; 
         icon.classList.add("pulsing"); 
     } else {
-        // TURN OFF
         audio.pause();
         btn.style.backgroundColor = green; 
         btn.style.color = gold; 
@@ -1062,30 +1218,15 @@ function toggleMusic() {
 }
 
 function setupMusicObserver() {
-    // 1. Target the Button
     var btn = document.getElementById("musicBtn");
-    
-    // 2. Target the Hero Section
     var heroSection = document.querySelector('#landing-hero');
-
     if (!btn || !heroSection) return;
-
-    // 3. Create the Observer
     var observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
-            // If Hero Section is NOT intersecting (it's off screen), SHOW button
-            if (!entry.isIntersecting) {
-                btn.style.opacity = "1";
-                btn.style.pointerEvents = "auto";
-            } else {
-                // If Hero Section IS visible, HIDE button
-                btn.style.opacity = "0";
-                btn.style.pointerEvents = "none";
-            }
+            if (!entry.isIntersecting) { btn.style.opacity = "1"; btn.style.pointerEvents = "auto"; } 
+            else { btn.style.opacity = "0"; btn.style.pointerEvents = "none"; }
         });
-    }, { threshold: 0.1 }); // Trigger when 10% of hero is left
-
-    // 4. Start Watching
+    }, { threshold: 0.1 });
     observer.observe(heroSection);
 }
 </script>
