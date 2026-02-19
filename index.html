@@ -24,7 +24,7 @@
 
 .pulsing {
     display: inline-block !important; /* REQUIRED for animation to work */
-    animation: music-pulse 1.2s infinite ease-in-out;
+animation: music-pulse 1.2s infinite ease-in-out !important;
 }
 
 /* --- BALANCED SPLIT TIMELINE --- */
@@ -876,8 +876,10 @@ z-index: 0;
 </div>
 
 <audio id="bg-music" loop><source src="bgm.mp3" id="config-audio" type="audio/mpeg"></audio>
-<button id="musicBtn" onclick="toggleMusic()" style="position: fixed; bottom: 25px; right: 25px; z-index: 9999; display: none; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid #d4af37; cursor: pointer; background-color: #043927; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: all 0.5s ease; opacity: 0;">
-    <span id="musicIcon" style="font-size: 22px; color: #d4af37 !important; line-height: 1;">🎵</span>
+<button id="musicBtn" onclick="toggleMusic()" style="position: fixed; bottom: 25px; right: 25px; z-index: 9999; display: none; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid #d4af37; cursor: pointer; background-color: #043927; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: all 0.4s ease; opacity: 0; outline: none; padding: 0;">
+    <svg id="musicSvg" viewBox="0 0 24 24" width="26" height="26" style="transition: fill 0.3s ease;">
+        <path id="musicPath" fill="#d4af37" d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+    </svg>
 </button>
 
 <div id="main-site" style="display:none;">
@@ -1652,28 +1654,28 @@ function handleMusic(play, event) {
     if (event) { event.preventDefault(); event.stopPropagation(); }
 
     const mBtn = document.getElementById('musicBtn');
-    const mIcon = document.getElementById('musicIcon');
+    const mPath = document.getElementById('musicPath');
     const audio = document.getElementById('bg-music');
 
     if (audio) { audio.currentTime = 4; }
     
-    if (mBtn && mIcon) {
+    if (mBtn && mPath) {
         mBtn.style.display = 'flex'; 
         
         if (play) {
-            // YES: Gold Background, White Icon
+            // PLAYING: Gold Background, White Icon
             mBtn.style.backgroundColor = "#d4af37"; 
-            mIcon.style.setProperty('color', '#ffffff', 'important'); // Forces White
-            mIcon.classList.add("pulsing"); 
+            mPath.setAttribute('fill', '#ffffff'); // Forces White
+            mBtn.classList.add("pulsing"); 
             if (audio) {
                 audio.volume = 1.0; 
                 audio.play().catch(e => console.error("Playback failed:", e));
             }
         } else {
-            // NO: Emerald Background, Gold Icon
+            // PAUSED: Emerald Background, Gold Icon
             mBtn.style.backgroundColor = "#043927"; 
-            mIcon.style.setProperty('color', '#d4af37', 'important'); // Forces Gold
-            mIcon.classList.remove("pulsing");
+            mPath.setAttribute('fill', '#d4af37'); // Forces Gold
+            mBtn.classList.remove("pulsing");
         }
     }
 
@@ -1695,20 +1697,20 @@ function handleMusic(play, event) {
 function toggleMusic() {
     var audio = document.getElementById("bg-music");
     var btn = document.getElementById("musicBtn");
-    var icon = document.getElementById("musicIcon");
+    var path = document.getElementById("musicPath");
 
     if (audio.paused) {
         // TURN ON: Gold Background, White Icon
         audio.play();
         btn.style.backgroundColor = "#d4af37"; 
-        icon.style.setProperty('color', '#ffffff', 'important');
-        icon.classList.add("pulsing");
+        path.setAttribute('fill', '#ffffff');
+        btn.classList.add("pulsing");
     } else {
         // TURN OFF (Pause): Emerald Background, Gold Icon
         audio.pause();
         btn.style.backgroundColor = "#043927"; 
-        icon.style.setProperty('color', '#d4af37', 'important');
-        icon.classList.remove("pulsing");
+        path.setAttribute('fill', '#d4af37');
+        btn.classList.remove("pulsing");
     }
 }
 
