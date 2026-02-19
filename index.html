@@ -876,8 +876,8 @@ z-index: 0;
 </div>
 
 <audio id="bg-music" loop><source src="bgm.mp3" id="config-audio" type="audio/mpeg"></audio>
-<button id="musicBtn" onclick="toggleMusic()" style="position: fixed; bottom: 25px; left: 25px; z-index: 9999; display: none; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 50%; border: 1px solid #d4af37; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: opacity 0.5s ease, background-color 0.3s ease, color 0.3s ease;">
-    <span id="musicIcon" style="font-size: 20px;">🎵</span>
+<button id="musicBtn" onclick="toggleMusic()" style="position: fixed; bottom: 25px; right: 25px; z-index: 9999; display: none; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid #d4af37; cursor: pointer; background-color: #043927; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: all 0.5s ease; opacity: 0;">
+    <span id="musicIcon" style="font-size: 22px; color: #d4af37;">🎵</span>
 </button>
 
 <div id="main-site" style="display:none;">
@@ -1647,6 +1647,7 @@ function openInvitation() {
    // THE FIX: We only disable clicking, we DO NOT set opacity to 0 anymore!
     seal.style.pointerEvents = "none";
 }
+    
 function handleMusic(play, event) {
     if (event) {
         event.preventDefault();
@@ -1657,38 +1658,28 @@ function handleMusic(play, event) {
     const mIcon = document.getElementById('musicIcon');
     const audio = document.getElementById('bg-music');
 
-    // 1. ALWAYS PRE-SET THE TIME (The Fix)
-    if (audio) {
-        // This ensures that even if they click NO, 
-        // the next time they click play, it starts at 4s.
-        audio.currentTime = 4; 
-    }
+    if (audio) { audio.currentTime = 4; }
     
-    // 2. Setup the button state
     if (mBtn) {
-        mBtn.style.display = 'flex'; // Make it exist
+        mBtn.style.display = 'flex'; 
         
         if (play) {
-            // YES: Gold, Green Text, Pulsing
+            // YES: Gold Background, White Icon
             mBtn.style.backgroundColor = "#d4af37"; 
-            mBtn.style.color = "#043927";
+            mIcon.style.color = "#ffffff";
             mIcon.classList.add("pulsing"); 
-            
-            // Actually play the audio
             if (audio) {
                 audio.volume = 1.0; 
                 audio.play().catch(e => console.error("Playback failed:", e));
             }
         } else {
-            // NO: Green, Gold Text, No Pulse
+            // NO: Emerald Background, Gold Icon
             mBtn.style.backgroundColor = "#043927"; 
-            mBtn.style.color = "#d4af37";
+            mIcon.style.color = "#d4af37";
             mIcon.classList.remove("pulsing");
-            // We don't call .play(), but .currentTime is already set to 4 above!
         }
     }
 
-    // 3. Reveal Animation
     document.getElementById('envelope-wrapper').classList.add('wrapper-exit');
 
     setTimeout(() => {
@@ -1696,11 +1687,7 @@ function handleMusic(play, event) {
         document.body.classList.add('show-site');
         document.body.style.overflow = 'auto'; 
         document.documentElement.style.overflow = 'auto';
-        
-        // Trigger the scroll observer
-        if (typeof setupMusicObserver === "function") {
-            setupMusicObserver(); 
-        }
+        setupMusicObserver(); 
     }, 100);
 
     setTimeout(() => {
@@ -1714,17 +1701,17 @@ function toggleMusic() {
     var icon = document.getElementById("musicIcon");
 
     if (audio.paused) {
-        // TURN ON
+        // TURN ON: Gold Background, White Icon
         audio.play();
-        btn.style.backgroundColor = "#d4af37"; // Gold
-        btn.style.color = "#043927"; // Green Text
-        icon.classList.add("pulsing"); // START PULSE
+        btn.style.backgroundColor = "#d4af37"; 
+        icon.style.color = "#ffffff";
+        icon.classList.add("pulsing");
     } else {
-        // TURN OFF
+        // TURN OFF: Emerald Background, Gold Icon
         audio.pause();
-        btn.style.backgroundColor = "#043927"; // Green
-        btn.style.color = "#d4af37"; // Gold Text
-        icon.classList.remove("pulsing"); // STOP PULSE
+        btn.style.backgroundColor = "#043927"; 
+        icon.style.color = "#d4af37";
+        icon.classList.remove("pulsing");
     }
 }
 
