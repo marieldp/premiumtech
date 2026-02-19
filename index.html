@@ -128,35 +128,133 @@
     .timeline-desc { font-family: var(--font-classic); font-size: 16px; color: #666; line-height: 1.5; font-style: italic; margin: 0; }
 
     /* --- ENVELOPE STYLES (Firefox Fixed) --- */
-    #envelope-wrapper { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; z-index: 9999 !important; background-color: #f4f1ea; transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-    #envelope-wrapper.wrapper-exit { opacity: 0 !important; transform: scale(1.15) !important; pointer-events: none; transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) !important; }
-    .envelope { position: relative; width: 90vw; height: 60vw; max-width: 600px; max-height: 400px; z-index: 10 !important; perspective: 1500px; }
-    .envelope-back { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1 !important; filter: brightness(0.9); box-shadow: 0 10px 30px rgba(0,0,0,0.15); background-size: cover; background-position: center; }
-    .envelope-pocket-main { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3 !important; clip-path: polygon(0 0, 50% 60%, 100% 0, 100% 100%, 0 100%); background-size: cover; background-position: center; }
-    .envelope-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 4 !important; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L50,60 L100,0' fill='none' stroke='black' stroke-opacity='0.05' stroke-width='0.4'/%3E%3C/svg%3E"); background-size: 100% 100%; }
-    
-    .letter {
-        position: absolute; bottom: 0; left: 15%; width: 70%; height: 70%; background: white; z-index: 2 !important; border: 1px solid var(--accent-gold);
-        display: flex; flex-direction: column; justify-content: center !important; align-items: center; text-align: center;
-        padding: 20px 20px 60px 20px; box-sizing: border-box; box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
-        transform: translateY(0); opacity: 0; visibility: hidden; 
-        transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s; 
+/* --- ENVELOPE STYLES (Fixed for Firefox & Chrome) --- */
+    #envelope-wrapper {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        display: flex; justify-content: center; align-items: center;
+        z-index: 9999 !important; background-color: #f4f1ea;
+        transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .open .letter { visibility: visible; opacity: 1; transform: translateY(-50%); transition-delay: 0.6s; /* Fix for Firefox */ }
+    #envelope-wrapper.wrapper-exit {
+        opacity: 0 !important;
+        transform: scale(1.15) !important;
+        pointer-events: none;
+        transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
+    }
+
+    .envelope {
+        position: relative; width: 90vw; height: 60vw; max-width: 600px; max-height: 400px;
+        z-index: 10 !important; perspective: 1500px;
+    }
+
+    /* Layers */
+    .envelope-back {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 1 !important; filter: brightness(0.9);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        background-size: cover; background-position: center;
+    }
     
-    .bottom-flap { position: absolute; bottom: 0; left: 0; width: 100%; height: 43%; z-index: 6; clip-path: polygon(0 100%, 100% 100%, 55% 0, 45% 0); filter: brightness(0.98); background-size: cover; background-position: center; }
-    .bottom-flap-lines { position: absolute; bottom: 0; left: 0; width: 100%; height: 43%; z-index: 7; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,100 L45,0 L55,0 L100,100' fill='none' stroke='black' stroke-opacity='0.08' stroke-width='0.4'/%3E%3C/svg%3E"); background-size: 100% 100%; }
-    .flap-container { position: absolute; top: 0; left: 0; width: 100%; height: 60%; z-index: 10 !important; transform-origin: top; transform-style: preserve-3d; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); animation: flap-bob 4s ease-in-out infinite; filter: drop-shadow(0 5px 6px rgba(0,0,0,0.3)); will-change: transform; /* Fix for Firefox */ }
-    .top-flap { width: 100%; height: 100%; clip-path: polygon(0 0, 100% 0, 50% 100%); background-size: center; background-position: center; }
-    .open .flap-container { animation: none !important; transform: rotateX(160deg); z-index: 1 !important; }
+    .envelope-pocket-main {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 3 !important;
+        clip-path: polygon(0 0, 50% 60%, 100% 0, 100% 100%, 0 100%);
+        background-size: cover; background-position: center;
+    }
+    
+    /* THE FLAP (Top Triangle) */
+    .flap-container {
+        position: absolute; top: 0; left: 0; width: 100%; height: 60%;
+        z-index: 10; /* Start on top */
+        transform-origin: top;
+        transform-style: preserve-3d;
+        
+        /* 1. Animation (Bobbing) Settings */
+        animation: flap-bob 4s ease-in-out infinite;
+        
+        /* 2. Transition Settings (Opening Speed) */
+        /* Note: We delay the z-index change so it only goes behind AFTER it opens */
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.1s step-end 0.8s;
+        
+        filter: drop-shadow(0 5px 6px rgba(0,0,0,0.3));
+    }
+    
+    .top-flap {
+        width: 100%; height: 100%;
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+        background-size: center; background-position: center;
+    }
+
+    /* THE OPEN STATE (When clicked) */
+    .open .flap-container {
+        animation: none !important; /* Stop bobbing immediately */
+        transform: rotateX(180deg); /* Flip up */
+        z-index: 1; /* Send behind AFTER transition (handled by transition-delay above) */
+    }
+
+    /* THE LETTER */
+    .letter {
+        position: absolute; bottom: 0; left: 15%; width: 70%; height: 70%;
+        background: white; z-index: 2 !important; border: 1px solid var(--accent-gold);
+        display: flex; flex-direction: column; justify-content: center !important;
+        align-items: center; text-align: center;
+        padding: 20px 20px 60px 20px; box-sizing: border-box;
+        box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+        
+        /* Initial State */
+        transform: translateY(0);
+        opacity: 0;
+        visibility: hidden;
+        
+        /* Slide Up Animation */
+        transition: transform 1.0s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s;
+    }
+
+    /* Letter Open State */
+    .open .letter {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(-50%);
+        /* Slight delay so flap clears first */
+        transition-delay: 0.4s;
+    }
+
+    /* Bottom Flap & Decorations */
+    .bottom-flap {
+        position: absolute; bottom: 0; left: 0; width: 100%; height: 43%;
+        z-index: 6; clip-path: polygon(0 100%, 100% 100%, 55% 0, 45% 0);
+        filter: brightness(0.98); background-size: cover; background-position: center;
+    }
+    .bottom-flap-lines, .envelope-lines {
+        position: absolute; width: 100%; height: 100%; pointer-events: none;
+        background-size: 100% 100%;
+    }
+    .bottom-flap-lines { bottom: 0; z-index: 7; height: 43%; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,100 L45,0 L55,0 L100,100' fill='none' stroke='black' stroke-opacity='0.08' stroke-width='0.4'/%3E%3C/svg%3E"); }
+    .envelope-lines { top: 0; z-index: 4; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L50,60 L100,0' fill='none' stroke='black' stroke-opacity='0.05' stroke-width='0.4'/%3E%3C/svg%3E"); }
+
+    /* Keyframes */
     @keyframes flap-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+    
+    /* Seal & Label */
     #seal { position: relative; transform: translate(-50%, -50%); width: 100%; }
     #seal img { width: 100%; display: block; }
-    .seal-bob-wrapper { position: absolute; top: 58%; left: 50%; width: 18%; min-width: 65px; z-index: 100 !important; animation: flap-bob 4s ease-in-out infinite; cursor: pointer; }
+    .seal-bob-wrapper {
+        position: absolute; top: 58%; left: 50%; width: 18%; min-width: 65px;
+        z-index: 100 !important; animation: flap-bob 4s ease-in-out infinite; cursor: pointer;
+    }
     
-    #envelope-label { position: absolute; bottom: 5% !important; left: 0; width: 100%; text-align: center; z-index: 1000 !important; display: block !important; font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase; color: #666; opacity: 0; transition: opacity 1.5s ease; pointer-events: none; }
+    #envelope-label {
+        position: absolute; bottom: 5% !important; left: 0; width: 100%; text-align: center;
+        z-index: 1000 !important; display: block !important;
+        font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 5px;
+        text-transform: uppercase; color: #666;
+        opacity: 0; transition: opacity 1.5s ease; pointer-events: none;
+    }
     #envelope-label.reveal-active { opacity: 1 !important; }
-    #envelope-label span { display: block; font-family: var(--font-hero-script); font-size: 2.5rem; color: var(--primary-dark); text-transform: none; margin-top: 5px; }
+    #envelope-label span {
+        display: block; font-family: var(--font-hero-script); font-size: 2.5rem;
+        color: var(--primary-dark); text-transform: none; margin-top: 5px;
+    }
 
     /* --- RSVP CARD --- */
     .rsvp-card { background: #fff; padding: 40px; max-width: 600px; margin: 0 auto; border: 1px solid var(--accent-gold); box-shadow: 0 15px 45px rgba(4, 57, 39, 0.15); text-align: center; display: flex; flex-direction: column; }
