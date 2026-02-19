@@ -877,7 +877,7 @@ z-index: 0;
 
 <audio id="bg-music" loop><source src="bgm.mp3" id="config-audio" type="audio/mpeg"></audio>
 <button id="musicBtn" onclick="toggleMusic()" style="position: fixed; bottom: 25px; right: 25px; z-index: 9999; display: none; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid #d4af37; cursor: pointer; background-color: #043927; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: all 0.5s ease; opacity: 0;">
-    <span id="musicIcon" style="font-size: 22px; color: #d4af37;">🎵</span>
+    <span id="musicIcon" style="font-size: 22px; color: #d4af37 !important; line-height: 1;">🎵</span>
 </button>
 
 <div id="main-site" style="display:none;">
@@ -1649,10 +1649,7 @@ function openInvitation() {
 }
     
 function handleMusic(play, event) {
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
+    if (event) { event.preventDefault(); event.stopPropagation(); }
 
     const mBtn = document.getElementById('musicBtn');
     const mIcon = document.getElementById('musicIcon');
@@ -1660,13 +1657,13 @@ function handleMusic(play, event) {
 
     if (audio) { audio.currentTime = 4; }
     
-    if (mBtn) {
+    if (mBtn && mIcon) {
         mBtn.style.display = 'flex'; 
         
         if (play) {
             // YES: Gold Background, White Icon
             mBtn.style.backgroundColor = "#d4af37"; 
-            mIcon.style.color = "#ffffff";
+            mIcon.style.setProperty('color', '#ffffff', 'important'); // Forces White
             mIcon.classList.add("pulsing"); 
             if (audio) {
                 audio.volume = 1.0; 
@@ -1675,7 +1672,7 @@ function handleMusic(play, event) {
         } else {
             // NO: Emerald Background, Gold Icon
             mBtn.style.backgroundColor = "#043927"; 
-            mIcon.style.color = "#d4af37";
+            mIcon.style.setProperty('color', '#d4af37', 'important'); // Forces Gold
             mIcon.classList.remove("pulsing");
         }
     }
@@ -1704,13 +1701,13 @@ function toggleMusic() {
         // TURN ON: Gold Background, White Icon
         audio.play();
         btn.style.backgroundColor = "#d4af37"; 
-        icon.style.color = "#ffffff";
+        icon.style.setProperty('color', '#ffffff', 'important');
         icon.classList.add("pulsing");
     } else {
-        // TURN OFF: Emerald Background, Gold Icon
+        // TURN OFF (Pause): Emerald Background, Gold Icon
         audio.pause();
         btn.style.backgroundColor = "#043927"; 
-        icon.style.color = "#d4af37";
+        icon.style.setProperty('color', '#d4af37', 'important');
         icon.classList.remove("pulsing");
     }
 }
