@@ -1727,34 +1727,29 @@ function toggleMusic() {
 
 // The scroll tracker that fades the button in when you scroll past the photo
 function setupMusicObserver() {
-    // 1. Target the Button
     var btn = document.getElementById("musicBtn");
     
-    // 2. Target the Hero Section (The first big photo)
-    // We select the first <section> inside #main-site
+    // Using the exact target that worked perfectly for you last time
     var heroSection = document.querySelector('#main-site > section:first-of-type');
 
     if (!btn || !heroSection) return;
 
-    // 3. Create the Observer
     var observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
-            // If Hero Section is NOT intersecting (it's off screen), SHOW button
             if (!entry.isIntersecting) {
+                // You scrolled past the top photo -> Show the button
                 btn.style.opacity = "1";
                 btn.style.pointerEvents = "auto";
             } else {
-                // If Hero Section IS visible, HIDE button
+                // You are at the top -> Hide the button so RSVP text is clear
                 btn.style.opacity = "0";
                 btn.style.pointerEvents = "none";
             }
         });
-    }, { threshold: 0.1 }); // Trigger when 10% of hero is left
+    }, { threshold: 0.1 }); 
 
-    // 4. Start Watching
     observer.observe(heroSection);
 }
-
 
 function showMainForm() {
     const content = document.getElementById('content');
