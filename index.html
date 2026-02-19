@@ -1655,9 +1655,8 @@ function handleMusic(play, event) {
     if (audio) { audio.currentTime = 4; }
     
     if (mBtn) {
+        // 1. Force the button to exist in the layout immediately
         mBtn.style.display = 'flex'; 
-        
-        // Ensure it starts HIDDEN so it doesn't cover "Scroll to RSVP"
         mBtn.style.opacity = '0'; 
         mBtn.style.pointerEvents = 'none'; 
         
@@ -1684,11 +1683,33 @@ function handleMusic(play, event) {
         document.body.style.overflow = 'auto'; 
         document.documentElement.style.overflow = 'auto';
         
-        // Turn the scroll watcher on
-        setupMusicObserver(); 
+        // Trigger the tracker
+        if (typeof setupMusicObserver === "function") { setupMusicObserver(); }
     }, 100);
 
     setTimeout(() => { document.getElementById('envelope-wrapper').style.display = "none"; }, 800);
+}
+
+function setupMusicObserver() {
+    var btn = document.getElementById("musicBtn");
+    var hero = document.getElementById("landing-hero");
+    
+    if (!btn || !hero) return;
+
+    // THE FIX: Bypasses browser scroll bugs by checking screen coordinates
+    setInterval(function() {
+        var rect = hero.getBoundingClientRect();
+        
+        // If the top photo has moved UP off the screen by 150 pixels, you are scrolling!
+        if (rect.top <= -150) {
+            btn.style.opacity = "1";
+            btn.style.pointerEvents = "auto";
+        } else {
+            // You are at the top, hide it!
+            btn.style.opacity = "0";
+            btn.style.pointerEvents = "none";
+        }
+    }, 200); // Runs 5 times a second in the background (zero performance impact)
 }
 
 function showMainForm() {
@@ -1816,27 +1837,7 @@ function toggleMusic() {
     }
 }
 
-function setupMusicObserver() {
-    var btn = document.getElementById("musicBtn");
-    if (!btn) return;
 
-    // Rock-solid scroll listener (works perfectly on all mobile browsers)
-    window.addEventListener('scroll', function() {
-        
-        // If you scroll down 30% of the screen, the music button appears
-        if (window.scrollY > (window.innerHeight * 0.3)) {
-            btn.style.opacity = "1";
-            btn.style.pointerEvents = "auto";
-        } else {
-            // When you are at the very top, it hides so "Scroll to RSVP" is visible
-            btn.style.opacity = "0";
-            btn.style.pointerEvents = "none";
-        }
-    });
-    
-    // Trigger it once immediately just to make sure the state is correct
-    window.dispatchEvent(new Event('scroll'));
-}
 </script>
 </body>
 </html>
