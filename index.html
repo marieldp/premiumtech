@@ -554,11 +554,12 @@ background-size: 100% 100%;
 }
 /* 7. TOP FLAP CONTAINER */
 .flap-container {
-position: absolute; top: 0; left: 0; width: 100%; height: 60%;
-z-index: 10 !important; transform-origin: top; transform-style: preserve-3d;
-transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-animation: flap-bob 4s ease-in-out infinite;
-filter: drop-shadow(0 5px 6px rgba(0,0,0,0.3));
+    position: absolute; top: 0; left: 0; width: 100%; height: 60%;
+    z-index: 10 !important; transform-origin: top; transform-style: preserve-3d;
+    /* THE FIX: Delays the z-index so it doesn't instantly jump behind the letter */
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s 0.6s;
+    animation: flap-bob 4s ease-in-out infinite;
+    filter: drop-shadow(0 5px 6px rgba(0,0,0,0.3));
 }
 .top-flap {
 width: 100%; height: 100%;
