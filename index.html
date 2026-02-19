@@ -1644,73 +1644,84 @@ function openInvitation() {
    // THE FIX: We only disable clicking, we DO NOT set opacity to 0 anymore!
     seal.style.pointerEvents = "none";
 }
-
 function handleMusic(play, event) {
-    if (event) { event.preventDefault(); event.stopPropagation(); }
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
 
-    const mBtn = document.getElementById('musicBtn');
-    const mIcon = document.getElementById('musicIcon');
-    const audio = document.getElementById('bg-music');
-
-    if (audio) { audio.currentTime = 4; }
-    
+    // --- FIX 1: WAKE THE BUTTON UP AND SET COLORS ---
+    var mBtn = document.getElementById('musicBtn');
+    var mIcon = document.getElementById('musicIcon');
     if (mBtn) {
-        // 1. Force the button to exist in the layout immediately
-        mBtn.style.display = 'flex'; 
-        mBtn.style.opacity = '0'; 
-        mBtn.style.pointerEvents = 'none'; 
-        
+        mBtn.style.display = 'flex'; // Removes the 'display: none'
         if (play) {
             mBtn.style.backgroundColor = '#d4af37';
             mBtn.style.color = '#043927';
-            mIcon.classList.add("pulsing"); 
-            if (audio) {
-                audio.volume = 1.0; 
-                audio.play().catch(e => console.error("Playback failed:", e));
-            }
-        } else {
-            mBtn.style.backgroundColor = '#043927';
-            mBtn.style.color = '#d4af37';
-            mIcon.classList.remove("pulsing");
+            if(mIcon) mIcon.classList.add("pulsing");
+        }
+    }
+    // ------------------------------------------------
+
+    if (play) {
+        var audio = document.getElementById('bg-music');
+
+        // 1. SET THE START TIME (in seconds)
+        audio.currentTime = 4; 
+        audio.volume = 1.0; 
+
+        var playPromise = audio.play();
+        if (playPromise !== undefined) {
+            playPromise.then(_ => { console.log("Audio started at 4s!"); })
+            .catch(error => { console.error("Playback failed:", error); });
         }
     }
 
+    // 1. Start the exit animation immediately (this is the .6s CSS fade)
     document.getElementById('envelope-wrapper').classList.add('wrapper-exit');
 
+    // 2. THE REVEAL: Wait only 100ms (.1s) before Mariel & Jasper start appearing
     setTimeout(() => {
         document.getElementById('main-site').style.display = 'block';
         document.body.classList.add('show-site');
         document.body.style.overflow = 'auto'; 
         document.documentElement.style.overflow = 'auto';
         
-        // Trigger the tracker
-        if (typeof setupMusicObserver === "function") { setupMusicObserver(); }
+        // --- FIX 2: TURN ON THE SCROLL TRACKER ---
+        setupMusicObserver(); 
+        // -----------------------------------------
     }, 100);
 
-    setTimeout(() => { document.getElementById('envelope-wrapper').style.display = "none"; }, 800);
-}
+    // 3. THE CLEANUP: Wait 600ms (.6s) to hide the envelope once the fade is done
+    setTimeout(() => {
+        document.getElementById('envelope-wrapper').style.display = "none";
+    }, 800);
+} 
 
+// The scroll tracker that fades the button in when you scroll past the photo
 function setupMusicObserver() {
     var btn = document.getElementById("musicBtn");
     var hero = document.getElementById("landing-hero");
     
     if (!btn || !hero) return;
 
-    // THE FIX: Bypasses browser scroll bugs by checking screen coordinates
-    setInterval(function() {
-        var rect = hero.getBoundingClientRect();
-        
-        // If the top photo has moved UP off the screen by 150 pixels, you are scrolling!
-        if (rect.top <= -150) {
+    var musicObserver = new IntersectionObserver(function(entries) {
+        if (!entries[0].isIntersecting) { 
+            // Hero photo scrolled away -> Show Button
             btn.style.opacity = "1";
             btn.style.pointerEvents = "auto";
-        } else {
-            // You are at the top, hide it!
+        } else { 
+            // Hero photo is visible -> Hide Button (so RSVP text is clear)
             btn.style.opacity = "0";
             btn.style.pointerEvents = "none";
         }
-    }, 200); // Runs 5 times a second in the background (zero performance impact)
+    }, { 
+        threshold: 0.5 // Triggers the exact moment the photo is halfway off the screen
+    });
+
+    musicObserver.observe(hero);
 }
+
 
 function showMainForm() {
     const content = document.getElementById('content');
