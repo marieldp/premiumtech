@@ -22,23 +22,30 @@
     100% { transform: scale(1); }
 }
 
-/* STATE: PAUSED (Default) - Emerald BG, Gold Icon */
+/* 1. DEFAULT/PAUSED STATE: Emerald BG, Gold Icon */
 #musicBtn {
     background-color: #043927 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
 #musicPath {
     fill: #d4af37 !important;
 }
 
-/* STATE: PLAYING - Gold BG, Emerald Icon, Pulsing Icon */
+/* 2. PLAYING STATE: Gold BG, Emerald Icon, Pulsing Icon */
 #musicBtn.playing {
     background-color: #d4af37 !important;
 }
+
 #musicBtn.playing #musicPath {
     fill: #043927 !important;
 }
-#musicBtn.playing #musicSvg {
+
+#musicBtn.playing svg {
     animation: music-pulse 1.2s infinite ease-in-out;
+    transform-origin: center;
 }
 
 /* --- BALANCED SPLIT TIMELINE --- */
@@ -889,8 +896,8 @@ z-index: 0;
 
 <audio id="bg-music" loop><source src="bgm.mp3" id="config-audio" type="audio/mpeg"></audio>
 
-<button id="musicBtn" onclick="toggleMusic()" style="position: fixed; bottom: 25px; right: 25px; z-index: 9999; display: none; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid #d4af37; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: all 0.4s ease; outline: none; padding: 0;">
-    <svg id="musicSvg" viewBox="0 0 24 24" width="26" height="26" style="transition: transform 0.3s ease;">
+<button id="musicBtn" onclick="toggleMusic()" style="position: fixed; bottom: 25px; right: 25px; z-index: 9999; display: none; width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid #d4af37; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: all 0.4s ease; outline: none; padding: 0;">
+    <svg id="musicSvg" viewBox="0 0 24 24" width="26" height="26">
         <path id="musicPath" d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
     </svg>
 </button>
@@ -1669,20 +1676,24 @@ function handleMusic(play, event) {
     const mBtn = document.getElementById('musicBtn');
     const audio = document.getElementById('bg-music');
 
-    if (mBtn && audio) {
+    if (mBtn) {
         mBtn.style.display = 'flex'; 
         
         if (play) {
-            audio.currentTime = 4;
-            audio.play().catch(e => console.log("Auto-play blocked"));
-            mBtn.classList.add('playing'); // Switches to Gold/Emerald/Pulse
+            // User clicked YES
+            mBtn.classList.add('playing'); // This changes colors & starts pulse
+            if (audio) {
+                audio.currentTime = 4;
+                audio.play().catch(e => console.log("Audio play blocked"));
+            }
         } else {
-            audio.pause();
-            mBtn.classList.remove('playing'); // Stays Emerald/Gold/No Pulse
+            // User clicked NO
+            mBtn.classList.remove('playing'); // This forces Emerald/Gold/No Pulse
+            if (audio) audio.pause();
         }
     }
 
-    // Envelope Transition
+    // Envelope exit logic
     document.getElementById('envelope-wrapper').classList.add('wrapper-exit');
     setTimeout(() => {
         document.getElementById('main-site').style.display = 'block';
@@ -1702,10 +1713,10 @@ function toggleMusic() {
 
     if (audio.paused) {
         audio.play();
-        mBtn.classList.add('playing');
+        mBtn.classList.add('playing'); // Switch to Gold BG / Emerald Icon
     } else {
         audio.pause();
-        mBtn.classList.remove('playing');
+        mBtn.classList.remove('playing'); // Switch back to Emerald BG / Gold Icon
     }
 }
 // The scroll tracker that fades the button in when you scroll past the photo
