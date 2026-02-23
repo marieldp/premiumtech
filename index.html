@@ -18,15 +18,16 @@
 /* --- MUSIC ICON ANIMATION --- */
 @keyframes music-pulse {
     0% { transform: scale(1); }
-    50% { transform: scale(1.4); } 
+    50% { transform: scale(1.2); } /* Slightly smaller pulse for just the icon */
     100% { transform: scale(1); }
 }
 
-.pulsing {
-    display: inline-block !important; /* REQUIRED for animation to work */
-animation: music-pulse 1.2s infinite ease-in-out !important;
+/* Now targeting the SVG specifically */
+.pulsing-icon {
+    display: inline-block;
+    transform-origin: center;
+    animation: music-pulse 1.2s infinite ease-in-out;
 }
-
 /* --- BALANCED SPLIT TIMELINE --- */
 #timeline {
 position: relative;
@@ -1654,33 +1655,34 @@ function handleMusic(play, event) {
     if (event) { event.preventDefault(); event.stopPropagation(); }
 
     const mBtn = document.getElementById('musicBtn');
+    const mSvg = document.getElementById('musicSvg');
     const mPath = document.getElementById('musicPath');
     const audio = document.getElementById('bg-music');
 
-    if (audio) { audio.currentTime = 4; }
-    
-    if (mBtn && mPath) {
+    if (mBtn && mSvg && mPath) {
         mBtn.style.display = 'flex'; 
         
         if (play) {
-            // PLAYING: Gold Background, White Icon
-            mBtn.style.backgroundColor = "#d4af37"; 
-            mPath.setAttribute('fill', '#ffffff'); // Forces White
-            mBtn.classList.add("pulsing"); 
+            // CHOICE: YES MUSIC
+            mBtn.style.backgroundColor = "#d4af37"; // Gold Background
+            mPath.setAttribute('fill', '#043927');   // Emerald Icon
+            mSvg.classList.add("pulsing-icon");     // Icon pulses
             if (audio) {
+                audio.currentTime = 4;
                 audio.volume = 1.0; 
                 audio.play().catch(e => console.error("Playback failed:", e));
             }
         } else {
-            // PAUSED: Emerald Background, Gold Icon
-            mBtn.style.backgroundColor = "#043927"; 
-            mPath.setAttribute('fill', '#d4af37'); // Forces Gold
-            mBtn.classList.remove("pulsing");
+            // CHOICE: NO MUSIC
+            mBtn.style.backgroundColor = "#043927"; // Emerald Background
+            mPath.setAttribute('fill', '#d4af37');   // Gold Icon
+            mSvg.classList.remove("pulsing-icon");  // No pulse
+            if (audio) { audio.pause(); }
         }
     }
 
+    // Transition out of envelope
     document.getElementById('envelope-wrapper').classList.add('wrapper-exit');
-
     setTimeout(() => {
         document.getElementById('main-site').style.display = 'block';
         document.body.classList.add('show-site');
@@ -1697,20 +1699,21 @@ function handleMusic(play, event) {
 function toggleMusic() {
     var audio = document.getElementById("bg-music");
     var btn = document.getElementById("musicBtn");
+    var svg = document.getElementById("musicSvg");
     var path = document.getElementById("musicPath");
 
     if (audio.paused) {
-        // TURN ON: Gold Background, White Icon
+        // TURN ON
         audio.play();
-        btn.style.backgroundColor = "#d4af37"; 
-        path.setAttribute('fill', '#ffffff');
-        btn.classList.add("pulsing");
+        btn.style.backgroundColor = "#d4af37"; // Gold Background
+        path.setAttribute('fill', '#043927');   // Emerald Icon
+        svg.classList.add("pulsing-icon");
     } else {
-        // TURN OFF (Pause): Emerald Background, Gold Icon
+        // TURN OFF
         audio.pause();
-        btn.style.backgroundColor = "#043927"; 
-        path.setAttribute('fill', '#d4af37');
-        btn.classList.remove("pulsing");
+        btn.style.backgroundColor = "#043927"; // Emerald Background
+        path.setAttribute('fill', '#d4af37');   // Gold Icon
+        svg.classList.remove("pulsing-icon");
     }
 }
 
