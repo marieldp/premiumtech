@@ -16,6 +16,52 @@
     padding: 10px; /* Gives the QR some breathing room inside the gold frame */
 }
 
+/* --- THE MUSIC BUTTON CONTAINER (Bottom Right) --- */
+#musicBtn {
+    position: fixed !important;
+    bottom: 25px !important;
+    right: 25px !important;
+    z-index: 9999 !important;
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50% !important;
+    border: 1.5px solid #d4af37 !important;
+    cursor: pointer !important;
+    display: none; /* JS makes this 'flex' when envelope opens */
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
+    
+    /* Hide by default so observer can fade it in on scroll */
+    opacity: 0; 
+    pointer-events: none;
+    transition: opacity 0.5s ease, background-color 0.3s ease !important;
+
+    /* PAUSED STATE: Emerald Background */
+    background-color: #043927 !important; 
+}
+
+/* PAUSED STATE: Gold Icon */
+#musicBtn #musicPath {
+    fill: #d4af37 !important; 
+    transition: fill 0.3s ease !important;
+}
+
+/* --- PLAYING STATE --- */
+#musicBtn.playing {
+    background-color: #d4af37 !important; /* Gold Background */
+}
+
+#musicBtn.playing #musicPath {
+    fill: #043927 !important; /* Emerald Icon */
+}
+
+/* ONLY THE ICON PULSES */
+#musicBtn.playing #musicSvg {
+    animation: icon-pulse 1.2s infinite ease-in-out !important;
+    transform-origin: center;
+}
+
 /* --- MUSIC ICON ANIMATION --- */
 @keyframes music-pulse {
     0% { transform: scale(1); }
@@ -871,9 +917,9 @@ z-index: 0;
 
 <audio id="bg-music" loop><source src="bgm.mp3" id="config-audio" type="audio/mpeg"></audio>
 
-<button id="musicBtn" onclick="toggleMusic()" style="position: fixed; bottom: 25px; right: 25px; z-index: 9999; display: none; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 50%; border: 2px solid #d4af37; cursor: pointer; background-color: #043927; box-shadow: 0 4px 15px rgba(0,0,0,0.4); outline: none;">
-    <svg viewBox="0 0 24 24" width="24" height="24">
-        <path id="musicPath" fill="#d4af37" d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+<button id="musicBtn" onclick="toggleMusic()">
+    <svg id="musicSvg" viewBox="0 0 24 24" width="24" height="24">
+        <path id="musicPath" d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
     </svg>
 </button>
 
@@ -1649,27 +1695,19 @@ function handleMusic(play, event) {
     if (event) { event.preventDefault(); event.stopPropagation(); }
 
     const mBtn = document.getElementById('musicBtn');
-    const mPath = document.getElementById('musicPath');
     const audio = document.getElementById('bg-music');
 
     if (audio) audio.currentTime = 4;
 
-    if (mBtn && mPath) {
-        mBtn.style.display = 'flex'; // Makes it show up on the bottom right
-        mBtn.style.opacity = '1'; 
+    if (mBtn) {
+        mBtn.style.display = 'flex'; // Activates the button in the DOM
         
         if (play) {
             if (audio) audio.play().catch(e => console.log("Audio blocked"));
-            // PLAYING STATE: Gold BG, Emerald Icon
-            mBtn.style.backgroundColor = '#d4af37';
-            mPath.setAttribute('fill', '#043927');
-            mBtn.style.animation = 'music-pulse 1.2s infinite ease-in-out';
+            mBtn.classList.add('playing');
         } else {
             if (audio) audio.pause();
-            // PAUSED STATE: Emerald BG, Gold Icon
-            mBtn.style.backgroundColor = '#043927';
-            mPath.setAttribute('fill', '#d4af37');
-            mBtn.style.animation = 'none';
+            mBtn.classList.remove('playing');
         }
     }
 
@@ -1682,26 +1720,24 @@ function handleMusic(play, event) {
         if(main) main.style.display = 'block';
         document.body.classList.add('show-site');
         document.body.style.overflow = 'auto'; 
+        
+        // This brings your scroll logic back to life!
+        if (typeof setupMusicObserver === "function") {
+            setupMusicObserver(); 
+        }
     }, 100);
 }
 
 function toggleMusic() {
     const audio = document.getElementById("bg-music");
     const mBtn = document.getElementById("musicBtn");
-    const mPath = document.getElementById("musicPath");
 
     if (audio.paused) {
-        // TURN ON: Gold BG, Emerald Icon
         audio.play();
-        mBtn.style.backgroundColor = '#d4af37';
-        mPath.setAttribute('fill', '#043927');
-        mBtn.style.animation = 'music-pulse 1.2s infinite ease-in-out';
+        mBtn.classList.add('playing');
     } else {
-        // TURN OFF: Emerald BG, Gold Icon
         audio.pause();
-        mBtn.style.backgroundColor = '#043927';
-        mPath.setAttribute('fill', '#d4af37');
-        mBtn.style.animation = 'none';
+        mBtn.classList.remove('playing');
     }
 }
 // The scroll tracker that fades the button in when you scroll past the photo
