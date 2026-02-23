@@ -620,6 +620,12 @@ position: relative;
 transform: translate(-50%, -50%);
 width: 100%;
 }
+/* Pushes the seal behind the flap paper as it opens */
+.open .seal-bob-wrapper {
+    z-index: -1 !important;
+    /* The 0.4s delay ensures it swaps to the back exactly when the flap is facing the ceiling so the transition is invisible */
+    transition: z-index 0s 0.4s !important; 
+}
 #seal img { width: 100%; display: block; }    
 .seal-bob-wrapper { 
     position: absolute; 
