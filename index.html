@@ -16,7 +16,7 @@
     padding: 10px; /* Gives the QR some breathing room inside the gold frame */
 }
 
-/* --- THE MUSIC BUTTON CONTAINER (Bottom Right) --- */
+/* --- PAUSED STATE (Pink Background, Bottom Right) --- */
 #musicBtn {
     position: fixed !important;
     bottom: 25px !important;
@@ -27,45 +27,39 @@
     border-radius: 50% !important;
     border: 1.5px solid #d4af37 !important;
     cursor: pointer !important;
-    display: none; /* JS makes this 'flex' when envelope opens */
+    display: none; /* JS makes this flex when opening */
     align-items: center !important;
     justify-content: center !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
     
-    /* Hide by default so observer can fade it in on scroll */
+    /* Fades in on scroll */
     opacity: 0; 
     pointer-events: none;
-    transition: opacity 0.5s ease, background-color 0.3s ease !important;
+    transition: opacity 0.5s ease, background-color 0.4s ease !important;
 
-    /* PAUSED STATE: Emerald Background */
+    /* Pink Background for Paused */
+    background-color: #f4cfe0 !important; 
+}
+
+/* THE ICON (Always Gold) */
+#musicBtn svg path {
+    fill: #d4af37 !important; 
+}
+
+/* --- PLAYING STATE (Emerald Background) --- */
+#musicBtn.playing {
     background-color: #043927 !important; 
 }
 
-/* PAUSED STATE: Gold Icon */
-#musicBtn #musicPath {
-    fill: #d4af37 !important; 
-    transition: fill 0.3s ease !important;
-}
-
-/* --- PLAYING STATE --- */
-#musicBtn.playing {
-    background-color: #d4af37 !important; /* Gold Background */
-}
-
-#musicBtn.playing #musicPath {
-    fill: #043927 !important; /* Emerald Icon */
-}
-
-/* ONLY THE ICON PULSES */
-#musicBtn.playing #musicSvg {
+/* PULSING ANIMATION (Only the Icon) */
+#musicBtn.playing svg {
     animation: icon-pulse 1.2s infinite ease-in-out !important;
     transform-origin: center;
 }
 
-/* --- MUSIC ICON ANIMATION --- */
-@keyframes music-pulse {
+@keyframes icon-pulse {
     0% { transform: scale(1); }
-    50% { transform: scale(1.15); }
+    50% { transform: scale(1.35); }
     100% { transform: scale(1); }
 }
 
@@ -918,8 +912,8 @@ z-index: 0;
 <audio id="bg-music" loop><source src="bgm.mp3" id="config-audio" type="audio/mpeg"></audio>
 
 <button id="musicBtn" onclick="toggleMusic()">
-    <svg id="musicSvg" viewBox="0 0 24 24" width="24" height="24">
-        <path id="musicPath" d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+    <svg viewBox="0 0 24 24" width="24" height="24">
+        <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
     </svg>
 </button>
 
@@ -1700,14 +1694,14 @@ function handleMusic(play, event) {
     if (audio) audio.currentTime = 4;
 
     if (mBtn) {
-        mBtn.style.display = 'flex'; // Activates the button in the DOM
+        mBtn.style.display = 'flex'; // Activates button in DOM
         
         if (play) {
             if (audio) audio.play().catch(e => console.log("Audio blocked"));
-            mBtn.classList.add('playing');
+            mBtn.classList.add('playing'); // Triggers Green BG & Pulse
         } else {
             if (audio) audio.pause();
-            mBtn.classList.remove('playing');
+            mBtn.classList.remove('playing'); // Triggers Pink BG & Stops Pulse
         }
     }
 
@@ -1721,7 +1715,7 @@ function handleMusic(play, event) {
         document.body.classList.add('show-site');
         document.body.style.overflow = 'auto'; 
         
-        // This brings your scroll logic back to life!
+        // Starts the scroll listener to fade the button in
         if (typeof setupMusicObserver === "function") {
             setupMusicObserver(); 
         }
@@ -1731,6 +1725,8 @@ function handleMusic(play, event) {
 function toggleMusic() {
     const audio = document.getElementById("bg-music");
     const mBtn = document.getElementById("musicBtn");
+
+    if (!audio || !mBtn) return;
 
     if (audio.paused) {
         audio.play();
@@ -1890,23 +1886,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCountdown();
 });
 
-function toggleMusic() {
-    var audio = document.getElementById("bg-music");
-    var btn = document.getElementById("musicBtn");
-    var icon = document.getElementById("musicIcon");
-    
-    if (audio.paused) {
-        audio.play();
-        btn.style.backgroundColor = '#d4af37'; 
-        btn.style.color = '#043927'; 
-        icon.classList.add("pulsing"); 
-    } else {
-        audio.pause();
-        btn.style.backgroundColor = '#043927'; 
-        btn.style.color = '#d4af37'; 
-        icon.classList.remove("pulsing"); 
-    }
-}
+
 
 
 </script>
