@@ -16,7 +16,7 @@
     padding: 10px; /* Gives the QR some breathing room inside the gold frame */
 }
 
-/* --- PAUSED STATE (Pink Background, Bottom Right) --- */
+/* --- PAUSED STATE (Pink Background, Green Icon) --- */
 #musicBtn {
     position: fixed !important;
     bottom: 25px !important;
@@ -41,14 +41,19 @@
     background-color: #f4cfe0 !important; 
 }
 
-/* THE ICON (Always Gold) */
+/* Green Icon for Paused */
 #musicBtn svg path {
-    fill: #d4af37 !important; 
+    fill: #043927 !important; 
+    transition: fill 0.4s ease !important;
 }
 
-/* --- PLAYING STATE (Emerald Background) --- */
+/* --- PLAYING STATE (Green Background, Gold Icon) --- */
 #musicBtn.playing {
-    background-color: #043927 !important; 
+    background-color: #043927 !important; /* Green Background */
+}
+
+#musicBtn.playing svg path {
+    fill: #d4af37 !important; /* Gold Icon */
 }
 
 /* PULSING ANIMATION (Only the Icon) */
