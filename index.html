@@ -1841,18 +1841,22 @@ const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); } });
 }, observerOptions);
 
+/* --- SPECIAL OBSERVER JUST FOR THE TALL ENTOURAGE SECTION --- */
 const earlyObserverOptions = { threshold: 0.02, rootMargin: "0px 0px 50px 0px" }; 
 const earlyObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); } });
 }, earlyObserverOptions);
 
-// Tell it to specifically watch the Entourage section
-const entourageSection = document.querySelector('#entourage .reveal-on-scroll');
-if (entourageSection) {
-    earlyObserver.observe(entourageSection);
-    // Remove it from the old observer so they don't fight
-    observer.unobserve(entourageSection); 
-}
+// Wait a tiny bit to ensure the main observer has finished setting up, then swap them
+setTimeout(() => {
+    const entourageReveal = document.querySelector('#entourage .reveal-on-scroll');
+    if (entourageReveal) {
+        // Stop the normal observer from delaying it
+        observer.unobserve(entourageReveal);
+        // Attach the fast observer
+        earlyObserver.observe(entourageReveal);
+    }
+}, 500);
 
 function loadEntourage() {
     fetch(`${CONFIG.webAppUrl}?action=getEntourage`)
