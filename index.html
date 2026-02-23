@@ -16,37 +16,29 @@
     padding: 10px; /* Gives the QR some breathing room inside the gold frame */
 }
 /* --- MUSIC ICON ANIMATION --- */
-/* The Pulse Animation */
 @keyframes music-pulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.3); }
     100% { transform: scale(1); }
 }
 
-/* 1. DEFAULT STATE (Paused / "No" clicked) */
-/* Emerald Background, Gold Icon, NO pulse */
+/* STATE: PAUSED (Default) - Emerald BG, Gold Icon */
 #musicBtn {
-    background-color: #043927 !important; 
-    transition: all 0.4s ease;
+    background-color: #043927 !important;
 }
-
 #musicPath {
-    fill: #d4af37 !important; 
+    fill: #d4af37 !important;
 }
 
-/* 2. PLAYING STATE (Yes clicked / Toggled on) */
-/* Gold Background, Emerald Icon, Icon PULSES */
+/* STATE: PLAYING - Gold BG, Emerald Icon, Pulsing Icon */
 #musicBtn.playing {
     background-color: #d4af37 !important;
 }
-
 #musicBtn.playing #musicPath {
     fill: #043927 !important;
 }
-
 #musicBtn.playing #musicSvg {
     animation: music-pulse 1.2s infinite ease-in-out;
-    transform-origin: center;
 }
 
 /* --- BALANCED SPLIT TIMELINE --- */
@@ -896,8 +888,9 @@ z-index: 0;
 </div>
 
 <audio id="bg-music" loop><source src="bgm.mp3" id="config-audio" type="audio/mpeg"></audio>
-<button id="musicBtn" onclick="toggleMusic()" style="position: fixed; bottom: 25px; right: 25px; z-index: 9999; display: none; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid #d4af37; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); outline: none; padding: 0;">
-    <svg id="musicSvg" viewBox="0 0 24 24" width="26" height="26">
+
+<button id="musicBtn" onclick="toggleMusic()" style="position: fixed; bottom: 25px; right: 25px; z-index: 9999; display: none; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid #d4af37; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: all 0.4s ease; outline: none; padding: 0;">
+    <svg id="musicSvg" viewBox="0 0 24 24" width="26" height="26" style="transition: transform 0.3s ease;">
         <path id="musicPath" d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
     </svg>
 </button>
@@ -1676,20 +1669,20 @@ function handleMusic(play, event) {
     const mBtn = document.getElementById('musicBtn');
     const audio = document.getElementById('bg-music');
 
-    if (mBtn) {
-        mBtn.style.display = 'flex'; // Make button visible
+    if (mBtn && audio) {
+        mBtn.style.display = 'flex'; 
         
-        if (play && audio) {
+        if (play) {
             audio.currentTime = 4;
-            audio.play().catch(e => console.error("Playback failed:", e));
-            mBtn.classList.add('playing'); // This triggers Gold BG + Emerald Icon + Pulse
+            audio.play().catch(e => console.log("Auto-play blocked"));
+            mBtn.classList.add('playing'); // Switches to Gold/Emerald/Pulse
         } else {
-            if (audio) audio.pause();
-            mBtn.classList.remove('playing'); // This triggers Emerald BG + Gold Icon + No Pulse
+            audio.pause();
+            mBtn.classList.remove('playing'); // Stays Emerald/Gold/No Pulse
         }
     }
 
-    // Standard envelope exit logic
+    // Envelope Transition
     document.getElementById('envelope-wrapper').classList.add('wrapper-exit');
     setTimeout(() => {
         document.getElementById('main-site').style.display = 'block';
