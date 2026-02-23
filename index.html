@@ -1841,6 +1841,19 @@ const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); } });
 }, observerOptions);
 
+const earlyObserverOptions = { threshold: 0.02, rootMargin: "0px 0px 50px 0px" }; 
+const earlyObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); } });
+}, earlyObserverOptions);
+
+// Tell it to specifically watch the Entourage section
+const entourageSection = document.querySelector('#entourage .reveal-on-scroll');
+if (entourageSection) {
+    earlyObserver.observe(entourageSection);
+    // Remove it from the old observer so they don't fight
+    observer.unobserve(entourageSection); 
+}
+
 function loadEntourage() {
     fetch(`${CONFIG.webAppUrl}?action=getEntourage`)
     .then(res => res.json())
