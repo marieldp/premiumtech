@@ -23,32 +23,30 @@
     100% { transform: scale(1); }
 }
 
-/* Default state: PAUSED (Emerald BG, Gold Icon) */
+/* 1. DEFAULT STATE (Paused / "No" clicked) */
+/* Emerald Background, Gold Icon, NO pulse */
 #musicBtn {
-    background-color: #043927 !important;
-    display: none; /* Hidden until envelope opens */
-    align-items: center;
-    justify-content: center;
+    background-color: #043927 !important; 
+    transition: all 0.4s ease;
 }
 
 #musicPath {
-    fill: #d4af37 !important; /* Gold Icon */
+    fill: #d4af37 !important; 
 }
 
-/* Playing state: PLAYING (Gold BG, Emerald Icon) */
+/* 2. PLAYING STATE (Yes clicked / Toggled on) */
+/* Gold Background, Emerald Icon, Icon PULSES */
 #musicBtn.playing {
     background-color: #d4af37 !important;
 }
 
 #musicBtn.playing #musicPath {
-    fill: #043927 !important; /* Emerald Icon */
+    fill: #043927 !important;
 }
 
-/* Target only the SVG for the pulse */
-#musicBtn.playing svg {
+#musicBtn.playing #musicSvg {
     animation: music-pulse 1.2s infinite ease-in-out;
     transform-origin: center;
-    display: block;
 }
 
 /* --- BALANCED SPLIT TIMELINE --- */
@@ -898,7 +896,7 @@ z-index: 0;
 </div>
 
 <audio id="bg-music" loop><source src="bgm.mp3" id="config-audio" type="audio/mpeg"></audio>
-<button id="musicBtn" onclick="toggleMusic()" style="position: fixed; bottom: 25px; right: 25px; z-index: 9999; width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid #d4af37; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: all 0.4s ease; outline: none; padding: 0;">
+<button id="musicBtn" onclick="toggleMusic()" style="position: fixed; bottom: 25px; right: 25px; z-index: 9999; display: none; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid #d4af37; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); outline: none; padding: 0;">
     <svg id="musicSvg" viewBox="0 0 24 24" width="26" height="26">
         <path id="musicPath" d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
     </svg>
@@ -1680,21 +1678,18 @@ function handleMusic(play, event) {
 
     if (mBtn) {
         mBtn.style.display = 'flex'; // Make button visible
-        mBtn.style.opacity = '0';    // Keep it invisible until observer triggers it
         
-        if (play) {
-            mBtn.classList.add('playing');
-            if (audio) {
-                audio.currentTime = 4;
-                audio.play().catch(e => console.error("Music failed:", e));
-            }
+        if (play && audio) {
+            audio.currentTime = 4;
+            audio.play().catch(e => console.error("Playback failed:", e));
+            mBtn.classList.add('playing'); // This triggers Gold BG + Emerald Icon + Pulse
         } else {
-            mBtn.classList.remove('playing');
-            if (audio) { audio.pause(); }
+            if (audio) audio.pause();
+            mBtn.classList.remove('playing'); // This triggers Emerald BG + Gold Icon + No Pulse
         }
     }
 
-    // Envelope Exit Logic
+    // Standard envelope exit logic
     document.getElementById('envelope-wrapper').classList.add('wrapper-exit');
     setTimeout(() => {
         document.getElementById('main-site').style.display = 'block';
